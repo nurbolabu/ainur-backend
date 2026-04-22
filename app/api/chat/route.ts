@@ -12,7 +12,7 @@ export async function OPTIONS() {
   return NextResponse.json({}, { headers: corsHeaders });
 }
 
-// Подключаем БД и новую нейросеть Groq
+// Подключаем БД и нейросеть Groq
 const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_ANON_KEY!);
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY! });
 
@@ -43,28 +43,17 @@ export async function POST(req: Request) {
       ВАЖНОЕ ПРАВИЛО: Отвечай ТОЛЬКО на основе Базы знаний. Если клиент спрашивает цену, услуги или любую информацию, которой НЕТ в базе знаний, КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО придумывать цифры или факты. 
       В этом случае ты ОБЯЗАН ответить: "К сожалению, у меня сейчас нет этой информации. Пожалуйста, оставьте ваш номер WhatsApp, и наш менеджер свяжется с вами!"
       
-      Отвечай кратко, не более 2-3 предложений.
+      Отвечай кратко, не более 2-3 предложений. На русском языке.
     `;
 
-    // Запрашиваем ответ у Llama 3 через серверы Groq
+    // Запрашиваем ответ у Llama 3.1
     const chatCompletion = await groq.chat.completions.create({
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: message }
       ],
       model: 'llama-3.1-8b-instant', 
-      temperature: 0.1, // Сделали ИИ максимально точным и не креативным
-      max_tokens: 256,
-    });
-
-    // Запрашиваем ответ у Llama 3 через серверы Groq
-    const chatCompletion = await groq.chat.completions.create({
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: message }
-      ],
-      model: 'llama-3.1-8b-instant', // Молниеносная модель от Meta
-      temperature: 0.7,
+      temperature: 0.1, // Строгий режим, без фантазий
       max_tokens: 256,
     });
 
