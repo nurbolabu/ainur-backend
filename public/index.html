@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>AI NUR Widget - Pure UI Kit</title>
     <style>
         /* =========================================
@@ -19,65 +19,52 @@
             --ainur-radius-window: 30px; 
             --ainur-radius-msg: 20px; 
             --ainur-radius-bar: 26px;
-            --ainur-spacing-base: 20px; 
-            --ainur-spacing-gap: 10px;
         }
 
-        /* Только для теста отображения (можно удалить при интеграции) */
         body { margin: 0; padding: 0; background-color: #f5f5f7; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; -webkit-font-smoothing: antialiased; }
+        * { box-sizing: border-box; }
 
-        /* БАЗА ВИДЖЕТА */
+        /* БАЗА ВИДЖЕТА (Отступ от низа строго 10px) */
         #ainur-widget {
-            position: fixed; bottom: var(--ainur-spacing-base); left: 50%; transform: translateX(-50%);
+            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%);
             z-index: 99999; display: flex; flex-direction: column; align-items: center; 
             opacity: 0; transition: opacity 0.4s ease;
         }
 
-        #ainur-popup-area { margin-bottom: var(--ainur-spacing-gap); position: relative; width: 340px; z-index: 10; }
-        
-        /* Дышащее свечение ИИ (Не перекрывает клики: pointer-events: none) */
-        #ainur-ai-glow {
-            position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%);
-            width: 280px; height: 100px;
-            background: linear-gradient(to top, rgba(139, 253, 168, 0.9) 0%, rgba(0, 176, 242, 0.6) 30%, rgba(255, 255, 255, 0) 100%);
-            filter: blur(20px); opacity: 0; transition: opacity 0.8s ease; pointer-events: none; z-index: 15;
-            animation: ainurAiGlowPulse 4s infinite ease-in-out;
-        }
-        @keyframes ainurAiGlowPulse { 0%, 100% { transform: translateX(-50%) scale(1) translateY(0); opacity: 0.7;} 50% { transform: translateX(-50%) scale(1.05) translateY(-5px); opacity: 1;} }
+        /* ПОПАП АРЕНА (Отступ от панели ввода строго 10px) */
+        #ainur-popup-area { margin-bottom: 10px; position: relative; width: 340px; z-index: 10; }
 
-        /* Базовая панель ввода */
+        /* ПАНЕЛЬ ВВОДА (Высота 60px, Легкая тень Y:6px Blur:8px, z-index максимальный) */
         #ainur-bottom-bar { 
-            display: flex; align-items: center; width: 340px; height: 52px;
-            background: #ffffff; border-radius: var(--ainur-radius-bar); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); 
-            padding: 4px; box-sizing: border-box; transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1), background 0.5s;
-            overflow: hidden; justify-content: center; position: relative; z-index: 20; 
+            display: flex; align-items: center; width: 340px; height: 60px;
+            background: #ffffff; border-radius: 30px; box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1); 
+            padding: 5px; box-sizing: border-box; transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1), background 0.5s;
+            overflow: hidden; justify-content: center; position: relative; z-index: 999; 
         }
-        #ainur-bottom-bar.intro-state { width: 44px; height: 44px; padding: 0; background: transparent; box-shadow: none; }
+        #ainur-bottom-bar.intro-state { width: 60px; height: 60px; padding: 0; background: transparent; box-shadow: none; }
 
-        /* Кнопки навигации 32x32 */
         .ainur-nav-btn {
             width: 32px; height: 32px; border-radius: 16px; background: #E5E5EA;
             display: flex; justify-content: center; align-items: center;
-            border: none; cursor: pointer; transition: background 0.2s; flex-shrink: 0; padding: 0;
+            border: none; cursor: pointer; transition: background 0.2s, transform 0.2s; flex-shrink: 0; padding: 0; z-index: 100;
         }
-        .ainur-nav-btn:active { background: #D1D1D6; }
+        .ainur-nav-btn:active { background: #D1D1D6; transform: scale(0.95); }
         .ainur-nav-icon { width: 14px; height: 14px; stroke: var(--ainur-icon-gray); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; fill: none; }
 
-        /* УНИВЕРСАЛЬНЫЙ КРЕСТИК ЗАКРЫТИЯ */
-        #ainur-universal-close { position: absolute; top: 16px; right: 15px; z-index: 100; display: none; }
-
-        /* --- СТЕКЛЯННАЯ ШАПКА --- */
+        /* --- ШАПКА ЧАТА (Закрепленная) --- */
         .ainur-header {
-            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; 
+            padding: 15px; 
+            display: flex; justify-content: space-between; align-items: center; 
             background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); 
-            border-bottom: 0.5px solid rgba(0,0,0,0.1); z-index: 50; height: 60px; box-sizing: border-box;
+            border-bottom: 0.5px solid rgba(0,0,0,0.1); z-index: 50; box-sizing: border-box;
+            position: absolute; top: 0; left: 0; width: 100%;
         }
 
-        /* --- MENU VIEW --- */
+        /* --- ГЛАВНОЕ МЕНЮ (Легкая тень) --- */
         #ainur-menu-window {
             display: none; width: 340px; height: fit-content; max-height: calc(100vh - 120px); overflow-y: auto;
             background: var(--ainur-bg-menu-blur); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: var(--ainur-radius-window); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            border-radius: var(--ainur-radius-window); box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
             padding: 10px 0; box-sizing: border-box; flex-direction: column;
             transform-origin: bottom center; animation: ainurPopUpMenu 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
@@ -85,69 +72,180 @@
         .ainur-menu-item:active { background: rgba(255, 255, 255, 0.1); }
         .ainur-menu-item:not(:last-child)::after { content: ''; position: absolute; bottom: 0; left: 64px; right: 0; height: 0.5px; background: rgba(255, 255, 255, 0.15); }
         .ainur-menu-text { color: #FFFFFF; font-size: 16px; font-weight: 500; }
+        .ainur-menu-badge { margin-left: auto; background: var(--ainur-primary); color: #000; border-radius: 12px; padding: 2px 8px; font-size: 12px; font-weight: bold; display: none; }
 
-        /* --- CHAT VIEW --- */
+        /* --- ОКНО ЧАТА (Высота строго 500px, Легкая тень) --- */
         #ainur-chat-window {
-            display: none; width: 340px; height: 420px;
-            background: var(--ainur-bg-chat); border-radius: var(--ainur-radius-window); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            display: none; width: 340px; height: 500px;
+            background: var(--ainur-bg-chat); border-radius: var(--ainur-radius-window); box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
             flex-direction: column; overflow: hidden; transform-origin: bottom center;
             animation: ainurPopUpMenu 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; position: relative;
         }
         @keyframes ainurPopUpMenu { 0% { opacity: 0; transform: scale(0.95) translateY(10px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 
-        #ainur-chat-window .ainur-header { position: absolute; top: 0; left: 0; width: 100%; }
-        
         .ainur-chat-header-content { display: flex; align-items: center; flex-grow: 1; overflow: hidden; }
-        .ainur-story-ring-small { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(45deg, var(--ainur-primary), var(--ainur-secondary)); padding: 3px; box-sizing: border-box; display: flex; justify-content: center; align-items: center; margin-right: 12px; cursor: pointer; transition: transform 0.2s; flex-shrink: 0;}
-        .ainur-story-ring-small:active { transform: scale(0.95); }
-        .ainur-avatar-small { width: 100%; height: 100%; border-radius: 50%; background: #ddd; border: 2px solid #fff; box-sizing: border-box;}
+        
+        /* СТОРИС В ЧАТЕ: АНИМАЦИЯ И КОЛЬЦО */
+        @keyframes ainurStorySpin { from { transform: rotate(-90deg); } to { transform: rotate(270deg); } }
+        
+        .ainur-story-ring-wrapper { 
+            position: relative; width: 60px; height: 60px; margin-right: 15px; 
+            cursor: pointer; flex-shrink: 0; transition: transform 0.2s;
+        }
+        .ainur-story-ring-wrapper:active { transform: scale(0.95); }
+        .ainur-story-svg { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            pointer-events: none; animation: ainurStorySpin 12s linear infinite; 
+        }
+        .ainur-avatar-small { position: absolute; top: 6px; left: 6px; width: 48px; height: 48px; border-radius: 50%; background: #ddd; object-fit: cover; border: 2px solid #fff; box-sizing: border-box; }
 
         .ainur-brand-info { flex-grow: 1; cursor: pointer; overflow: hidden; }
         .ainur-brand-name { font-weight: 600; font-size: 16px; color: #000; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
         .ainur-brand-profile { font-size: 12px; color: #888; }
 
-        .ainur-chat-body { flex-grow: 1; padding: 75px 15px 20px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: #ffffff; }
+        .ainur-chat-body { flex-grow: 1; padding: 100px 15px 20px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: #ffffff; }
+        
+        /* СООБЩЕНИЯ */
         .ainur-message-wrapper { width: 100%; display: flex; flex-direction: column; }
         .ainur-message-wrapper.ai { align-items: flex-start; }
-        .ainur-message-wrapper.client { align-items: flex-end; }
+        .ainur-message-wrapper.client { align-items: flex-end; transform-origin: bottom right; animation: ainurMessagePop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes ainurMessagePop { 0% { opacity: 0; transform: scale(0.8) translate(10px, 10px); } 100% { opacity: 1; transform: scale(1) translate(0, 0); } }
+
         .ainur-message { width: fit-content; max-width: 290px; padding: 12px 16px; border-radius: var(--ainur-radius-msg); font-size: 15px; line-height: 1.4; color: #000000; box-sizing: border-box; }
         .ainur-message.ai { background: var(--ainur-bg-ai-msg); border-bottom-left-radius: 4px; }
         .ainur-message.client { background: var(--ainur-primary); border-bottom-right-radius: 4px; }
 
+        /* ВСТРОЕННАЯ КАРТОЧКА ЗАЯВКИ И КОРЗИНЫ В СООБЩЕНИИ ИИ */
+        .ainur-lead-ticket {
+            background: #FFFFFF; border-radius: 12px; padding: 12px; margin-bottom: 10px; width: 100%; box-sizing: border-box;
+            border: 1px solid #f0f0f0; 
+        }
+        .ainur-lead-ticket-title {
+            font-size: 12px; font-weight: 600; color: #34C759; margin-bottom: 10px;
+            text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 4px;
+        }
+        .ainur-lead-ticket-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px; gap: 15px; }
+        .ainur-lead-ticket-row:last-child { margin-bottom: 0; }
+        .ainur-lead-ticket-label { color: #8E8E93; font-size: 13px; }
+        .ainur-lead-ticket-val { font-weight: 500; color: #000; text-align: right; word-break: break-all;}
+
+        .ainur-typing-indicator { display: flex; gap: 4px; padding: 14px 16px; background: var(--ainur-bg-ai-msg); border-radius: var(--ainur-radius-msg); border-bottom-left-radius: 4px; width: fit-content; align-items: center;}
+        .ainur-dot { width: 6px; height: 6px; background-color: #8E8E93; border-radius: 50%; animation: ainurTypingBlink 1.4s infinite ease-in-out both; }
+        .ainur-dot:nth-child(1) { animation-delay: -0.32s; }
+        .ainur-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes ainurTypingBlink { 0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
+
+        /* БЫСТРЫЕ ОТВЕТЫ */
         .ainur-quick-replies { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; width: 100%; max-width: 300px; }
         .ainur-qr-btn { background: transparent; color: var(--ainur-icon-gray); border: 1px solid var(--ainur-icon-gray); height: 32px; padding: 0 14px; border-radius: 16px; font-size: 14px; font-weight: 400; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s, background 0.2s; }
         .ainur-qr-btn:active { transform: scale(0.95); background: rgba(58, 58, 60, 0.08); }
 
-        /* --- PROFILE SHEET --- */
-        #ainur-profile-window { position: absolute; top: 100%; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 20; transition: top 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); display: block; overflow-y: auto; border-radius: var(--ainur-radius-window); }
-        #ainur-profile-window.active { top: 0; }
-        #ainur-profile-window .ainur-header { position: sticky; top: 0; margin-bottom: -1px; }
+        /* УНИВЕРСАЛЬНЫЕ ОКНА (Профиль, Детали, Корзина) */
+        .ainur-sub-window { position: absolute; top: 100%; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 120; transition: top 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); display: flex; flex-direction: column; overflow-y: auto; border-radius: var(--ainur-radius-window); }
+        .ainur-sub-window.active { top: 0; }
+        
+        /* ЗАКРЕПЛЕННЫЙ ЛОКАЛЬНЫЙ ХЕДЕР ДЛЯ ДОП. ОКОН */
+        .ainur-window-header { 
+            position: sticky; top: 0; left: 0; width: 100%; 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 15px; background: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); 
+            z-index: 200; border-bottom: 0.5px solid rgba(0,0,0,0.1); flex-shrink: 0; 
+        }
+        .ainur-window-title { font-size: 17px; font-weight: 600; color: #000; text-align: center; flex-grow: 1; }
 
-        .ainur-profile-content { padding: 20px 20px 40px 20px; display: flex; flex-direction: column; align-items: center; }
-        .ainur-story-ring-large { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(45deg, var(--ainur-primary), var(--ainur-secondary)); padding: 5px; display: flex; justify-content: center; align-items: center; box-sizing: border-box; cursor: pointer; }
-        .ainur-avatar-large { width: 100%; height: 100%; border-radius: 50%; background: #ddd; border: 4px solid #fff; box-sizing: border-box; }
+        /* ПРОФИЛЬ */
+        .ainur-profile-content { padding: 10px 20px 40px 20px; display: flex; flex-direction: column; align-items: center; }
+        
+        .ainur-story-ring-wrapper-large { 
+            position: relative; width: 120px; height: 120px; 
+            cursor: pointer; flex-shrink: 0; transition: transform 0.2s; margin-top: 10px;
+        }
+        .ainur-story-ring-wrapper-large:active { transform: scale(0.95); }
+        .ainur-avatar-large { position: absolute; top: 10px; left: 10px; width: 100px; height: 100px; border-radius: 50%; background: #ddd; object-fit: cover; border: 4px solid #fff; }
+        
         .ainur-profile-title { font-size: 20px; font-weight: 600; color: #000; margin-top: 15px; text-align: center; }
         .ainur-profile-socials { display: flex; gap: 15px; margin-top: 15px; }
         .ainur-social-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: opacity 0.2s; color: white;}
         .ainur-bg-instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%); }
         .ainur-bg-whatsapp { background: #25D366; }
         .ainur-bg-telegram { background: #0088cc; }
-        .ainur-profile-cards { margin-top: 40px; width: 100%; display: flex; flex-direction: column; gap: 15px; }
-        .ainur-service-card { background: #f5f5f7; border-radius: 20px; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .ainur-service-info { flex-grow: 1; padding-right: 15px; }
-        .ainur-service-title { font-size: 16px; font-weight: 600; color: #000; margin-bottom: 5px; }
-        .ainur-service-desc { font-size: 13px; color: #888; line-height: 1.3;}
-        .ainur-service-img { width: 64px; height: 64px; border-radius: 12px; background: #ddd; object-fit: cover; flex-shrink: 0; }
+        
+        /* КАТАЛОГ */
+        .ainur-catalog-list { margin-top: 30px; width: 100%; display: flex; flex-direction: column; gap: 15px; }
+        .ainur-product-card { background: #f5f5f7; border-radius: 20px; padding: 12px; display: flex; flex-direction: column; gap: 12px;}
+        .ainur-product-top { display: flex; gap: 12px; align-items: flex-start; cursor: pointer;}
+        .ainur-product-img { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; background: #ddd; flex-shrink: 0; }
+        .ainur-product-info { display: flex; flex-direction: column; flex-grow: 1; }
+        .ainur-product-title { font-size: 15px; font-weight: 600; color: #000; margin-bottom: 4px; line-height: 1.2;}
+        .ainur-product-desc { font-size: 13px; color: #8E8E93; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .ainur-product-price { font-size: 16px; font-weight: bold; color: #000; margin-top: 8px; }
+        .ainur-product-actions { display: flex; gap: 8px; }
+        .ainur-btn-sec, .ainur-btn-prim { flex: 1; height: 36px; border-radius: 10px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; transition: transform 0.2s;}
+        .ainur-btn-sec { background: #E5E5EA; color: #000; }
+        .ainur-btn-prim { background: var(--ainur-primary); color: #000; }
+        .ainur-btn-sec:active, .ainur-btn-prim:active { transform: scale(0.95); }
 
-        /* --- КНОПКИ БАЗОВОЙ ПАНЕЛИ --- */
-        .ainur-menu-btn, .ainur-send-btn { width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; flex-shrink: 0; padding: 0; transition: transform 0.2s; }
+        /* ОКНО ДЕТАЛЕЙ ТОВАРА */
+        #ainur-detail-window { z-index: 130; background: #fff;}
+        .ainur-gallery-wrapper { position: relative; margin-bottom: 15px; border-radius: 16px; overflow: hidden; }
+        .ainur-detail-gallery { width: 100%; aspect-ratio: 1/1; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; background: #f0f0f0; margin-bottom: 0;}
+        .ainur-detail-gallery::-webkit-scrollbar { display: none; }
+        .ainur-detail-slide { flex: 0 0 100%; scroll-snap-align: center; width: 100%; height: 100%; object-fit: cover; }
+        .ainur-gallery-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; display: flex; justify-content: space-between; padding: 0 10px; pointer-events: none;}
+        .ainur-gallery-btn { width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.8); display: flex; justify-content: center; align-items: center; border: none; pointer-events: auto; cursor: pointer;}
+        .ainur-detail-body { padding: 20px 20px 30px 20px; }
+        .ainur-detail-title { font-size: 22px; font-weight: 700; margin-bottom: 8px;}
+        .ainur-detail-price { font-size: 20px; font-weight: bold; color: #000; margin-bottom: 15px;}
+        .ainur-detail-desc { font-size: 15px; color: #666; line-height: 1.5; margin-bottom: 20px;}
+
+        /* КОРЗИНА И ЗАЯВКА */
+        #ainur-cart-window { z-index: 140; }
+        #ainur-lead-overlay { z-index: 150; }
+        
+        .ainur-cart-body { padding: 10px 20px 30px 20px; display: flex; flex-direction: column; flex-grow: 1; }
+        .ainur-cart-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f0f0f0;}
+        .ainur-cart-img { width: 60px; height: 60px; border-radius: 12px; object-fit: cover;}
+        .ainur-cart-info { flex-grow: 1; }
+        .ainur-cart-title { font-size: 14px; font-weight: 600; margin-bottom: 4px;}
+        .ainur-cart-price { font-size: 14px; font-weight: bold; color: #000;}
+        .ainur-cart-controls { display: flex; align-items: center; gap: 10px; background: #F2F2F7; border-radius: 10px; padding: 4px 8px;}
+        .ainur-cart-btn { width: 24px; height: 24px; border: none; background: transparent; font-size: 18px; display: flex; justify-content: center; align-items: center; cursor: pointer;}
+        .ainur-cart-qty { font-size: 14px; font-weight: 600; width: 16px; text-align: center;}
+        .ainur-cart-footer { margin-top: auto; padding-top: 20px;}
+        .ainur-cart-total { display: flex; justify-content: space-between; font-size: 18px; font-weight: 700; margin-bottom: 15px;}
+        
+        .ainur-cart-step { display: none; flex-direction: column; height: 100%; }
+        .ainur-cart-step.active { display: flex; }
+
+        /* ФОРМЫ (В Корзине и Заявке) */
+        .ainur-lead-title { font-size: 22px; font-weight: 600; color: #000; margin-bottom: 8px; text-align: center;}
+        .ainur-lead-desc { font-size: 14px; color: #8E8E93; text-align: center; margin-bottom: 25px; padding: 0 10px; line-height: 1.3;}
+        
+        .ainur-form-container { display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: 0; }
+        .ainur-lead-input { width: 100%; background: #F2F2F7; border: 1px solid transparent; padding: 14px 16px; border-radius: 14px; margin-bottom: 12px; font-size: 16px; outline: none; transition: border 0.2s; box-sizing: border-box; font-family: inherit;}
+        .ainur-lead-input:focus { border-color: var(--ainur-primary); }
+        .ainur-main-btn { width: 100%; background: var(--ainur-primary); color: #000; font-weight: 600; font-size: 16px; border: none; padding: 15px; border-radius: 14px; cursor: pointer; transition: transform 0.2s; font-family: inherit; box-sizing: border-box;}
+        .ainur-main-btn:active { transform: scale(0.96); }
+
+        .ainur-success-screen { display: none; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding-bottom: 40px;}
+        .ainur-success-circle { width: 80px; height: 80px; background: #34C759; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; transform: scale(0); animation: ainurPopIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .ainur-success-circle svg { width: 40px; height: 40px; stroke: white; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; fill: none; stroke-dasharray: 100; stroke-dashoffset: 100; animation: ainurDrawCheck 0.4s 0.3s ease-out forwards; }
+        .ainur-success-text { font-size: 20px; font-weight: 600; color: #000; opacity: 0; animation: ainurFadeIn 0.4s 0.5s ease-out forwards; }
+
+        @keyframes ainurPopIn { to { transform: scale(1); } }
+        @keyframes ainurDrawCheck { to { stroke-dashoffset: 0; } }
+        @keyframes ainurFadeIn { to { opacity: 1; } }
+
+        /* КНОПКИ ПАНЕЛИ ВВОДА */
+        .ainur-menu-btn, .ainur-send-btn { width: 50px; height: 50px; border-radius: 25px; cursor: pointer; display: flex; justify-content: center; align-items: center; flex-shrink: 0; padding: 0; transition: transform 0.2s; }
         .ainur-menu-btn { background: #000000; border: none; position: relative;} 
         .ainur-send-btn { background: var(--ainur-primary); border: none; }
         .ainur-menu-btn:active, .ainur-send-btn:active { transform: scale(0.95); }
+        .ainur-menu-icon-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; transition: opacity 0.2s ease; }
         
-        .ainur-menu-icon-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; transition: transform 0.4s ease, opacity 0.4s ease; }
-        #ainur-icon-burger { opacity: 1; transform: rotate(0deg); }
-        #ainur-icon-cross { opacity: 0; transform: rotate(-90deg); pointer-events: none;}
+        #ainur-icon-burger { opacity: 1; transform: rotate(0deg); transition: transform 0.4s ease, opacity 0.4s ease; }
+        #ainur-icon-cross { opacity: 0; transform: rotate(-90deg); pointer-events: none; transition: transform 0.4s ease, opacity 0.4s ease;}
         .ainur-menu-btn.menu-open #ainur-icon-burger { opacity: 0 !important; transform: rotate(90deg); pointer-events: none;}
         .ainur-menu-btn.menu-open #ainur-icon-cross { opacity: 1 !important; transform: rotate(0deg); }
 
@@ -158,48 +256,61 @@
         @keyframes ainurBlink { 50% { opacity: 0; } }
         .ainur-real-input { display: none; width: 100%; height: 100%; border: none; background: transparent; font-size: 14px; outline: none; color: #333; font-family: inherit;}
 
-        /* --- FULLSCREEN STORY OVERLAY (9:16) --- */
+        /* --- FULLSCREEN STORY (АНИМАЦИЯ ИНСТАГРАМ) --- */
         #ainur-fullscreen-story {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
-            background: rgba(0,0,0,0.38); z-index: 1000000; display: none; flex-direction: column; opacity: 0; transition: opacity 0.3s;
+            background: #000; z-index: 1000000; display: none; flex-direction: column; opacity: 0;
             justify-content: center; align-items: center; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
         }
-        #ainur-fullscreen-story.active { display: flex; opacity: 1; }
+        #ainur-fullscreen-story.active { display: flex; animation: storyInstaOpen 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        #ainur-fullscreen-story.closing { display: flex; animation: storyInstaClose 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         
-        .fs-story-wrapper { position: relative; width: 100%; max-width: calc(100vh * (9/16)); height: 100%; background: #111; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 8px rgba(0,0,0,0.5); }
-        .fs-story-progress-container { width: 100%; padding: 15px 10px 5px 10px; box-sizing: border-box; display: flex; gap: 5px; position: absolute; top: 0; z-index: 100001;}
+        @keyframes storyInstaOpen { 
+            0% { opacity: 0; transform: scale(0.1) translate(calc(var(--origin-x) * 10), calc(var(--origin-y) * 10)); border-radius: 50%;} 
+            100% { opacity: 1; transform: scale(1) translate(0, 0); border-radius: 0;} 
+        }
+        @keyframes storyInstaClose {
+            0% { opacity: 1; transform: scale(1) translate(0, 0); }
+            100% { opacity: 0; transform: scale(0.1) translate(calc(var(--origin-x) * 10), calc(var(--origin-y) * 10)); }
+        }
+        
+        .fs-story-wrapper { position: relative; width: 100%; max-width: calc(100vh * (9/16)); height: 100%; background: #111; display: flex; flex-direction: column; overflow: hidden;}
+        .fs-story-progress-container { width: 100%; padding: 15px 10px 5px 10px; box-sizing: border-box; display: flex; gap: 5px; position: absolute; top: 0; z-index: 100003;}
         .fs-story-bar { flex-grow: 1; height: 2px; background: rgba(255,255,255,0.3); border-radius: 2px; overflow: hidden; }
         .fs-story-fill { height: 100%; width: 0%; background: #fff; }
-        .fs-story-header { position: absolute; top: 25px; left: 0; width: 100%; padding: 0 15px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; z-index: 100001;}
+        .fs-story-header { position: absolute; top: 25px; left: 0; width: 100%; padding: 0 15px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; z-index: 100003;}
         .fs-story-author { color: #fff; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 10px;}
-        .fs-story-author-avatar { width: 32px; height: 32px; border-radius: 50%; background: #fff; }
+        .fs-story-author-avatar { width: 32px; height: 32px; border-radius: 50%; background: #fff; object-fit: cover;}
         .fs-story-content-area { position: relative; flex-grow: 1; width: 100%; height: 100%; background: linear-gradient(45deg, #1C1C1E, #3A3A3C); display: flex; justify-content: center; align-items: center; color: white; font-size: 24px; font-weight: bold;}
-        .fs-tap-zone { position: absolute; top: 0; height: 100%; z-index: 100002; }
-        .fs-tap-left { left: 0; width: 30%; }
-        .fs-tap-center { left: 30%; width: 40%; }
-        .fs-tap-right { right: 0; width: 30%; }
+        
+        .fs-tap-zone { position: absolute; top: 80px; height: calc(100% - 160px); z-index: 100002; display: flex; align-items: center; }
+        .fs-tap-left { left: 0; width: 35%; justify-content: flex-start; padding-left: 10px; }
+        .fs-tap-right { right: 0; width: 35%; justify-content: flex-end; padding-right: 10px; }
+        .fs-nav-arrow { width: 30px; height: 30px; background: rgba(0,0,0,0.2); border-radius: 50%; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); opacity: 0.6; pointer-events: none;}
+        
+        .fs-story-cta-container { position: absolute; bottom: 40px; left: 0; width: 100%; display: flex; justify-content: center; z-index: 100005; padding: 0 20px;}
     </style>
 </head>
 <body>
 
 <div id="ainur-fullscreen-story">
     <div class="fs-story-wrapper" id="fs-swipe-zone">
-        <div class="fs-story-progress-container">
-            <div class="fs-story-bar"><div class="fs-story-fill" id="fs-fill-0"></div></div>
-            <div class="fs-story-bar"><div class="fs-story-fill" id="fs-fill-1"></div></div>
-            <div class="fs-story-bar"><div class="fs-story-fill" id="fs-fill-2"></div></div>
-        </div>
+        <div class="fs-story-progress-container" id="fs-progress-bars"></div>
         <div class="fs-story-header">
-            <div class="fs-story-author"><div class="fs-story-author-avatar"></div> AI NUR Platform</div>
+            <div class="fs-story-author"><img src="https://via.placeholder.com/32" class="fs-story-author-avatar" alt=""/> AI NUR Platform</div>
             <button class="ainur-nav-btn" style="background: rgba(255,255,255,0.2);" onclick="ainurCloseFullscreenStory()">
-                <svg class="ainur-nav-icon" style="stroke: white;" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <svg class="ainur-nav-icon" style="stroke: white;" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
             </button>
         </div>
-        <div class="fs-story-content-area">
-            <div id="fs-story-media">Стори 1</div>
-            <div class="fs-tap-zone fs-tap-left" onclick="ainurPrevStory()"></div>
-            <div class="fs-tap-zone fs-tap-center" onmousedown="ainurPauseStory()" onmouseup="ainurResumeStory()" ontouchstart="ainurPauseStory()" ontouchend="ainurResumeStory()"></div>
-            <div class="fs-tap-zone fs-tap-right" onclick="ainurNextStory()"></div>
+        <div class="fs-story-content-area" id="fs-story-media"></div>
+        <div class="fs-tap-zone fs-tap-left" onmousedown="startStoryPress(event)" onmouseup="endStoryPress(event, 'prev')" ontouchstart="startStoryPress(event)" ontouchend="endStoryPress(event, 'prev')">
+            <div class="fs-nav-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6" /></svg></div>
+        </div>
+        <div class="fs-tap-zone fs-tap-right" onmousedown="startStoryPress(event)" onmouseup="endStoryPress(event, 'next')" ontouchstart="startStoryPress(event)" ontouchend="endStoryPress(event, 'next')">
+            <div class="fs-nav-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6" /></svg></div>
+        </div>
+        <div class="fs-story-cta-container">
+            <button class="ainur-main-btn" onclick="ainurOpenLeadFromStory()">Оставить заявку</button>
         </div>
     </div>
 </div>
@@ -207,215 +318,689 @@
 <div id="ainur-widget">
     <div id="ainur-popup-area">
         
-        <button class="ainur-nav-btn" id="ainur-universal-close" onclick="ainurCloseAll()">
-            <svg class="ainur-nav-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-
         <div id="ainur-menu-window">
-            <div class="ainur-menu-item" onclick="ainurOpenProfileFromMenu()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8BFDA8" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg>
-                <span class="ainur-menu-text">Профиль</span>
+            <div class="ainur-menu-item" onclick="ainurOpenView('profile')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8BFDA8" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="7" r="4" /><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /></svg>
+                <span class="ainur-menu-text">Профиль и Каталог</span>
             </div>
-            <div class="ainur-menu-item">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8BFDA8" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-                <span class="ainur-menu-text">Каталог</span>
+            <div class="ainur-menu-item" onclick="ainurOpenView('cart')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8BFDA8" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" /><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" /></svg>
+                <span class="ainur-menu-text">Корзина</span>
+                <span class="ainur-menu-badge" id="ainur-menu-cart-badge">0</span>
             </div>
-            <div class="ainur-menu-item">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8BFDA8" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <div class="ainur-menu-item" onclick="ainurOpenLeadForm()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8BFDA8" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" /></svg>
                 <span class="ainur-menu-text">Оставить заявку</span>
             </div>
             <div class="ainur-menu-item">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8BFDA8" stroke-width="2" stroke-linecap="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8BFDA8" stroke-width="2" stroke-linecap="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg>
                 <span class="ainur-menu-text">Контакты</span>
-            </div>
-            <div class="ainur-menu-item">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 24L1.687 17.837C0.645998 16.033 0.0989998 13.988 0.0999998 11.891C0.103 5.335 5.43799 0 11.993 0C15.174 0.001 18.16 1.24 20.406 3.488C22.6509 5.736 23.8869 8.724 23.8859 11.902C23.8829 18.459 18.548 23.794 11.993 23.794C10.003 23.793 8.04198 23.294 6.30499 22.346L0 24ZM6.59698 20.193C8.27298 21.188 9.87298 21.784 11.989 21.785C17.437 21.785 21.875 17.351 21.878 11.9C21.88 6.438 17.463 2.01 11.997 2.008C6.54498 2.008 2.11 6.442 2.108 11.892C2.107 14.117 2.75899 15.783 3.85399 17.526L2.85499 21.174L6.59698 20.193ZM17.984 14.729C17.91 14.605 17.712 14.531 17.414 14.382C17.117 14.233 15.656 13.514 15.383 13.415C15.111 13.316 14.913 13.266 14.714 13.564C14.516 13.861 13.946 14.531 13.773 14.729C13.6 14.927 13.426 14.952 13.129 14.803C12.832 14.654 11.874 14.341 10.739 13.328C9.85598 12.54 9.25898 11.567 9.08598 11.269C8.91298 10.972 9.06798 10.811 9.21598 10.663C9.34998 10.53 9.51298 10.316 9.66198 10.142C9.81298 9.97 9.86198 9.846 9.96198 9.647C10.061 9.449 10.012 9.275 9.93698 9.126C9.86198 8.978 9.26798 7.515 9.02098 6.92C8.77898 6.341 8.53398 6.419 8.35198 6.41L7.78198 6.4C7.58398 6.4 7.26198 6.474 6.98998 6.772C6.71798 7.07 5.94999 7.788 5.94999 9.251C5.94999 10.714 7.01498 12.127 7.16298 12.325C7.31198 12.523 9.25798 15.525 12.239 16.812C12.948 17.118 13.502 17.301 13.933 17.438C14.645 17.664 15.293 17.632 15.805 17.556C16.376 17.471 17.563 16.837 17.811 16.143C18.059 15.448 18.059 14.853 17.984 14.729Z" fill="#8BFDA8"/></svg>
-                <span class="ainur-menu-text">Написать в Whatsapp</span>
             </div>
         </div>
 
         <div id="ainur-chat-window">
             <div class="ainur-header">
                 <div class="ainur-chat-header-content">
-                    <div class="ainur-story-ring-small" onclick="ainurOpenFullscreenStory()"><div class="ainur-avatar-small"></div></div>
-                    <div class="ainur-brand-info" onclick="ainurOpenProfile()">
-                        <div class="ainur-brand-name">Название компании</div>
-                        <div class="ainur-brand-profile">Профиль</div>
+                    <div class="ainur-story-ring-wrapper" onclick="ainurOpenFullscreenStory(event)">
+                        <svg class="ainur-story-svg" viewBox="0 0 60 60">
+                            <defs>
+                                <linearGradient id="ainur-grad-small" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#8BFDA8" /><stop offset="100%" stop-color="#00B0F2" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="30" cy="30" r="26" stroke="#E5E5EA" stroke-width="6" fill="none" />
+                            <circle id="ainur-svg-ring-path-small" cx="30" cy="30" r="26" stroke="url(#ainur-grad-small)" stroke-width="6" fill="none" stroke-linecap="round" />
+                        </svg>
+                        <img src="https://via.placeholder.com/60" class="ainur-avatar-small" alt=""/>
                     </div>
+                    <div class="ainur-brand-info" onclick="ainurOpenView('profile')">
+                        <div class="ainur-brand-name">Название компании</div>
+                        <div class="ainur-brand-profile">Профиль, каталог, stories</div>
+                    </div>
+                    <button class="ainur-nav-btn" onclick="ainurCloseAll()"><svg class="ainur-nav-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>
                 </div>
             </div>
             <div class="ainur-chat-body" id="ainur-chat-messages"></div>
 
-            <div id="ainur-profile-window">
-                <div class="ainur-header">
-                    <button class="ainur-nav-btn" onclick="ainurCloseProfile()"><svg class="ainur-nav-icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
-                    <div style="flex-grow: 1;"></div>
+            <div id="ainur-profile-view" class="ainur-sub-window">
+                <div class="ainur-window-header">
+                    <button class="ainur-nav-btn" onclick="ainurCloseView('profile')"><svg class="ainur-nav-icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg></button>
+                    <div class="ainur-window-title">Профиль</div>
+                    <button class="ainur-nav-btn" onclick="ainurCloseAll()"><svg class="ainur-nav-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>
                 </div>
                 <div class="ainur-profile-content">
-                    <div class="ainur-story-ring-large" onclick="ainurOpenFullscreenStory()"><div class="ainur-avatar-large"></div></div>
-                    <div class="ainur-profile-title">Название компании</div>
-                    <div class="ainur-profile-socials">
-                        <div class="ainur-social-icon ainur-bg-instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.88z"/></svg></div>
-                        <div class="ainur-social-icon ainur-bg-whatsapp"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-1.555-.765-3.008-1.755-4.135-3.064-.297-.348-.049-.526.118-.7.14-.148.297-.348.446-.546.148-.173.198-.297.297-.495.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.015-1.04 2.476s1.065 2.872 1.213 3.07c.149.198 2.095 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
-                            <div class="ainur-social-icon ainur-bg-telegram"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12zm5.894-16.481l-1.956 9.208c-.147.653-.531.812-1.074.507l-2.969-2.188-1.433 1.38c-.158.158-.291.291-.598.291l.213-3.03 5.513-4.981c.24-.214-.052-.332-.372-.119l-6.815 4.29-2.936-.917c-.638-.2-.65-.638.133-.945l11.482-4.426c.532-.197 1.002.12.812.93z"/></svg></div>
-                        </div>
-                        <div class="ainur-profile-cards">
-                            <div class="ainur-service-card"><div class="ainur-service-info"><div class="ainur-service-title">Анимация Сайта</div><div class="ainur-service-desc">Сложная 3D анимация и интерактив.</div></div><div class="ainur-service-img"></div></div>
-                            <div class="ainur-service-card"><div class="ainur-service-info"><div class="ainur-service-title">AI Чат Бот</div><div class="ainur-service-desc">Интеграция искусственного интеллекта.</div></div><div class="ainur-service-img"></div></div>
-                        </div>
+                    <div class="ainur-story-ring-wrapper-large" onclick="ainurOpenFullscreenStory(event)">
+                        <svg class="ainur-story-svg" viewBox="0 0 120 120">
+                            <defs>
+                                <linearGradient id="ainur-grad-large" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#8BFDA8" /><stop offset="100%" stop-color="#00B0F2" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="60" cy="60" r="54" stroke="#E5E5EA" stroke-width="8" fill="none" />
+                            <circle id="ainur-svg-ring-path-large" cx="60" cy="60" r="54" stroke="url(#ainur-grad-large)" stroke-width="8" fill="none" stroke-linecap="round" />
+                        </svg>
+                        <img src="https://via.placeholder.com/120" class="ainur-avatar-large" alt=""/>
                     </div>
+                    <div class="ainur-profile-title ainur-brand-name">Название компании</div>
+                    <div class="ainur-profile-socials">
+                        <div class="ainur-social-icon ainur-bg-instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.88z" /></svg></div>
+                        <div class="ainur-social-icon ainur-bg-whatsapp"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-1.555-.765-3.008-1.755-4.135-3.064-.297-.348-.049-.526.118-.7.14-.148.297-.348.446-.546.148-.173.198-.297.297-.495.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.015-1.04 2.476s1.065 2.872 1.213 3.07c.149.198 2.095 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg></div>
+                        <div class="ainur-social-icon ainur-bg-telegram"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12zm5.894-16.481l-1.956 9.208c-.147.653-.531.812-1.074.507l-2.969-2.188-1.433 1.38c-.158.158-.291.291-.598.291l.213-3.03 5.513-4.981c.24-.214-.052-.332-.372-.119l-6.815 4.29-2.936-.917c-.638-.2-.65-.638.133-.945l11.482-4.426c.532-.197 1.002.12.812.93z" /></svg></div>
+                    </div>
+                    <div class="ainur-catalog-list" id="ainur-catalog-render"></div>
                 </div>
             </div>
-        </div>
 
-        <div id="ainur-ai-glow"></div>
+            <div id="ainur-detail-view" class="ainur-sub-window">
+                <div class="ainur-window-header">
+                    <button class="ainur-nav-btn" onclick="ainurCloseView('detail')"><svg class="ainur-nav-icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg></button>
+                    <div class="ainur-window-title">Товар</div>
+                    <button class="ainur-nav-btn" onclick="ainurCloseAll()"><svg class="ainur-nav-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>
+                </div>
+                <div class="ainur-detail-body" style="padding: 20px;">
+                    <div class="ainur-gallery-wrapper">
+                        <div class="ainur-detail-gallery" id="ainur-detail-gallery">
+                            <img src="https://via.placeholder.com/400" class="ainur-detail-slide" id="ainur-detail-img" alt=""/>
+                        </div>
+                    </div>
+                    <div class="ainur-detail-title" id="ainur-detail-title">Название</div>
+                    <div class="ainur-detail-price" id="ainur-detail-price">0 ₸</div>
+                    <div class="ainur-detail-desc" id="ainur-detail-desc">Описание...</div>
+                    <button class="ainur-main-btn" onclick="addToCartFromDetail()">Оформить (В корзину)</button>
+                </div>
+            </div>
+
+            <div id="ainur-cart-view" class="ainur-sub-window">
+                <div class="ainur-window-header">
+                    <button class="ainur-nav-btn" onclick="handleCartBack()"><svg class="ainur-nav-icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg></button>
+                    <div class="ainur-window-title">Корзина</div>
+                    <button class="ainur-nav-btn" onclick="ainurCloseAll()"><svg class="ainur-nav-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>
+                </div>
+                
+                <div class="ainur-cart-body ainur-cart-step active" id="ainur-cart-step-1">
+                    <div id="ainur-cart-items-container"></div>
+                    <div class="ainur-cart-footer" id="ainur-cart-footer">
+                        <div class="ainur-cart-total"><span>Итого:</span> <span id="ainur-cart-total-price">0 ₸</span></div>
+                        <button class="ainur-main-btn" onclick="goToCartStep2()">Оформить заказ</button>
+                    </div>
+                    <div id="ainur-cart-empty" style="text-align:center; color:#888; margin-top:50px;">Корзина пуста</div>
+                </div>
+
+                <div class="ainur-cart-body ainur-cart-step" id="ainur-cart-step-2" style="justify-content:center;">
+                    <div class="ainur-lead-title">Оформить заказ</div>
+                    <div class="ainur-lead-desc" style="margin-bottom: 25px;">После оформления заказа наш менеджер свяжется с вами.</div>
+                    <div class="ainur-form-container" style="margin-top: 0;">
+                        <input type="text" id="ainur-cart-name" class="ainur-lead-input" placeholder="Ваше имя" />
+                        <input type="tel" id="ainur-cart-phone" class="ainur-lead-input" placeholder="Ваш телефон" />
+                        <button class="ainur-main-btn" onclick="submitCartOrder()">Подтвердить заказ</button>
+                    </div>
+                </div>
+
+                <div class="ainur-cart-body ainur-cart-step ainur-success-screen" id="ainur-cart-success">
+                    <div class="ainur-success-circle"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg></div>
+                    <div class="ainur-success-text">Заказ оформлен</div>
+                </div>
+            </div>
+
+            <div id="ainur-lead-view" class="ainur-sub-window">
+                <div class="ainur-window-header">
+                    <button class="ainur-nav-btn" onclick="ainurCloseView('lead')"><svg class="ainur-nav-icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg></button>
+                    <div class="ainur-window-title">Оставить заявку</div>
+                    <button class="ainur-nav-btn" onclick="ainurCloseAll()"><svg class="ainur-nav-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg></button>
+                </div>
+                
+                <div class="ainur-cart-body ainur-cart-step active" id="ainur-lead-form-content" style="justify-content:center;">
+                    <div class="ainur-lead-desc" style="margin-bottom: 25px;">Оставьте заявку и мы вам обязательно перезвоним</div>
+                    <div class="ainur-form-container" style="margin-top: 0;">
+                        <input type="text" id="ainur-lead-name" class="ainur-lead-input" placeholder="Ваше имя" />
+                        <input type="tel" id="ainur-lead-phone" class="ainur-lead-input" placeholder="Ваш телефон" />
+                        <button class="ainur-main-btn" onclick="ainurSubmitLead()">Отправить заявку</button>
+                    </div>
+                </div>
+
+                <div class="ainur-cart-body ainur-cart-step ainur-success-screen" id="ainur-lead-success">
+                    <div class="ainur-success-circle"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg></div>
+                    <div class="ainur-success-text">Заявка отправлена</div>
+                </div>
+            </div>
+
+        </div>
 
         <div id="ainur-bottom-bar" class="intro-state">
             <button class="ainur-menu-btn" id="ainur-menu-toggle">
-                <div class="ainur-menu-icon-layer" id="ainur-icon-burger">
-                    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.7762 21C13.9377 21 10.0013 17.0623 10 12.2238C10.0013 10.9974 11 10 12.2238 10C12.3497 10 12.4742 10.0106 12.5934 10.0318C12.8556 10.0755 13.1046 10.1642 13.3338 10.298C13.3669 10.3179 13.3894 10.3497 13.3947 10.3868L13.906 13.6093C13.9126 13.6477 13.9007 13.6848 13.8755 13.7126C13.5934 14.0252 13.2331 14.2503 12.8318 14.3629L12.6384 14.4172L12.7113 14.604C13.3709 16.2834 14.7139 17.6252 16.3947 18.2874L16.5815 18.3616L16.6358 18.1682C16.7483 17.7669 16.9735 17.4066 17.2861 17.1245C17.3086 17.1033 17.3391 17.0927 17.3695 17.0927C17.3762 17.0927 17.3828 17.0927 17.3907 17.094L20.6132 17.6053C20.6517 17.6119 20.6834 17.6331 20.7033 17.6662C20.8358 17.8954 20.9245 18.1457 20.9695 18.4079C20.9907 18.5245 21 18.6477 21 18.7762C21 20.0013 20.0026 20.9987 18.7762 21Z" fill="#8BFDA8"/><path d="M17.3848 22.9229C19.4238 22.9229 21.0771 24.5762 21.0771 26.6152V30.3076C21.0771 32.2829 19.5258 33.8959 17.5752 33.9951L17.3848 34H13.6924L13.502 33.9951C11.6143 33.8993 10.1007 32.3857 10.0049 30.498L10 30.3076V26.6152C10.0001 24.5761 11.6532 22.9229 13.6924 22.9229H17.3848ZM30.3086 22.9229C32.3477 22.9229 34.0009 24.5762 34.001 26.6152V30.3076C34.001 32.2829 32.4497 33.8959 30.499 33.9951L30.3086 34H26.6162L26.4258 33.9951C24.5381 33.8993 23.0246 32.3857 22.9287 30.498L22.9238 30.3076V26.6152C22.9239 24.5761 24.5771 22.9229 26.6162 22.9229H30.3086ZM13.6924 24.7695C12.6728 24.7695 11.8458 25.5957 11.8457 26.6152V30.3076C11.8457 31.3272 12.6728 32.1543 13.6924 32.1543H17.3848C18.4043 32.1542 19.2305 31.3272 19.2305 30.3076V26.6152C19.2304 25.5958 18.4042 24.7696 17.3848 24.7695H13.6924ZM26.6162 24.7695C25.5967 24.7695 24.7696 25.5957 24.7695 26.6152V30.3076C24.7695 31.3272 25.5966 32.1543 26.6162 32.1543H30.3086C31.3281 32.1542 32.1543 31.3272 32.1543 30.3076V26.6152C32.1542 25.5958 31.3281 24.7696 30.3086 24.7695H26.6162ZM30.3086 10C32.3477 10.0001 34.001 11.6532 34.001 13.6924V17.3848C34.0009 19.36 32.4496 20.9731 30.499 21.0723L30.3086 21.0771H26.6162L26.4258 21.0723C24.5382 20.9764 23.0247 19.4628 22.9287 17.5752L22.9238 17.3848V13.6924C22.9238 11.6532 24.577 10 26.6162 10H30.3086ZM26.6162 11.8457C25.5966 11.8457 24.7695 12.6728 24.7695 13.6924V17.3848C24.7696 18.4043 25.5967 19.2305 26.6162 19.2305H30.3086C31.3281 19.2304 32.1542 18.4042 32.1543 17.3848V13.6924C32.1543 12.6728 31.3281 11.8458 30.3086 11.8457H26.6162Z" fill="#8BFDA8"/></svg>
-                </div>
+                <div class="ainur-menu-icon-layer" id="ainur-icon-burger"></div>
                 <div class="ainur-menu-icon-layer" id="ainur-icon-cross">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8BFDA8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8BFDA8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
                 </div>
             </button>
             <div class="ainur-input-wrapper">
                 <div class="ainur-fake-input" id="ainur-trigger"><span id="ainur-typewriter-text"></span><span class="ainur-typing-cursor"></span></div>
-                <input type="text" class="ainur-real-input" id="ainur-real-input" placeholder="Напиши вопрос я отвечу">
+                <input type="text" class="ainur-real-input" id="ainur-real-input" placeholder="Напиши вопрос я отвечу" />
             </div>
             <button class="ainur-send-btn" id="ainur-real-send">
-                <svg viewBox="0 0 24 24" fill="#333" width="24" height="24"><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/></svg>
+                <svg viewBox="0 0 24 24" fill="#333" width="24" height="24"><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" /></svg>
             </button>
         </div>
 
     </div>
 
     <script>
+        // === НАСТРОЙКИ СЕРВЕРА (API) ===
+        // ВАЖНО: Когда зальешь бэкенд на Vercel, поменяй 'http://localhost:3000/api' на 'https://твой-домен.vercel.app/api'
+        const API_BASE = 'http://localhost:3000/api'; 
+        const MY_PROJECT_ID = '8c49172a-333f-4708-ad0c-f08d70045891'; // Твой ID из Supabase
+
+        // === ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ===
         let ainurStoryTimer;
         let ainurIsChatOpen = false;
         let ainurIsMenuOpen = false;
+        let TOTAL_STORIES = 0;
+        
+        let ainurProducts = [];
+        let ainurStories = [];
+        let projectData = null;
 
-        function ainurCloseAll() {
-            document.getElementById('ainur-chat-window').style.display = 'none';
-            document.getElementById('ainur-menu-window').style.display = 'none';
-            document.getElementById('ainur-profile-window').classList.remove('active');
-            document.getElementById('ainur-menu-toggle').classList.remove('menu-open');
-            document.getElementById('ainur-universal-close').style.display = 'none';
-            ainurIsChatOpen = false; ainurIsMenuOpen = false;
+        let ainurCart = [];
+        let currentDetailProduct = null;
+        let isCartStep2 = false;
+
+        // Генерация или получение ID сессии для истории диалогов
+        function getOrCreateConversationId() {
+            let id = localStorage.getItem('ainur_conv_id');
+            if (!id) {
+                id = 'conv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('ainur_conv_id', id);
+            }
+            return id;
+        }
+        const CONVERSATION_ID = getOrCreateConversationId();
+
+        // === ИНИЦИАЛИЗАЦИЯ И СВЯЗЬ С БАЗОЙ ===
+        async function initWidget() {
+            try {
+                const res = await fetch(`${API_BASE}/widget-init`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ projectId: MY_PROJECT_ID })
+                });
+                const data = await res.json();
+                
+                if (data.project) {
+                    projectData = data.project;
+                    ainurProducts = data.products || [];
+                    ainurStories = data.stories || [];
+
+                    // Применяем цвета и тексты
+                    if (projectData.theme_color) {
+                        document.documentElement.style.setProperty('--ainur-primary', projectData.theme_color);
+                        // Обновляем цвет иконок в меню под тему
+                        document.querySelectorAll('.ainur-menu-item svg').forEach(svg => svg.setAttribute('stroke', projectData.theme_color));
+                        document.getElementById('ainur-icon-cross').querySelector('svg').setAttribute('stroke', projectData.theme_color);
+                    }
+                    if (projectData.company_name) {
+                        document.querySelectorAll('.ainur-brand-name').forEach(el => el.innerText = projectData.company_name);
+                    }
+                    if (projectData.logo_url) {
+                        document.querySelectorAll('.ainur-avatar-small, .ainur-avatar-large, .fs-story-author-avatar').forEach(el => el.src = projectData.logo_url);
+                    }
+
+                    // Социальные сети
+                    if (projectData.social_links) {
+                        const ig = document.querySelector('.ainur-bg-instagram');
+                        const wa = document.querySelector('.ainur-bg-whatsapp');
+                        const tg = document.querySelector('.ainur-bg-telegram');
+                        if(projectData.social_links.instagram) ig.onclick = () => window.open(projectData.social_links.instagram, '_blank'); else ig.style.display = 'none';
+                        if(projectData.social_links.whatsapp) wa.onclick = () => window.open(projectData.social_links.whatsapp, '_blank'); else wa.style.display = 'none';
+                        if(projectData.social_links.telegram) tg.onclick = () => window.open(projectData.social_links.telegram, '_blank'); else tg.style.display = 'none';
+                    }
+
+                    TOTAL_STORIES = ainurStories.length;
+                    setupRingSVG();
+                    renderCatalog();
+                }
+            } catch (e) {
+                console.error('Ошибка инициализации виджета:', e);
+                renderCatalog(); // Рендерим пустой, если ошибка
+            }
         }
 
-        // Клик вне виджета (Click Outside)
-        document.addEventListener('click', (e) => {
-            const widget = document.getElementById('ainur-widget');
-            const fsStory = document.getElementById('ainur-fullscreen-story');
-            if (widget && fsStory) {
-                // Если кликнули НЕ по виджету и НЕ по сторис
-                if (!widget.contains(e.target) && !fsStory.contains(e.target)) {
-                    if (ainurIsChatOpen || ainurIsMenuOpen || fsStory.classList.contains('active')) {
-                        ainurCloseAll();
-                        ainurCloseFullscreenStory();
-                    }
-                }
-            }
-        });
-
-        function ainurOpenProfile() { document.getElementById('ainur-profile-window').classList.add('active'); }
-        function ainurCloseProfile() { document.getElementById('ainur-profile-window').classList.remove('active'); }
-
-        function ainurOpenProfileFromMenu() {
+        function ainurOpenView(viewId) {
             document.getElementById('ainur-menu-window').style.display = 'none'; ainurIsMenuOpen = false;
+            document.getElementById('ainur-menu-toggle').classList.remove('menu-open');
             document.getElementById('ainur-trigger').style.display = 'none';
             document.getElementById('ainur-real-input').style.display = 'block';
-            document.getElementById('ainur-chat-window').style.display = 'flex'; ainurIsChatOpen = true;
-            document.getElementById('ainur-universal-close').style.display = 'flex';
+            
+            if (!ainurIsChatOpen) {
+                document.getElementById('ainur-chat-window').style.display = 'flex'; ainurIsChatOpen = true;
+            }
+            if (viewId) { document.getElementById('ainur-' + viewId + '-view').classList.add('active'); }
+            
+            if (viewId === 'profile') { renderCatalog(); playRingLoadingAnimation(); }
+            if (viewId === 'cart') renderCart();
+        }
+
+        function ainurCloseView(viewId) { document.getElementById('ainur-' + viewId + '-view').classList.remove('active'); }
+
+        function ainurCloseAll() {
+            document.querySelectorAll('.ainur-sub-window').forEach(el => el.classList.remove('active'));
+            document.getElementById('ainur-chat-window').style.display = 'none';
+            document.getElementById('ainur-menu-window').style.display = 'none';
             document.getElementById('ainur-menu-toggle').classList.remove('menu-open');
-            ainurOpenProfile();
+            ainurIsChatOpen = false; ainurIsMenuOpen = false;
+            resetRingAnimation();
+            document.getElementById('ainur-real-input').blur();
         }
 
-        // STORIES
-        let ainurCurrentStory = 0; let ainurStoryProgress = 0; let ainurStoryInterval; let ainurIsPaused = false;
-        const ainurTotalStories = 3; const ainurStoryDuration = 4000; const ainurTickRate = 50;
+        function setupRingSVG() {
+            if (TOTAL_STORIES === 0) {
+                document.querySelectorAll('.ainur-story-svg').forEach(el => el.style.display = 'none');
+                return;
+            }
+            document.querySelectorAll('.ainur-story-svg').forEach(el => el.style.display = 'block');
+            const gapSmall = 10; const cSmall = 2 * Math.PI * 26; 
+            const segSmall = (cSmall - (TOTAL_STORIES * gapSmall)) / TOTAL_STORIES;
+            const pathSmall = document.getElementById('ainur-svg-ring-path-small');
+            if (pathSmall) { pathSmall.style.strokeDasharray = `${segSmall} ${gapSmall}`; pathSmall.style.strokeDashoffset = cSmall; }
 
-        function ainurOpenFullscreenStory() { document.getElementById('ainur-fullscreen-story').classList.add('active'); ainurCurrentStory = 0; ainurStartStory(); }
-        function ainurCloseFullscreenStory() { document.getElementById('ainur-fullscreen-story').classList.remove('active'); clearInterval(ainurStoryInterval); ainurResetBars(); }
-        function ainurResetBars() { for(let i=0; i<ainurTotalStories; i++) { document.getElementById(`fs-fill-${i}`).style.width = (i < ainurCurrentStory ? '100%' : '0%'); } }
+            const gapLarge = 14; const cLarge = 2 * Math.PI * 54; 
+            const segLarge = (cLarge - (TOTAL_STORIES * gapLarge)) / TOTAL_STORIES;
+            const pathLarge = document.getElementById('ainur-svg-ring-path-large');
+            if (pathLarge) { pathLarge.style.strokeDasharray = `${segLarge} ${gapLarge}`; pathLarge.style.strokeDashoffset = cLarge; }
+        }
         
-        function ainurStartStory() {
-            clearInterval(ainurStoryInterval); ainurStoryProgress = 0; ainurResetBars();
-            document.getElementById('fs-story-media').innerText = `Стори ${ainurCurrentStory + 1}`;
-            ainurStoryInterval = setInterval(() => {
-                if(ainurIsPaused) return;
-                ainurStoryProgress += ainurTickRate;
-                let percent = (ainurStoryProgress / ainurStoryDuration) * 100;
-                document.getElementById(`fs-fill-${ainurCurrentStory}`).style.width = `${percent}%`;
-                if (ainurStoryProgress >= ainurStoryDuration) {
-                    ainurCurrentStory++;
-                    if (ainurCurrentStory >= ainurTotalStories) { ainurCloseFullscreenStory(); } else { ainurStartStory(); }
-                }
-            }, ainurTickRate);
+        function playRingLoadingAnimation() {
+            if (TOTAL_STORIES === 0) return;
+            const pathSmall = document.getElementById('ainur-svg-ring-path-small');
+            const pathLarge = document.getElementById('ainur-svg-ring-path-large');
+            if (pathSmall) { pathSmall.style.transition = 'none'; pathSmall.style.strokeDashoffset = 2 * Math.PI * 26; }
+            if (pathLarge) { pathLarge.style.transition = 'none'; pathLarge.style.strokeDashoffset = 2 * Math.PI * 54; }
+            setTimeout(() => {
+                if (pathSmall) { pathSmall.style.transition = 'stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)'; pathSmall.style.strokeDashoffset = 0; }
+                if (pathLarge) { pathLarge.style.transition = 'stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)'; pathLarge.style.strokeDashoffset = 0; }
+            }, 50);
         }
-        function ainurPauseStory() { ainurIsPaused = true; }
-        function ainurResumeStory() { ainurIsPaused = false; }
-        function ainurPrevStory() { if(ainurCurrentStory > 0) { ainurCurrentStory--; ainurStartStory(); } else { ainurStartStory(); } }
-        function ainurNextStory() { if(ainurCurrentStory < ainurTotalStories - 1) { ainurCurrentStory++; ainurStartStory(); } else { ainurCloseFullscreenStory(); } }
 
-        let ainurTouchStartY = 0; const ainurSwipeZone = document.getElementById('fs-swipe-zone');
-        ainurSwipeZone.addEventListener('touchstart', e => { ainurTouchStartY = e.changedTouches[0].screenY; }, {passive: true});
-        ainurSwipeZone.addEventListener('touchend', e => { if (e.changedTouches[0].screenY - ainurTouchStartY > 60) { ainurCloseFullscreenStory(); } }, {passive: true});
+        function resetRingAnimation() { 
+            const pathSmall = document.getElementById('ainur-svg-ring-path-small');
+            if (pathSmall) pathSmall.style.strokeDashoffset = 2 * Math.PI * 26;
+            const pathLarge = document.getElementById('ainur-svg-ring-path-large');
+            if (pathLarge) pathLarge.style.strokeDashoffset = 2 * Math.PI * 54;
+        }
 
-        // INIT
+        function renderCatalog() {
+            const container = document.getElementById('ainur-catalog-render');
+            if (ainurProducts.length === 0) {
+                container.innerHTML = '<div style="text-align:center; color:#888; padding: 20px;">Каталог пуст</div>';
+                return;
+            }
+            container.innerHTML = ainurProducts.map(p => `
+                <div class="ainur-product-card">
+                    <div class="ainur-product-top" onclick="openProductDetail('${p.id}')">
+                        <img class="ainur-product-img" src="${p.image_url || 'https://via.placeholder.com/80'}" alt=""/>
+                        <div class="ainur-product-info">
+                            <div class="ainur-product-title">${p.name}</div>
+                            <div class="ainur-product-desc">${p.description || ''}</div>
+                            <div class="ainur-product-price">${Number(p.price).toLocaleString('ru-RU')} ₸</div>
+                        </div>
+                    </div>
+                    <div class="ainur-product-actions">
+                        <button class="ainur-btn-sec" onclick="openProductDetail('${p.id}')">Подробнее</button>
+                        <button class="ainur-btn-prim" onclick="addToCart('${p.id}')">В корзину</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.openProductDetail = function(id) {
+            currentDetailProduct = ainurProducts.find(p => p.id === id);
+            if(!currentDetailProduct) return;
+            document.getElementById('ainur-detail-title').innerText = currentDetailProduct.name;
+            document.getElementById('ainur-detail-price').innerText = Number(currentDetailProduct.price).toLocaleString('ru-RU') + ' ₸';
+            document.getElementById('ainur-detail-desc').innerText = currentDetailProduct.description || '';
+            document.getElementById('ainur-detail-img').src = currentDetailProduct.image_url || 'https://via.placeholder.com/400';
+            ainurOpenView('detail');
+        };
+
+        window.scrollGallery = function(dir) {
+            const gallery = document.getElementById('ainur-detail-gallery');
+            gallery.scrollBy({ left: dir * gallery.clientWidth, behavior: 'smooth' });
+        };
+
+        window.addToCartFromDetail = function() {
+            if(currentDetailProduct) addToCart(currentDetailProduct.id);
+        };
+
+        window.addToCart = function(id) {
+            const product = ainurProducts.find(p => p.id === id);
+            const existing = ainurCart.find(i => i.id === id);
+            if(existing) existing.qty++; else ainurCart.push({...product, qty: 1});
+            
+            const badge = document.getElementById('ainur-menu-cart-badge');
+            badge.innerText = ainurCart.length; badge.style.display = ainurCart.length > 0 ? 'inline-block' : 'none';
+            ainurOpenView('cart');
+        };
+
+        function renderCart() {
+            const container = document.getElementById('ainur-cart-items-container');
+            const emptyMsg = document.getElementById('ainur-cart-empty');
+            const footer = document.getElementById('ainur-cart-footer');
+            
+            isCartStep2 = false;
+            document.getElementById('ainur-cart-step-1').classList.add('active');
+            document.getElementById('ainur-cart-step-2').classList.remove('active');
+            document.getElementById('ainur-cart-success').classList.remove('active');
+
+            if(ainurCart.length === 0) {
+                container.innerHTML = ''; emptyMsg.style.display = 'block'; footer.style.display = 'none'; return;
+            }
+            emptyMsg.style.display = 'none'; footer.style.display = 'block';
+            
+            let total = 0;
+            container.innerHTML = ainurCart.map(item => {
+                total += item.price * item.qty;
+                return `
+                <div class="ainur-cart-item">
+                    <img src="${item.image_url || 'https://via.placeholder.com/60'}" class="ainur-cart-img" alt=""/>
+                    <div class="ainur-cart-info">
+                        <div class="ainur-cart-title">${item.name}</div>
+                        <div class="ainur-cart-price">${(item.price * item.qty).toLocaleString('ru-RU')} ₸</div>
+                    </div>
+                    <div class="ainur-cart-controls">
+                        <button class="ainur-cart-btn" onclick="changeQty('${item.id}', -1)">-</button>
+                        <div class="ainur-cart-qty">${item.qty}</div>
+                        <button class="ainur-cart-btn" onclick="changeQty('${item.id}', 1)">+</button>
+                    </div>
+                </div>`;
+            }).join('');
+            document.getElementById('ainur-cart-total-price').innerText = total.toLocaleString('ru-RU') + ' ₸';
+        }
+
+        window.changeQty = function(id, delta) {
+            const item = ainurCart.find(i => i.id === id);
+            if(!item) return;
+            item.qty += delta;
+            if(item.qty <= 0) ainurCart = ainurCart.filter(i => i.id !== id);
+            
+            const badge = document.getElementById('ainur-menu-cart-badge');
+            badge.innerText = ainurCart.length; badge.style.display = ainurCart.length > 0 ? 'inline-block' : 'none';
+            renderCart();
+        };
+
+        window.goToCartStep2 = function() {
+            isCartStep2 = true;
+            document.getElementById('ainur-cart-step-1').classList.remove('active');
+            document.getElementById('ainur-cart-step-2').classList.add('active');
+        };
+
+        window.handleCartBack = function() {
+            if(isCartStep2) { renderCart(); } else { ainurCloseView('cart'); }
+        };
+
+        function addAiCartTicketMessage(name, phone, cartItems, total) {
+            const chatBody = document.getElementById('ainur-chat-messages');
+            const wrapper = document.createElement('div'); wrapper.className = 'ainur-message-wrapper ai';
+            const msg = document.createElement('div'); msg.className = 'ainur-message ai';
+
+            const ticket = document.createElement('div'); ticket.className = 'ainur-lead-ticket';
+            let itemsHtml = cartItems.map(item => `<div style="font-size: 13px; color: #666; margin-bottom: 2px;">• ${item.name} (x${item.qty})</div>`).join('');
+            
+            ticket.innerHTML = `
+                <div class="ainur-lead-ticket-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg> НОВЫЙ ЗАКАЗ</div>
+                <div class="ainur-lead-ticket-row"><span class="ainur-lead-ticket-label">Имя:</span><span class="ainur-lead-ticket-val">${name}</span></div>
+                <div class="ainur-lead-ticket-row"><span class="ainur-lead-ticket-label">Телефон:</span><span class="ainur-lead-ticket-val">${phone}</span></div>
+                <div style="margin-top: 8px; border-top: 1px dashed #eee; padding-top: 8px;">
+                    <div style="font-size: 12px; font-weight: 600; margin-bottom: 4px;">Товары:</div>
+                    ${itemsHtml}
+                </div>
+                <div class="ainur-lead-ticket-row" style="margin-top: 8px; border-top: 1px dashed #eee; padding-top: 8px;">
+                    <span class="ainur-lead-ticket-label" style="font-weight: bold; color: #000;">Сумма:</span>
+                    <span class="ainur-lead-ticket-val" style="font-weight: bold; color: #000;">${total.toLocaleString('ru-RU')} ₸</span>
+                </div>
+            `;
+            
+            const textNode = document.createElement('div');
+            textNode.style.marginTop = '4px';
+            textNode.innerText = 'Заказ успешно оформлен! Наш менеджер свяжется с вами в ближайшее время для подтверждения.';
+
+            msg.appendChild(ticket);
+            msg.appendChild(textNode);
+            wrapper.appendChild(msg);
+            chatBody.appendChild(wrapper);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        window.submitCartOrder = async function() {
+            const name = document.getElementById('ainur-cart-name').value.trim();
+            const phone = document.getElementById('ainur-cart-phone').value.trim();
+            if(!name || !phone) return alert("Заполните данные");
+            
+            const currentCart = [...ainurCart];
+            const currentTotal = currentCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            document.getElementById('ainur-cart-step-2').classList.remove('active');
+            document.getElementById('ainur-cart-success').classList.add('active');
+
+            try {
+                await fetch(`${API_BASE}/lead`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        projectId: MY_PROJECT_ID,
+                        conversationId: CONVERSATION_ID,
+                        name: name,
+                        phone: phone,
+                        cartItems: currentCart,
+                        total: currentTotal
+                    })
+                });
+            } catch (e) { console.error('Ошибка отправки заказа:', e); }
+
+            setTimeout(() => {
+                openChatOnly();
+                ainurCart = []; document.getElementById('ainur-menu-cart-badge').style.display = 'none';
+                setTimeout(() => { addAiCartTicketMessage(name, phone, currentCart, currentTotal); }, 400);
+            }, 2000);
+        };
+
+        function ainurOpenLeadForm() { ainurOpenView('lead'); }
+        function ainurCloseLeadForm() { document.getElementById('ainur-lead-view').classList.remove('active'); }
+        function ainurOpenLeadFromStory() { ainurCloseFullscreenStory(); setTimeout(() => { ainurOpenLeadForm(); }, 300); }
+        
+        function addAiTicketMessage(name, phone) {
+            const chatBody = document.getElementById('ainur-chat-messages');
+            const wrapper = document.createElement('div'); wrapper.className = 'ainur-message-wrapper ai';
+            const msg = document.createElement('div'); msg.className = 'ainur-message ai';
+            const ticket = document.createElement('div'); ticket.className = 'ainur-lead-ticket';
+            ticket.innerHTML = `
+                <div class="ainur-lead-ticket-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg> Заявка зафиксирована</div>
+                <div class="ainur-lead-ticket-row"><span class="ainur-lead-ticket-label">Имя:</span><span class="ainur-lead-ticket-val">${name}</span></div>
+                <div class="ainur-lead-ticket-row"><span class="ainur-lead-ticket-label">Телефон:</span><span class="ainur-lead-ticket-val">${phone}</span></div>
+            `;
+            const textNode = document.createElement('div'); textNode.style.marginTop = '4px';
+            textNode.innerText = 'Отлично! Ваша заявка отправлена и в скором времени с вами свяжутся. Если у вас есть еще вопросы, смело пишите!';
+            msg.appendChild(ticket); msg.appendChild(textNode); wrapper.appendChild(msg);
+            chatBody.appendChild(wrapper); chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        window.ainurSubmitLead = async function() {
+            const name = document.getElementById('ainur-lead-name').value.trim(); 
+            const phone = document.getElementById('ainur-lead-phone').value.trim();
+            if(!name || !phone) return alert("Пожалуйста, заполните все поля");
+            
+            document.getElementById('ainur-lead-form-content').classList.remove('active'); 
+            document.getElementById('ainur-lead-success').classList.add('active');
+
+            try {
+                await fetch(`${API_BASE}/lead`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        projectId: MY_PROJECT_ID,
+                        conversationId: CONVERSATION_ID,
+                        name: name,
+                        phone: phone
+                    })
+                });
+            } catch (e) { console.error('Ошибка отправки заявки:', e); }
+
+            setTimeout(() => { 
+                openChatOnly();
+                document.getElementById('ainur-lead-form-content').classList.add('active'); 
+                document.getElementById('ainur-lead-success').classList.remove('active'); 
+                document.getElementById('ainur-lead-name').value = '';
+                document.getElementById('ainur-lead-phone').value = '';
+                setTimeout(() => { addAiTicketMessage(name, phone); }, 400); 
+            }, 2000);
+        }
+
+        // === FULLSCREEN STORY ===
+        let currentStory = 0, storyProgress = 0, storyInterval, ainurIsPaused = false, isHoldingStory = false, holdTimer;
+        
+        window.ainurOpenFullscreenStory = function(e) {
+            if (TOTAL_STORIES === 0) return;
+            setupStoryBars();
+            const rect = e.currentTarget.getBoundingClientRect();
+            const screenX = ((rect.left + rect.width / 2) / window.innerWidth) - 0.5;
+            const screenY = ((rect.top + rect.height / 2) / window.innerHeight) - 0.5;
+            const fs = document.getElementById('ainur-fullscreen-story');
+            fs.style.setProperty('--origin-x', screenX); fs.style.setProperty('--origin-y', screenY);
+            fs.classList.remove('closing'); fs.classList.add('active');
+            currentStory = 0; startStoryProgress();
+        };
+        
+        window.ainurCloseFullscreenStory = function() { 
+            const fs = document.getElementById('ainur-fullscreen-story');
+            fs.classList.add('closing'); clearInterval(storyInterval);
+            setTimeout(() => { fs.classList.remove('active'); fs.classList.remove('closing'); }, 300);
+        };
+        
+        function setupStoryBars() {
+            const container = document.getElementById('fs-progress-bars'); container.innerHTML = '';
+            for(let i=0; i<TOTAL_STORIES; i++) { container.innerHTML += `<div class="fs-story-bar"><div class="fs-story-fill" id="fs-fill-${i}"></div></div>`; }
+        }
+        
+        function startStoryProgress() {
+            clearInterval(storyInterval); storyProgress = 0;
+            for(let i=0; i<TOTAL_STORIES; i++) { document.getElementById(`fs-fill-${i}`).style.width = (i < currentStory ? '100%' : '0%'); }
+            
+            // Загрузка медиа сторис из БД
+            const story = ainurStories[currentStory];
+            const mediaContainer = document.getElementById('fs-story-media');
+            if (story && story.media_url) {
+                if (story.media_url.toLowerCase().endsWith('.mp4')) {
+                    mediaContainer.innerHTML = `<video src="${story.media_url}" autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover;"></video>`;
+                } else {
+                    mediaContainer.innerHTML = `<img src="${story.media_url}" style="width:100%; height:100%; object-fit:cover;" alt=""/>`;
+                }
+            } else {
+                mediaContainer.innerHTML = `Стори ${currentStory + 1}`;
+            }
+
+            storyInterval = setInterval(() => {
+                if(ainurIsPaused) return; 
+                storyProgress += 50; document.getElementById(`fs-fill-${currentStory}`).style.width = `${(storyProgress/4000)*100}%`;
+                if (storyProgress >= 4000) { currentStory++; if (currentStory >= TOTAL_STORIES) ainurCloseFullscreenStory(); else startStoryProgress(); }
+            }, 50);
+        }
+        
+        window.ainurPrevStory = function() { if(currentStory > 0) currentStory--; startStoryProgress(); };
+        window.ainurNextStory = function() { if(currentStory < TOTAL_STORIES - 1) { currentStory++; startStoryProgress(); } else ainurCloseFullscreenStory(); };
+
+        window.startStoryPress = function(e) { e.preventDefault(); holdTimer = setTimeout(() => { ainurIsPaused = true; isHoldingStory = true; }, 150); };
+        window.endStoryPress = function(e, direction) { e.preventDefault(); clearTimeout(holdTimer); if (isHoldingStory) { ainurIsPaused = false; isHoldingStory = false; } else { if (direction === 'prev') window.ainurPrevStory(); else window.ainurNextStory(); } };
+
+        const swipeZone = document.getElementById('fs-swipe-zone');
+        let touchStartY = 0;
+        swipeZone.addEventListener('touchstart', e => { touchStartY = e.changedTouches[0].screenY; swipeZone.style.transition = 'none'; }, {passive: true});
+        swipeZone.addEventListener('touchmove', e => { let dy = e.changedTouches[0].screenY - touchStartY; if (dy > 0) { swipeZone.style.transform = `translateY(${dy}px)`; } }, {passive: true});
+        swipeZone.addEventListener('touchend', e => { let dy = e.changedTouches[0].screenY - touchStartY; swipeZone.style.transition = 'transform 0.2s cubic-bezier(0.1, 0.7, 0.1, 1)'; swipeZone.style.transform = ''; if (dy > 100) { window.ainurCloseFullscreenStory(); } }, {passive: true});
+
+        // === ГЛОБАЛЬНЫЙ ФОКУС И ОТКРЫТИЕ ЧАТА ===
+        const fakeInput = document.getElementById('ainur-trigger');
+        const realInput = document.getElementById('ainur-real-input');
+
+        function openChatOnly() {
+            document.querySelectorAll('.ainur-sub-window').forEach(el => el.classList.remove('active'));
+            document.getElementById('ainur-menu-window').style.display = 'none';
+            ainurIsMenuOpen = false;
+            document.getElementById('ainur-menu-toggle').classList.remove('menu-open');
+            
+            if (!ainurIsChatOpen) {
+                document.getElementById('ainur-chat-window').style.display = 'flex'; 
+                ainurIsChatOpen = true;
+                playRingLoadingAnimation(); 
+                const chatBody = document.getElementById('ainur-chat-messages');
+                if(chatBody.children.length === 0) {
+                    setTimeout(() => { addAiMessageWithButtons('Здравствуйте, я ИИ ассистент! Напишите, чем могу вам помочь?', ['Оформить заказ', 'Расскажите про услуги']); }, 500);
+                }
+            }
+        }
+
+        fakeInput.addEventListener('click', () => { fakeInput.style.display = 'none'; realInput.style.display = 'block'; openChatOnly(); });
+
+        function preventKeyboardIfOverlays(e) {
+            const hasActiveWindows = document.querySelectorAll('.ainur-sub-window.active').length > 0;
+            if (hasActiveWindows || ainurIsMenuOpen || !ainurIsChatOpen) {
+                e.preventDefault(); 
+                realInput.blur(); 
+                openChatOnly(); 
+            }
+        }
+        realInput.addEventListener('touchstart', preventKeyboardIfOverlays, {passive: false});
+        realInput.addEventListener('mousedown', preventKeyboardIfOverlays);
+
+        // === ИНИЦИАЛИЗАЦИЯ И ЧАТ ===
         document.addEventListener('DOMContentLoaded', () => {
+            // Вызов API инициализации
+            initWidget();
+            
             const widgetBase = document.getElementById('ainur-widget');
             const bottomBar = document.getElementById('ainur-bottom-bar');
-            const aiGlow = document.getElementById('ainur-ai-glow');
             const iconBurger = document.getElementById('ainur-icon-burger');
-            const inputWrapper = document.querySelector('.ainur-input-wrapper');
             const sendBtn = document.getElementById('ainur-real-send');
+            const chatBody = document.getElementById('ainur-chat-messages');
             
-            const introIcons = [
-                `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8BFDA8" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>`,
-                `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8BFDA8" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>`,
-                `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8BFDA8" stroke-width="2" stroke-linecap="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`,
-                `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 24L1.687 17.837C0.645998 16.033 0.0989998 13.988 0.0999998 11.891C0.103 5.335 5.43799 0 11.993 0C15.174 0.001 18.16 1.24 20.406 3.488C22.6509 5.736 23.8869 8.724 23.8859 11.902C23.8829 18.459 18.548 23.794 11.993 23.794C10.003 23.793 8.04198 23.294 6.30499 22.346L0 24ZM6.59698 20.193C8.27298 21.188 9.87298 21.784 11.989 21.785C17.437 21.785 21.875 17.351 21.878 11.9C21.88 6.438 17.463 2.01 11.997 2.008C6.54498 2.008 2.11 6.442 2.108 11.892C2.107 14.117 2.75899 15.783 3.85399 17.526L2.85499 21.174L6.59698 20.193ZM17.984 14.729C17.91 14.605 17.712 14.531 17.414 14.382C17.117 14.233 15.656 13.514 15.383 13.415C15.111 13.316 14.913 13.266 14.714 13.564C14.516 13.861 13.946 14.531 13.773 14.729C13.6 14.927 13.426 14.952 13.129 14.803C12.832 14.654 11.874 14.341 10.739 13.328C9.85598 12.54 9.25898 11.567 9.08598 11.269C8.91298 10.972 9.06798 10.811 9.21598 10.663C9.34998 10.53 9.51298 10.316 9.66198 10.142C9.81298 9.97 9.86198 9.846 9.96198 9.647C10.061 9.449 10.012 9.275 9.93698 9.126C9.86198 8.978 9.26798 7.515 9.02098 6.92C8.77898 6.341 8.53398 6.419 8.35198 6.41L7.78198 6.4C7.58398 6.4 7.26198 6.474 6.98998 6.772C6.71798 7.07 5.94999 7.788 5.94999 9.251C5.94999 10.714 7.01498 12.127 7.16298 12.325C7.31198 12.523 9.25798 15.525 12.239 16.812C12.948 17.118 13.502 17.301 13.933 17.438C14.645 17.664 15.293 17.632 15.805 17.556C16.376 17.471 17.563 16.837 17.811 16.143C18.059 15.448 18.059 14.853 17.984 14.729Z" fill="#8BFDA8"/></svg>`,
-                `<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18.7762 21C13.9377 21 10.0013 17.0623 10 12.2238C10.0013 10.9974 11 10 12.2238 10C12.3497 10 12.4742 10.0106 12.5934 10.0318C12.8556 10.0755 13.1046 10.1642 13.3338 10.298C13.3669 10.3179 13.3894 10.3497 13.3947 10.3868L13.906 13.6093C13.9126 13.6477 13.9007 13.6848 13.8755 13.7126C13.5934 14.0252 13.2331 14.2503 12.8318 14.3629L12.6384 14.4172L12.7113 14.604C13.3709 16.2834 14.7139 17.6252 16.3947 18.2874L16.5815 18.3616L16.6358 18.1682C16.7483 17.7669 16.9735 17.4066 17.2861 17.1245C17.3086 17.1033 17.3391 17.0927 17.3695 17.0927C17.3762 17.0927 17.3828 17.0927 17.3907 17.094L20.6132 17.6053C20.6517 17.6119 20.6834 17.6331 20.7033 17.6662C20.8358 17.8954 20.9245 18.1457 20.9695 18.4079C20.9907 18.5245 21 18.6477 21 18.7762C21 20.0013 20.0026 20.9987 18.7762 21Z" fill="#8BFDA8"/><path d="M17.3848 22.9229C19.4238 22.9229 21.0771 24.5762 21.0771 26.6152V30.3076C21.0771 32.2829 19.5258 33.8959 17.5752 33.9951L17.3848 34H13.6924L13.502 33.9951C11.6143 33.8993 10.1007 32.3857 10.0049 30.498L10 30.3076V26.6152C10.0001 24.5761 11.6532 22.9229 13.6924 22.9229H17.3848ZM30.3086 22.9229C32.3477 22.9229 34.0009 24.5762 34.001 26.6152V30.3076C34.001 32.2829 32.4497 33.8959 30.499 33.9951L30.3086 34H26.6162L26.4258 33.9951C24.5381 33.8993 23.0246 32.3857 22.9287 30.498L22.9238 30.3076V26.6152C22.9239 24.5761 24.5771 22.9229 26.6162 22.9229H30.3086ZM13.6924 24.7695C12.6728 24.7695 11.8458 25.5957 11.8457 26.6152V30.3076C11.8457 31.3272 12.6728 32.1543 13.6924 32.1543H17.3848C18.4043 32.1542 19.2305 31.3272 19.2305 30.3076V26.6152C19.2304 25.5958 18.4042 24.7696 17.3848 24.7695H13.6924ZM26.6162 24.7695C25.5967 24.7695 24.7696 25.5957 24.7695 26.6152V30.3076C24.7695 31.3272 25.5966 32.1543 26.6162 32.1543H30.3086C31.3281 32.1542 32.1543 31.3272 32.1543 30.3076V26.6152C32.1542 25.5958 31.3281 24.7696 30.3086 24.7695H26.6162ZM30.3086 10C32.3477 10.0001 34.001 11.6532 34.001 13.6924V17.3848C34.0009 19.36 32.4496 20.9731 30.499 21.0723L30.3086 21.0771H26.6162L26.4258 21.0723C24.5382 20.9764 23.0247 19.4628 22.9287 17.5752L22.9238 17.3848V13.6924C22.9238 11.6532 24.577 10 26.6162 10H30.3086ZM26.6162 11.8457C25.5966 11.8457 24.7695 12.6728 24.7695 13.6924V17.3848C24.7696 18.4043 25.5967 19.2305 26.6162 19.2305H30.3086C31.3281 19.2304 32.1542 18.4042 32.1543 17.3848V13.6924C32.1543 12.6728 31.3281 11.8458 30.3086 11.8457H26.6162Z" fill="#8BFDA8"/></svg>`
-            ];
+            const svgProfile = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="7" r="4" /><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /></svg>`;
+            const svgCatalog = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /></svg>`;
+            const svgLead = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" /></svg>`;
+            const svgContact = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg>`;
+            const svgMainBurger = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.77616 11C3.93775 11 0.0013245 7.06225 0 2.22384C0.0013245 0.99735 1 0 2.22385 0C2.34967 0 2.47416 0.0105957 2.59337 0.0317878C2.85562 0.0754964 3.10464 0.164238 3.33378 0.298013C3.36689 0.317881 3.3894 0.349669 3.3947 0.386755L3.90596 3.60927C3.91258 3.64768 3.90066 3.68477 3.8755 3.71258C3.59338 4.02517 3.23311 4.25033 2.83179 4.36291L2.63841 4.41722L2.71125 4.60397C3.37085 6.28344 4.71391 7.62516 6.3947 8.28742L6.58146 8.36159L6.63575 8.16821C6.74834 7.76689 6.97351 7.40662 7.28609 7.1245C7.30861 7.10331 7.33907 7.09271 7.36953 7.09271C7.37616 7.09271 7.38278 7.09271 7.39073 7.09404L10.6132 7.6053C10.6517 7.61192 10.6834 7.63311 10.7033 7.66622C10.8358 7.89536 10.9245 8.14569 10.9695 8.40795C10.9907 8.5245 11 8.64768 11 8.77616C11 10.0013 10.0026 10.9987 8.77616 11Z" fill="currentColor" /><path d="M7.38477 12.9229C9.42385 12.9229 11.0771 14.5762 11.0771 16.6152V20.3076C11.0771 22.2829 9.52583 23.8959 7.5752 23.9951L7.38477 24H3.69238L3.50195 23.9951C1.61426 23.8993 0.100744 22.3857 0.00488281 20.498L0 20.3076V16.6152C8.61986e-05 14.5761 1.65323 12.9229 3.69238 12.9229H7.38477ZM20.3086 12.9229C22.3477 12.9229 24.0009 14.5762 24.001 16.6152V20.3076C24.001 22.2829 22.4497 23.8959 20.499 23.9951L20.3086 24H16.6162L16.4258 23.9951C14.5381 23.8993 13.0246 22.3857 12.9287 20.498L12.9238 20.3076V16.6152C12.9239 14.5761 14.5771 12.9229 16.6162 12.9229H20.3086ZM3.69238 14.7695C2.67283 14.7695 1.84579 15.5957 1.8457 16.6152V20.3076C1.8457 21.3272 2.67278 22.1543 3.69238 22.1543H7.38477C8.4043 22.1542 9.23047 21.3272 9.23047 20.3076V16.6152C9.23038 15.5958 8.40425 14.7696 7.38477 14.7695H3.69238ZM16.6162 14.7695C15.5967 14.7695 14.7696 15.5957 14.7695 16.6152V20.3076C14.7695 21.3272 15.5966 22.1543 16.6162 22.1543H20.3086C21.3281 22.1542 22.1543 21.3272 22.1543 20.3076V16.6152C22.1542 15.5958 21.3281 14.7696 20.3086 14.7695H16.6162ZM20.3086 0C22.3477 8.11737e-05 24.001 1.65323 24.001 3.69238V7.38477C24.0009 9.35999 22.4496 10.9731 20.499 11.0723L20.3086 11.0771H16.6162L16.4258 11.0723C14.5382 10.9764 13.0247 9.46278 12.9287 7.5752L12.9238 7.38477V3.69238C12.9238 1.65318 14.577 5.94698e-08 16.6162 0H20.3086ZM16.6162 1.8457C15.5966 1.8457 14.7695 2.67278 14.7695 3.69238V7.38477C14.7696 8.4043 15.5967 9.23047 16.6162 9.23047H20.3086C21.3281 9.23039 22.1542 8.40425 22.1543 7.38477V3.69238C22.1543 2.67283 21.3281 1.84578 20.3086 1.8457H16.6162Z" fill="currentColor" /></svg>`;
+            
+            const introIcons = [svgProfile, svgCatalog, svgLead, svgContact, svgMainBurger];
 
             setTimeout(() => {
                 widgetBase.style.opacity = '1';
                 let currentStep = 0;
+                // Стилизуем иконки под первичный цвет
+                iconBurger.style.color = 'var(--ainur-primary)';
+                iconBurger.innerHTML = introIcons[0]; 
+                
                 const animInterval = setInterval(() => {
                     currentStep++;
                     if (currentStep < introIcons.length) {
                         iconBurger.style.opacity = '0';
-                        setTimeout(() => { iconBurger.innerHTML = introIcons[currentStep]; iconBurger.style.opacity = '1'; }, 100);
+                        setTimeout(() => { 
+                            iconBurger.innerHTML = introIcons[currentStep]; 
+                            iconBurger.style.opacity = '1'; 
+                        }, 100);
                     } else {
                         clearInterval(animInterval);
-                        iconBurger.style.opacity = '0'; 
-                        setTimeout(() => { 
-                            iconBurger.innerHTML = introIcons[introIcons.length - 1]; 
-                            iconBurger.style.opacity = ''; 
-                        }, 100);
-                        
                         bottomBar.classList.remove('intro-state');
-                        setTimeout(() => { aiGlow.style.opacity = '1'; }, 200);
                         setTimeout(() => {
-                            inputWrapper.style.display = 'flex'; sendBtn.style.display = 'flex';
-                            setTimeout(() => { inputWrapper.style.opacity = '1'; sendBtn.style.opacity = '1'; ainurTypeWriter(); }, 50);
+                            document.querySelector('.ainur-input-wrapper').style.display = 'flex'; 
+                            sendBtn.style.display = 'flex';
+                            setTimeout(() => { 
+                                document.querySelector('.ainur-input-wrapper').style.opacity = '1'; 
+                                sendBtn.style.opacity = '1'; 
+                                ainurTypeWriter(); 
+                            }, 50);
                         }, 400); 
                     }
                 }, 320); 
             }, 600); 
 
-            // CHAT LOGIC
-            const menuBtn = document.getElementById('ainur-menu-toggle');
-            const menuWindow = document.getElementById('ainur-menu-window');
-            const chatWindow = document.getElementById('ainur-chat-window');
-            const fakeInput = document.getElementById('ainur-trigger');
-            const realInput = document.getElementById('ainur-real-input');
-            const chatBody = document.getElementById('ainur-chat-messages');
-
-            const phrase = "Напиши мне и я отвечу на все вопросы";
             let i = 0; let typeTimeout;
+            const phrase = "Напиши мне и я отвечу на все вопросы";
             function ainurTypeWriter() {
                 if (i < phrase.length) {
                     document.getElementById('ainur-typewriter-text').innerHTML += phrase.charAt(i);
@@ -425,8 +1010,6 @@
                 }
             }
 
-            function switchToRealInput() { if (fakeInput.style.display !== 'none') { clearTimeout(typeTimeout); fakeInput.style.display = 'none'; realInput.style.display = 'block'; } }
-
             function addAiMessageWithButtons(text, buttons) {
                 const wrapper = document.createElement('div'); wrapper.className = 'ainur-message-wrapper ai';
                 const msg = document.createElement('div'); msg.className = 'ainur-message ai'; msg.innerText = text;
@@ -435,7 +1018,7 @@
                     const btnContainer = document.createElement('div'); btnContainer.className = 'ainur-quick-replies';
                     buttons.forEach(btnText => {
                         const btn = document.createElement('button'); btn.className = 'ainur-qr-btn'; btn.innerText = btnText;
-                        btn.onclick = () => { addClientMessage(btnText); btnContainer.style.opacity = '0.5'; btnContainer.style.pointerEvents = 'none'; };
+                        btn.onclick = () => { sendClientMessageAuto(btnText); btnContainer.style.opacity = '0.5'; btnContainer.style.pointerEvents = 'none'; };
                         btnContainer.appendChild(btn);
                     });
                     wrapper.appendChild(btnContainer);
@@ -443,59 +1026,59 @@
                 chatBody.appendChild(wrapper); chatBody.scrollTop = chatBody.scrollHeight;
             }
 
-            // ЗАМЕНИ СВОЙ ID ПРОЕКТА СЮДА!
-            const MY_PROJECT_ID = '8db21154-dc19-4c40-8fed-f0dffe7f7ad9'; 
+            function showTypingIndicator() {
+                const wrapper = document.createElement('div'); 
+                wrapper.className = 'ainur-message-wrapper ai typing-wrapper';
+                const indicator = document.createElement('div'); 
+                indicator.className = 'ainur-typing-indicator';
+                indicator.innerHTML = '<div class="ainur-dot"></div><div class="ainur-dot"></div><div class="ainur-dot"></div>';
+                wrapper.appendChild(indicator);
+                chatBody.appendChild(wrapper); 
+                chatBody.scrollTop = chatBody.scrollHeight;
+                return wrapper;
+            }
 
             async function addClientMessage(text) {
-                // 1. Показываем сообщение пользователя
                 const wrapper = document.createElement('div'); wrapper.className = 'ainur-message-wrapper client';
                 const msg = document.createElement('div'); msg.className = 'ainur-message client'; msg.innerText = text;
                 wrapper.appendChild(msg); chatBody.appendChild(wrapper); chatBody.scrollTop = chatBody.scrollHeight;
                 
-                // Временное сообщение "Печатает..."
-                const loadingWrapper = document.createElement('div'); loadingWrapper.className = 'ainur-message-wrapper ai';
-                const loadingMsg = document.createElement('div'); loadingMsg.className = 'ainur-message ai'; loadingMsg.innerText = 'печатает...';
-                loadingWrapper.appendChild(loadingMsg); chatBody.appendChild(loadingWrapper); chatBody.scrollTop = chatBody.scrollHeight;
+                const typingIndicatorEl = showTypingIndicator();
 
                 try {
-                    // 2. Отправляем запрос на наш сервер Next.js
-                    const response = await fetch('/api/chat', {
+                    const response = await fetch(`${API_BASE}/chat`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            projectId: MY_PROJECT_ID, // ID проекта из базы
-                            message: text
+                        body: JSON.stringify({ 
+                            projectId: MY_PROJECT_ID, 
+                            message: text,
+                            conversationId: CONVERSATION_ID
                         })
                     });
                     
                     const data = await response.json();
+                    chatBody.removeChild(typingIndicatorEl);
                     
-                    // Удаляем "Печатает..."
-                    chatBody.removeChild(loadingWrapper);
-                    
-                    // 3. Показываем ответ ИИ
-                    if (data.reply) {
-                        addAiMessageWithButtons(data.reply, []); 
-                    } else {
-                        addAiMessageWithButtons('Ой, что-то пошло не так.', []);
-                    }
+                    if (data.reply) { addAiMessageWithButtons(data.reply, []); } 
+                    else { addAiMessageWithButtons('Ой, что-то пошло не так.', []); }
                 } catch(e) {
-                    chatBody.removeChild(loadingWrapper);
+                    chatBody.removeChild(typingIndicatorEl);
                     addAiMessageWithButtons('Сервер сейчас недоступен.', []);
                 }
             }
 
-            function openChat() {
-                switchToRealInput();
-                if (ainurIsMenuOpen) { menuWindow.style.display = 'none'; ainurIsMenuOpen = false; menuBtn.classList.remove('menu-open'); }
-                if (!ainurIsChatOpen) {
-                    chatWindow.style.display = 'flex'; ainurIsChatOpen = true;
-                    document.getElementById('ainur-universal-close').style.display = 'flex';
-                    if(chatBody.children.length === 0) {
-                        setTimeout(() => { addAiMessageWithButtons('Здравствуйте, я ИИ ассистент! Напишите, чем могу вам помочь?', ['Расскажите про услуги', 'Ваши цены']); }, 500);
+            function sendClientMessageAuto(text) {
+                if (text) { 
+                    if (fakeInput.style.display !== 'none') { 
+                        clearTimeout(typeTimeout); fakeInput.style.display = 'none'; realInput.style.display = 'block'; realInput.blur(); 
                     }
+                    openChatOnly(); 
+                    addClientMessage(text); 
                 }
             }
+
+            const menuBtn = document.getElementById('ainur-menu-toggle');
+            const menuWindow = document.getElementById('ainur-menu-window');
 
             menuBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -505,15 +1088,22 @@
                     menuWindow.style.display = 'none'; ainurIsMenuOpen = false; menuBtn.classList.remove('menu-open');
                 } else {
                     if (ainurIsChatOpen) { ainurCloseAll(); }
-                    menuWindow.style.display = 'flex'; ainurIsMenuOpen = true; switchToRealInput(); 
+                    menuWindow.style.display = 'flex'; ainurIsMenuOpen = true; 
+                    if (fakeInput.style.display !== 'none') { clearTimeout(typeTimeout); fakeInput.style.display = 'none'; realInput.style.display = 'block'; realInput.blur(); }
                     menuBtn.classList.add('menu-open'); 
                 }
             });
 
-            fakeInput.addEventListener('click', openChat);
-            realInput.addEventListener('click', openChat);
-            document.getElementById('ainur-real-send').addEventListener('click', () => { const text = realInput.value.trim(); if (text) { openChat(); addClientMessage(text); realInput.value = ''; } });
-            realInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { const text = realInput.value.trim(); if (text) { openChat(); addClientMessage(text); realInput.value = ''; } } });
+            document.getElementById('ainur-real-send').addEventListener('click', () => { const text = realInput.value.trim(); if (text) { openChatOnly(); addClientMessage(text); realInput.value = ''; } });
+            realInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { const text = realInput.value.trim(); if (text) { openChatOnly(); addClientMessage(text); realInput.value = ''; } } });
+            
+            chatBody.addEventListener('click', (e) => {
+                if (e.target.classList.contains('ainur-qr-btn') && e.target.innerText === 'Оформить заказ') {
+                    ainurOpenView('cart');
+                } else if (e.target.classList.contains('ainur-qr-btn') && e.target.innerText === 'Расскажите про услуги') {
+                    ainurOpenView('profile');
+                }
+            });
         });
     </script>
 </body>
