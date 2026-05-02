@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import { Plus, Trash2, Edit, Image as ImageIcon } from 'lucide-react';
+import { Plus, Trash2, Edit, Image as ImageIcon, ShoppingBag } from 'lucide-react';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
