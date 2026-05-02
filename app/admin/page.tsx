@@ -13,7 +13,7 @@ export default function AdminDashboard() {
     <div className="animate-in fade-in duration-500 max-w-5xl">
       <header className="mb-8"><h1 className="text-3xl font-bold tracking-tight">Главная</h1></header>
 
-      {/* СТАТИСТИКА (Белые карточки) */}
+      {/* СТАТИСТИКА */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
         <div className="card-ios p-5 flex flex-col justify-between">
           <span className="text-gray-500 font-medium text-sm">Пользователей</span>
@@ -33,17 +33,17 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* ПОСЛЕДНИЕ ДИАЛОГИ */}
+      {/* ПОСЛЕДНИЕ ДИАЛОГИ (Каждый в своей карточке) */}
       <div>
         <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3 ml-4">Последние диалоги</h2>
-        <div className="card-ios divide-y divide-gray-100">
+        <div className="space-y-3">
           {recentChats.map((chat) => (
-            <Link key={chat.id} href={`/admin/chats?id=${chat.id}`} className="flex items-center justify-between p-4 hover:bg-gray-50 active:bg-gray-100 transition-colors">
+            <Link key={chat.id} href={`/admin/chats?id=${chat.id}`} className="card-ios flex items-center justify-between p-4 hover:scale-[0.99] transition-transform">
               <div className="flex items-center gap-4 overflow-hidden">
-                <div className="w-10 h-10 rounded-full bg-[#f5f5f7] flex items-center justify-center text-gray-400 flex-shrink-0"><MessageSquare size={20} /></div>
+                <div className="w-12 h-12 rounded-full bg-[#f5f5f7] flex items-center justify-center text-gray-400 flex-shrink-0"><MessageSquare size={22} /></div>
                 <div className="overflow-hidden">
-                  <div className="font-semibold text-base">{chat.name}</div>
-                  <div className="text-gray-500 text-sm truncate">{chat.message}</div>
+                  <div className="font-bold text-base">{chat.name}</div>
+                  <div className="text-gray-500 text-sm truncate mt-0.5">{chat.message}</div>
                 </div>
               </div>
               <div className="flex items-center gap-3 flex-shrink-0 ml-4">

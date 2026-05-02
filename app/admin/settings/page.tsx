@@ -39,9 +39,7 @@ export default function SettingsPage() {
 
   const handleToggle = (itemKey: string) => {
     if (isDirty && openSection !== itemKey) {
-      setNextSection(itemKey);
-      setShowWarning(true);
-      return;
+      setNextSection(itemKey); setShowWarning(true); return;
     }
     setOpenSection(openSection === itemKey ? null : itemKey);
   };
@@ -52,34 +50,38 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="animate-in fade-in duration-500 max-w-2xl mx-auto pb-20">
+    <div className="animate-in fade-in duration-500 max-w-3xl mx-auto">
       <h1 className="text-3xl font-bold mb-8 tracking-tight">Настройки</h1>
 
-      <div className="space-y-8">
+      <div className="space-y-10">
         {sections.map(section => (
           <div key={section.id}>
-            <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2 ml-4">{section.title}</h2>
-            <div className="card-ios divide-y divide-gray-100">
+            <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3 ml-2">{section.title}</h2>
+            {/* Каждый пункт в секции - это отдельная карточка */}
+            <div className="space-y-3">
               {section.items.map(item => (
-                <div key={item.key} className="flex flex-col">
-                  <button onClick={() => item.type === 'link' ? null : handleToggle(item.key)} className="w-full p-4 flex items-center justify-between bg-white hover:bg-gray-50 active:bg-gray-100 transition-colors text-left">
-                    <span className="font-medium text-lg">{item.label}</span>
-                    <ChevronRight size={20} className={`text-gray-300 transition-transform ${openSection === item.key ? 'rotate-90' : ''}`} />
+                <div key={item.key} className="card-ios">
+                  <button onClick={() => item.type === 'link' ? null : handleToggle(item.key)} className="w-full p-5 flex items-center justify-between active:bg-gray-50 transition-colors text-left">
+                    <span className="font-bold text-lg">{item.label}</span>
+                    <ChevronRight size={22} className={`text-gray-300 transition-transform ${openSection === item.key ? 'rotate-90' : ''}`} />
                   </button>
                   
                   {openSection === item.key && item.type !== 'link' && (
-                    <div className="p-4 pt-0 bg-white border-t border-dashed border-gray-100 animate-in slide-in-from-top-2 duration-200">
+                    <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50/30 mt-2 animate-in slide-in-from-top-2 duration-200">
                       {item.type === 'textarea' ? (
-                        <textarea rows={4} value={(formData as any)[item.key]} onChange={e => {setFormData({...formData, [item.key]: e.target.value}); setIsDirty(true);}} className="input-ios mb-4 resize-none" />
+                        <textarea rows={4} value={(formData as any)[item.key]} onChange={e => {setFormData({...formData, [item.key]: e.target.value}); setIsDirty(true);}} className="input-ios mb-6 resize-none" placeholder={`Введите ${item.label.toLowerCase()}...`} />
                       ) : item.type === 'color' ? (
-                        <input type="color" value={(formData as any)[item.key]} onChange={e => {setFormData({...formData, [item.key]: e.target.value}); setIsDirty(true);}} className="w-12 h-12 rounded-xl cursor-pointer mb-4" />
+                        <div className="flex items-center gap-4 mb-6">
+                          <input type="color" value={(formData as any)[item.key]} onChange={e => {setFormData({...formData, [item.key]: e.target.value}); setIsDirty(true);}} className="w-14 h-14 rounded-full cursor-pointer border-0 p-0 overflow-hidden" />
+                          <span className="font-bold text-gray-500 uppercase">{String((formData as any)[item.key])}</span>
+                        </div>
                       ) : (
-                        <input type="text" value={(formData as any)[item.key]} onChange={e => {setFormData({...formData, [item.key]: e.target.value}); setIsDirty(true);}} className="input-ios mb-4" />
+                        <input type="text" value={(formData as any)[item.key]} onChange={e => {setFormData({...formData, [item.key]: e.target.value}); setIsDirty(true);}} className="input-ios mb-6" />
                       )}
                       
-                      <div className="flex gap-3 justify-end">
-                        <button onClick={() => {setIsDirty(false); setOpenSection(null);}} className="btn-secondary px-6 py-2.5">Отмена</button>
-                        <button onClick={handleSave} className="btn-primary px-6 py-2.5">Сохранить</button>
+                      <div className="flex flex-col md:flex-row gap-3 justify-end">
+                        <button onClick={() => {setIsDirty(false); setOpenSection(null);}} className="btn-secondary w-full md:w-auto">Отмена</button>
+                        <button onClick={handleSave} className="btn-primary w-full md:w-auto">Сохранить</button>
                       </div>
                     </div>
                   )}
@@ -90,15 +92,15 @@ export default function SettingsPage() {
         ))}
       </div>
 
-      {/* Уведомление о несохраненных изменениях */}
+      {/* Предупреждение (Модальное окно) */}
       {showWarning && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-          <div className="card-ios p-8 max-w-sm w-full text-center animate-in zoom-in-95 duration-200">
-            <AlertCircle size={48} className="mx-auto mb-4 text-red-500" />
+          <div className="card-ios p-8 max-w-sm w-full text-center shadow-2xl animate-in zoom-in-95 duration-200">
+            <AlertCircle size={48} className="mx-auto mb-4 text-black" />
             <h3 className="text-xl font-bold mb-2">Изменения не сохранены</h3>
-            <p className="text-gray-500 mb-6 text-sm">Хотите сохранить изменения перед переходом?</p>
+            <p className="text-gray-500 mb-8 font-medium">У вас остались несохраненные данные. Сохранить их?</p>
             <div className="flex flex-col gap-3">
-              <button onClick={() => { handleSave(); setShowWarning(false); setOpenSection(nextSection); }} className="btn-primary w-full">Сохранить и продолжить</button>
+              <button onClick={() => { handleSave(); setShowWarning(false); setOpenSection(nextSection); }} className="btn-primary w-full">Сохранить</button>
               <button onClick={() => { setIsDirty(false); setShowWarning(false); setOpenSection(nextSection); }} className="btn-secondary w-full">Не сохранять</button>
             </div>
           </div>

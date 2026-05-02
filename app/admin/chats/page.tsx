@@ -19,48 +19,41 @@ export default function ChatsPage() {
         {activeChatId && <h2 className="text-xl font-bold text-gray-400 hidden md:block">Диалог №{activeChatId}</h2>}
       </header>
       
-      {/* Контейнер равной высоты */}
       <div className="flex gap-6 flex-1 overflow-hidden pb-6">
-        
-        {/* Список диалогов (скрывается на мобильном при открытом чате) */}
-        <div className={`w-full md:w-80 flex-col card-ios shadow-sm ${activeChatId ? 'hidden md:flex' : 'flex'}`}>
-          <div className="p-4 border-b border-gray-100 bg-gray-50/50 shrink-0">
-            <h2 className="font-semibold text-gray-500 text-sm uppercase tracking-wider">Все сообщения</h2>
-          </div>
-          <div className="overflow-y-auto flex-1 divide-y divide-gray-100">
+        {/* Список диалогов (Каждый в своей белой карточке) */}
+        <div className={`w-full md:w-[340px] flex-col ${activeChatId ? 'hidden md:flex' : 'flex'}`}>
+          <div className="overflow-y-auto flex-1 space-y-3 pr-2 pb-6">
             {dialogs.map((dialog) => (
               <button key={dialog.id} onClick={() => setActiveChatId(dialog.id)} 
-                className={`w-full flex items-center gap-4 p-4 text-left transition-colors ${activeChatId === dialog.id ? 'bg-[#8BFDA8]/10' : 'hover:bg-gray-50'}`}>
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${activeChatId === dialog.id ? 'bg-[#8BFDA8] text-black' : 'bg-[#f5f5f7] text-gray-400'}`}>
-                  <MessageSquare size={20} />
+                className={`w-full card-ios flex items-center gap-4 p-4 text-left transition-transform active:scale-95 border-[3px] ${activeChatId === dialog.id ? 'border-[#8BFDA8]' : 'border-transparent'}`}>
+                <div className="w-12 h-12 rounded-full bg-[#f5f5f7] flex items-center justify-center text-gray-400 flex-shrink-0">
+                  <MessageSquare size={22} />
                 </div>
                 <div className="overflow-hidden flex-1">
-                  <div className="font-bold text-base truncate">Клиент #{dialog.id}</div>
-                  <div className="text-sm truncate text-gray-500">Последнее сообщение...</div>
+                  <div className="font-bold text-lg truncate">Клиент #{dialog.id}</div>
+                  <div className="text-sm truncate text-gray-500 mt-0.5">Последнее сообщение...</div>
                 </div>
-                <div className="text-xs font-medium text-gray-400 mb-auto">{dialog.date}</div>
+                <div className="text-xs font-bold text-gray-400 mb-auto">{dialog.date}</div>
               </button>
             ))}
           </div>
         </div>
 
-        {/* Окно самого чата */}
-        <div className={`flex-1 card-ios flex-col shadow-sm ${!activeChatId ? 'hidden md:flex items-center justify-center bg-gray-50' : 'flex'}`}>
+        {/* Окно самого чата (Одна большая белая карточка) */}
+        <div className={`flex-1 bg-white rounded-[30px] flex-col overflow-hidden ${!activeChatId ? 'hidden md:flex items-center justify-center bg-transparent border-2 border-dashed border-gray-300' : 'flex'}`}>
           {!activeChatId ? (
-            <div className="text-gray-400 font-medium flex items-center gap-2"><MessageSquare/> Выберите диалог слева</div>
+            <div className="text-gray-400 font-bold text-lg flex items-center gap-3"><MessageSquare size={28}/> Выберите диалог слева</div>
           ) : (
             <>
-              {/* Шапка чата для мобилок */}
               <div className="p-4 border-b border-gray-100 flex items-center gap-3 bg-white shrink-0 md:hidden">
                 <button onClick={() => setActiveChatId(null)} className="p-2 -ml-2 text-black bg-gray-100 rounded-full"><ChevronLeft size={20} /></button>
-                <span className="font-bold text-lg">Диалог №{activeChatId}</span>
+                <span className="font-bold text-xl">Диалог №{activeChatId}</span>
               </div>
               
-              {/* Зона сообщений (iMessage Style) */}
-              <div className="flex-1 p-4 md:p-6 overflow-y-auto flex flex-col gap-4 bg-white">
+              <div className="flex-1 p-4 md:p-8 overflow-y-auto flex flex-col gap-4 bg-white">
                 {activeChat?.messages.map((msg, i) => (
                   <div key={i} className={`flex w-full ${msg.role === 'ai' ? 'justify-start' : 'justify-end'}`}>
-                    <div className={`max-w-[80%] px-5 py-3 text-[15px] leading-relaxed rounded-[20px] ${
+                    <div className={`max-w-[80%] px-5 py-3.5 text-[16px] leading-relaxed rounded-[24px] ${
                       msg.role === 'ai' ? 'bg-[#f5f5f7] text-black rounded-bl-sm' : 'bg-[#8BFDA8] text-black rounded-br-sm'
                     }`}>
                       {msg.text}
