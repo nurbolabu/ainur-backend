@@ -10,40 +10,39 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="animate-in fade-in duration-500 max-w-5xl">
-      <header className="mb-8"><h1 className="text-3xl font-bold tracking-tight">Главная</h1></header>
+    <div className="animate-in fade-in duration-500 max-w-5xl mx-auto">
+      <header className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Обзор проекта</h1>
+        <p className="text-gray-500 mt-1">Статистика вашего виджета и ИИ-ассистента.</p>
+      </header>
 
-      {/* СТАТИСТИКА */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-        <div className="card-ios p-5 flex flex-col justify-between">
-          <span className="text-gray-500 font-medium text-sm">Пользователей</span>
-          <span className="text-3xl font-bold mt-2">1,204</span>
-        </div>
-        <div className="card-ios p-5 flex flex-col justify-between">
-          <span className="text-gray-500 font-medium text-sm">Диалогов с ИИ</span>
-          <span className="text-3xl font-bold mt-2">84</span>
-        </div>
-        <div className="card-ios p-5 flex flex-col justify-between">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-white/80 border border-white p-6 rounded-[24px] shadow-sm flex flex-col justify-between">
           <span className="text-gray-500 font-medium text-sm">Новых заявок</span>
-          <span className="text-3xl font-bold mt-2">12</span>
+          <span className="text-4xl font-bold text-gray-900 mt-2">12</span>
         </div>
-        <div className="card-ios p-5 flex flex-col justify-between">
-          <span className="text-gray-500 font-medium text-sm">Клики контактов</span>
-          <span className="text-3xl font-bold mt-2">340</span>
+        <div className="bg-white/80 border border-white p-6 rounded-[24px] shadow-sm flex flex-col justify-between">
+          <span className="text-gray-500 font-medium text-sm">Сумма заказов</span>
+          <span className="text-4xl font-bold text-gray-900 mt-2">450 000 ₸</span>
+        </div>
+        <div className="bg-white/80 border border-white p-6 rounded-[24px] shadow-sm flex flex-col justify-between">
+          <span className="text-gray-500 font-medium text-sm">Диалогов с ИИ</span>
+          <span className="text-4xl font-bold text-gray-900 mt-2">84</span>
         </div>
       </div>
 
-      {/* ПОСЛЕДНИЕ ДИАЛОГИ (Каждый в своей карточке) */}
       <div>
-        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3 ml-4">Последние диалоги</h2>
-        <div className="space-y-3">
+        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3 ml-4">Последние диалоги</h2>
+        <div className="bg-white/80 border border-white shadow-sm rounded-[24px] overflow-hidden divide-y divide-gray-100">
           {recentChats.map((chat) => (
-            <Link key={chat.id} href={`/admin/chats?id=${chat.id}`} className="card-ios flex items-center justify-between p-4 hover:scale-[0.99] transition-transform">
+            <Link key={chat.id} href={`/admin/chats?id=${chat.id}`} className="flex items-center justify-between p-4 hover:bg-white active:bg-gray-50 transition-colors">
               <div className="flex items-center gap-4 overflow-hidden">
-                <div className="w-12 h-12 rounded-full bg-[#f5f5f7] flex items-center justify-center text-gray-400 flex-shrink-0"><MessageSquare size={22} /></div>
+                <div className="w-10 h-10 rounded-full bg-[#f5f5f7] flex items-center justify-center text-gray-400 flex-shrink-0">
+                  <MessageSquare size={20} />
+                </div>
                 <div className="overflow-hidden">
-                  <div className="font-bold text-base">{chat.name}</div>
-                  <div className="text-gray-500 text-sm truncate mt-0.5">{chat.message}</div>
+                  <div className="font-semibold text-gray-900 text-base">{chat.name}</div>
+                  <div className="text-gray-500 text-sm truncate">{chat.message}</div>
                 </div>
               </div>
               <div className="flex items-center gap-3 flex-shrink-0 ml-4">
