@@ -19,7 +19,7 @@ export default function ChatsPage() {
       {/* Список диалогов (скрывается на мобильном, если открыт чат) */}
       <div className={`w-full md:w-1/3 flex flex-col ${activeChatId ? 'hidden md:flex' : 'flex'}`}>
         <h1 className="text-3xl font-bold text-gray-900 tracking-tight mb-6">Диалоги</h1>
-        <div className="bg-white rounded-[24px] overflow-hidden divide-y divide-gray-100 flex-grow">
+        <div className="bg-white rounded-[24px] overflow-hidden divide-y divide-gray-100 flex-grow shadow-sm">
           {dialogs.map((dialog, idx) => (
             <button key={dialog.id} onClick={() => setActiveChatId(dialog.id)} className={`w-full flex items-center gap-4 p-4 text-left hover:bg-gray-50 transition-colors ${activeChatId === dialog.id ? 'bg-gray-50' : ''}`}>
                <div className="w-10 h-10 rounded-full bg-[#f5f5f7] flex items-center justify-center text-gray-400 flex-shrink-0"><MessageSquare size={20} /></div>
@@ -33,7 +33,7 @@ export default function ChatsPage() {
       </div>
 
       {/* Окно самого чата (стиль Виджета) */}
-      <div className={`w-full md:w-2/3 bg-white rounded-[30px] flex flex-col overflow-hidden h-[70vh] md:h-[calc(100vh-120px)] border border-gray-100 ${!activeChatId ? 'hidden md:flex items-center justify-center text-gray-400' : 'flex'}`}>
+      <div className={`w-full md:w-2/3 bg-white rounded-[30px] flex flex-col overflow-hidden h-[70vh] md:h-[calc(100vh-120px)] border border-gray-100 shadow-sm ${!activeChatId ? 'hidden md:flex items-center justify-center text-gray-400' : 'flex'}`}>
         
         {!activeChatId ? (
           <div>Выберите диалог слева</div>
@@ -47,7 +47,7 @@ export default function ChatsPage() {
             
             {/* Баблы как в виджете */}
             <div className="flex-1 p-5 overflow-y-auto flex flex-col gap-4 bg-[#ffffff]">
-              {activeChat.messages.map((msg, i) => (
+              {activeChat?.messages.map((msg, i) => (
                 <div key={i} className={`flex flex-col w-full ${msg.role === 'ai' ? 'items-start' : 'items-end'}`}>
                   <div className={`max-w-[80%] p-3 px-4 text-[15px] leading-snug ${
                     msg.role === 'ai' 
