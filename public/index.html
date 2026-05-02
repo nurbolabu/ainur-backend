@@ -265,7 +265,7 @@
         @keyframes ainurBlink { 50% { opacity: 0; } }
         .ainur-real-input { display: none; width: 100%; height: 100%; border: none; background: transparent; font-size: 14px; outline: none; color: #333; font-family: inherit;}
 
-        /* --- FULLSCREEN STORY (АНИМАЦИЯ ИНСТАГРАМ) --- */
+        /* --- FULLSCREEN STORY --- */
         #ainur-fullscreen-story {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
             background: #000; z-index: 1000000; display: none; flex-direction: column; opacity: 0;
@@ -538,9 +538,8 @@
 
     <script>
         // === НАСТРОЙКИ СЕРВЕРА (API) ===
-        // ВАЖНО: Когда зальешь бэкенд на Vercel, поменяй 'http://localhost:3000/api' на 'https://твой-домен.vercel.app/api'
-        const API_BASE = 'https://ainur-backend-eta.vercel.app/api';
-        const MY_PROJECT_ID = '8c49172a-333f-4708-ad0c-f08d70045891'; // Твой ID из Supabase
+        const API_BASE = 'https://ainur-backend-eta.vercel.app/api'; 
+        const MY_PROJECT_ID = '8c49172a-333f-4708-ad0c-f08d70045891';
 
         // === АНАЛИТИКА: Отправка событий на сервер ===
         function trackWidgetEvent(eventName, eventData = {}) {
