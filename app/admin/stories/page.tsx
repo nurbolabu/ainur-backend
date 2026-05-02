@@ -50,10 +50,13 @@ export default function StoriesPage() {
 
   return (
     <div className="animate-in fade-in duration-500">
-      <header className="mb-8 flex justify-between items-end">
-        <div><h1 className="text-3xl font-bold text-gray-900 tracking-tight">Управление Stories</h1></div>
+      <header className="mb-8 flex flex-col md:flex-row md:justify-between items-start md:items-end gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Stories</h1>
+          <p className="text-gray-500 mt-1 text-sm md:text-base">Вертикальные видео или фото (9:16).</p>
+        </div>
         
-        <label className="bg-[#8BFDA8] text-black font-semibold px-5 py-2.5 rounded-xl shadow-sm hover:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer">
+        <label className="w-full md:w-auto bg-[#8BFDA8] text-black font-semibold px-5 py-3 md:py-2.5 rounded-xl shadow-sm hover:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer">
           {isUploading ? <Loader2 size={20} className="animate-spin" /> : <Upload size={20} />}
           {isUploading ? 'Загрузка...' : 'Загрузить файл'}
           <input type="file" accept="image/*,video/*" className="hidden" onChange={handleFileUpload} disabled={isUploading} />

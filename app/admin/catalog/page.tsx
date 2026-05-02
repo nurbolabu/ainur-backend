@@ -106,11 +106,15 @@ export default function CatalogPage() {
 
   return (
     <div className="animate-in fade-in duration-500 pb-20">
-      <header className="mb-8 flex justify-between items-end">
+     <header className="mb-8 flex flex-col md:flex-row md:justify-between items-start md:items-end gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Каталог товаров</h1>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Каталог</h1>
+          <p className="text-gray-500 mt-1 text-sm md:text-base">Управляйте услугами и товарами для виджета.</p>
         </div>
-        <button onClick={() => { setIsAdding(!isAdding); setEditId(null); setNewProduct({ name: '', description: '', price: '', image_urls: [], is_active: true }); }} className="bg-[#8BFDA8] text-black font-semibold px-5 py-2.5 rounded-xl shadow-sm hover:scale-[0.98] transition-all flex items-center gap-2">
+        <button 
+          onClick={() => { setIsAdding(!isAdding); setEditId(null); setNewProduct({ name: '', description: '', price: '', image_urls: [], is_active: true }); }} 
+          className="w-full md:w-auto bg-[#8BFDA8] text-black font-semibold px-5 py-3 md:py-2.5 rounded-xl shadow-sm hover:scale-[0.98] transition-all flex items-center justify-center gap-2"
+        >
           {isAdding ? <X size={20} /> : <Plus size={20} />}
           {isAdding ? 'Отмена' : 'Добавить товар'}
         </button>
