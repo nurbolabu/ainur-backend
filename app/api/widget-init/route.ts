@@ -62,4 +62,4 @@ export async function POST(req: Request) {
     console.error('Ошибка инициализации виджета:', error);
     return NextResponse.json({ error: 'Ошибка сервера' }, { status: 500, headers: corsHeaders });
   }
-}
+} 
