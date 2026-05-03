@@ -1,67 +1,55 @@
 'use client';
 import { useState } from 'react';
+import { ChevronLeft } from 'lucide-react';
 
 export default function ChatsPage() {
-  const [activeChatId, setActiveChatId] = useState<string | null>('842');
-
-  const dialogs = [
-    { id: '842', time: '14:30', messages: [{role: 'client', text: 'Добрый день, нужна консультация.'}, {role: 'ai', text: 'Здравствуйте! Я ИИ-ассистент, чем могу помочь?'}] },
-    { id: '841', time: 'Вчера', messages: [{role: 'client', text: 'Сколько стоит дизайн?'}] }
-  ];
+  const [activeChatId, setActiveChatId] = useState<string | null>(null);
+  const dialogs = [{ id: '842', time: '14:30', messages: [{role: 'client', text: 'Привет!'}, {role: 'ai', text: 'Здравствуйте! Чем помочь?'}] }];
   const activeChat = dialogs.find(d => d.id === activeChatId);
 
   return (
-    <div className="animate-in fade-in duration-300 flex flex-col h-[calc(100vh-120px)] md:h-[650px] w-full">
-      
-      {/* Контейнер 900px, скругление 24px, без теней */}
-      <div className="ios-module flex-1 flex flex-col md:flex-row mb-0">
-        
-        {/* ЛЕВАЯ КОЛОНКА (300px) */}
-        <div className={`w-full md:w-[300px] border-r border-[#E5E5EA] flex-col overflow-y-auto ${activeChatId ? 'hidden md:flex' : 'flex'}`}>
-          <div className="p-6 pb-2">
-            <h1 className="ios-title-2 mb-0">Чаты</h1>
-          </div>
-          <div className="flex-1">
-            {dialogs.map((dialog) => (
-              <button key={dialog.id} onClick={() => setActiveChatId(dialog.id)} 
-                className={`w-full flex flex-col p-4 border-b border-[#E5E5EA] transition-colors ${activeChatId === dialog.id ? 'bg-[#F5F5F7]' : 'bg-[#FFFFFF]'}`}>
-                <div className="flex justify-between items-center w-full mb-1">
-                  <span className="font-semibold text-[17px] text-[#000000]">Чат #{dialog.id}</span>
+    <div className="animate-in fade-in duration-300 flex flex-col h-[calc(100vh-100px)] md:h-[600px] w-full px-4 md:px-0">
+      <h1 className={`ios-large-title mt-4 ${activeChatId ? 'hidden md:block' : 'block'}`}>История</h1>
+
+      <div className="flex gap-4 flex-1 overflow-hidden pb-4">
+        <div className={`ios-bubble mb-0 w-full md:w-[320px] flex-col overflow-y-auto ${activeChatId ? 'hidden md:flex' : 'flex'}`}>
+          {dialogs.map((dialog) => (
+            <button key={dialog.id} onClick={() => setActiveChatId(dialog.id)} 
+              className={`flex items-center gap-3 p-4 text-left border-b border-[#C6C6C8] transition-colors ${activeChatId === dialog.id ? 'bg-[#8BFDA8]/20' : 'bg-white active:bg-[#E5E5EA]'}`}>
+              <div className="flex-1 overflow-hidden">
+                <div className="flex justify-between items-center mb-0.5">
+                  <span className="font-semibold text-[17px] text-black">Клиент #{dialog.id}</span>
                   <span className="text-[15px] text-[#8E8E93]">{dialog.time}</span>
                 </div>
-                <span className="text-[15px] text-[#8E8E93] truncate w-full text-left">{dialog.messages[0].text}</span>
-              </button>
-            ))}
-          </div>
+                <div className="text-[15px] text-[#8E8E93] truncate">{dialog.messages[0].text}</div>
+              </div>
+            </button>
+          ))}
         </div>
 
-        {/* ПРАВАЯ КОЛОНКА (600px) */}
-        <div className={`flex-1 flex-col bg-[#FFFFFF] ${!activeChatId ? 'hidden md:flex' : 'flex'}`}>
+        <div className={`ios-bubble mb-0 flex-1 flex-col bg-white ${!activeChatId ? 'hidden md:flex items-center justify-center text-[#8E8E93]' : 'flex'}`}>
           {activeChat ? (
             <>
-              {/* Шапка чата */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-[#E5E5EA] bg-[#FFFFFF]/90 backdrop-blur-md">
-                <button onClick={() => setActiveChatId(null)} className="md:hidden text-[#8E8E93] font-medium text-[17px]">Назад</button>
-                <div className="font-semibold text-[17px] text-[#000000]">Чат #{activeChatId}</div>
-                <div className="w-10"></div>
+              <div className="flex items-center gap-2 p-3 bg-[#F2F2F7] shrink-0 border-b border-[#C6C6C8]">
+                <button onClick={() => setActiveChatId(null)} className="md:hidden flex items-center text-black active:opacity-50">
+                  <ChevronLeft size={28} /><span className="text-[17px] -ml-1">Назад</span>
+                </button>
+                <div className="flex-1 flex justify-center md:justify-start md:pl-2">
+                  <span className="text-[15px] font-semibold text-black">Чат #{activeChatId}</span>
+                </div>
               </div>
-              
-              {/* Баблы (Сообщения) */}
-              <div className="flex-1 p-6 overflow-y-auto flex flex-col gap-4">
+              <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-2">
                 {activeChat.messages.map((msg, i) => (
                   <div key={i} className={`flex w-full ${msg.role === 'ai' ? 'justify-start' : 'justify-end'}`}>
-                    <div className={`max-w-[75%] px-4 py-2.5 text-[17px] leading-snug rounded-[20px] ${
-                      msg.role === 'ai' ? 'bg-[#F5F5F7] text-[#000000] rounded-bl-[4px]' : 'bg-[#8BFDA8] text-[#000000] rounded-br-[4px]'
-                    }`}>
+                    <div className={`max-w-[75%] px-4 py-2 text-[17px] leading-snug rounded-[20px] ${msg.role === 'ai' ? 'bg-[#E5E5EA] text-black rounded-bl-[4px]' : 'bg-[#8BFDA8] text-black rounded-br-[4px]'}`}>
                       {msg.text}
                     </div>
                   </div>
                 ))}
               </div>
             </>
-          ) : <div className="flex-1 flex items-center justify-center text-[#8E8E93] text-[17px]">Выберите диалог</div>}
+          ) : <div className="text-[17px]">Выберите диалог</div>}
         </div>
-
       </div>
     </div>
   );
