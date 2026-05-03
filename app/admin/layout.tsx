@@ -10,101 +10,103 @@ const MY_PROJECT_ID = '8c49172a-333f-4708-ad0c-f08d70045891';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [logo, setLogo] = useState('');
+  const [projectData, setProjectData] = useState<any>(null);
 
   useEffect(() => {
-    supabase.from('projects').select('logo_url').eq('id', MY_PROJECT_ID).single()
-      .then(({ data }) => { if (data?.logo_url) setLogo(data.logo_url); });
+    supabase.from('projects').select('logo_url, company_name').eq('id', MY_PROJECT_ID).single()
+      .then(({ data }) => { if (data) setProjectData(data); });
   }, []);
 
   const navItems = [
-    { href: '/admin', icon: LayoutDashboard, text: 'Главная' },
-    { href: '/admin/leads', icon: Users, text: 'Заявки' },
-    { href: '/admin/chats', icon: MessageSquare, text: 'Чаты' },
-    { href: '/admin/catalog', icon: ShoppingBag, text: 'Каталог' },
-    { href: '/admin/stories', icon: Clapperboard, text: 'Stories' }
+    { href: '/admin', icon: <LayoutDashboard size={22} />, text: 'Главная' },
+    { href: '/admin/catalog', icon: <ShoppingBag size={22} />, text: 'Каталог' },
+    { href: '/admin/leads', icon: <Users size={22} />, text: 'Заявки' },
+    { href: '/admin/chats', icon: <MessageSquare size={22} />, text: 'История чатов' },
+    { href: '/admin/stories', icon: <Clapperboard size={22} />, text: 'Stories' }
   ];
 
   return (
     <div className="min-h-[100dvh] bg-[#F2F2F7] flex justify-center font-sans text-[#000000] selection:bg-[#8BFDA8]">
       
-      {/* Сетка iPadOS / macOS */}
-      <div className="flex w-full md:max-w-[1200px] gap-8 md:pt-10 px-4 md:px-0">
+      {/* СЕТКА (Max 1200px) */}
+      <div className="flex w-full md:max-w-[1200px] gap-[20px] md:pt-10 px-4 md:px-0">
         
-        {/* SIDEBAR (Desktop) */}
-        <aside className="hidden md:flex w-[260px] h-fit flex-col sticky top-10">
-          <div className="mb-6 px-4 flex items-center gap-4">
-             <div className="w-[44px] h-[44px] rounded-[12px] bg-black flex items-center justify-center text-[#8BFDA8] font-bold text-xl">A</div>
-             <span className="font-semibold text-[22px] tracking-tight">AI NUR</span>
+        {/* ЛЕВАЯ КОЛОНКА: Сайдбар (280px) */}
+        <aside className="hidden md:flex w-[280px] h-fit bg-[#FFFFFF] rounded-[24px] p-6 flex-col sticky top-10">
+          <div className="mb-10 flex flex-col items-center justify-center text-center">
+             <div className="w-[48px] h-[48px] rounded-full bg-[#F2F2F7] overflow-hidden flex items-center justify-center mb-3">
+                {projectData?.logo_url ? <img src={projectData.logo_url} className="w-full h-full object-cover" /> : <span className="font-bold text-[#8E8E93] text-[20px]">A</span>}
+             </div>
+             <span className="font-bold text-[17px] tracking-tight">{projectData?.company_name || 'AI NUR'}</span>
           </div>
 
-          <nav className="flex flex-col gap-1">
-            {[...navItems, { href: '/admin/settings', icon: Settings, text: 'Настройки' }].map(item => {
+          <nav className="flex flex-col gap-2">
+            {navItems.map(item => {
               const isActive = pathname === item.href;
-              const Icon = item.icon;
               return (
                 <Link key={item.href} href={item.href} 
-                  className={`flex items-center gap-3.5 px-4 py-2.5 rounded-[12px] min-h-[44px] transition-colors ${isActive ? 'bg-[#E3E3E8] text-black font-semibold' : 'text-[#3C3C43] hover:bg-[#E3E3E8]/50 font-normal'}`}>
-                  <Icon size={22} className={isActive ? 'text-[#8BFDA8] fill-black stroke-black stroke-2' : 'text-[#8E8E93]'} />
+                  className={`flex items-center gap-4 px-4 py-3.5 rounded-[16px] transition-colors ${isActive ? 'bg-[#8BFDA8] text-[#000000] font-semibold' : 'bg-transparent text-[#8E8E93] hover:bg-[#F2F2F7] font-normal'}`}>
+                  <div className={isActive ? 'text-[#000000]' : 'text-[#8E8E93]'}>{item.icon}</div>
                   <span className="text-[17px]">{item.text}</span>
                 </Link>
               )
             })}
           </nav>
+
+          <div className="mt-12 pt-6 border-t border-[#E5E5EA]">
+            <Link href="/admin/settings" className={`flex items-center gap-4 px-4 py-3.5 rounded-[16px] transition-colors ${pathname === '/admin/settings' ? 'bg-[#8BFDA8] text-[#000000] font-semibold' : 'bg-transparent text-[#8E8E93] hover:bg-[#F2F2F7] font-normal'}`}>
+              <div className={pathname === '/admin/settings' ? 'text-[#000000]' : 'text-[#8E8E93]'}><Settings size={22} /></div>
+              <span className="text-[17px]">Настройки</span>
+            </Link>
+          </div>
         </aside>
 
-        {/* MAIN CONTENT AREA */}
-        <main className="flex-1 w-full pb-28 md:pb-20 pt-10 md:pt-0 max-w-[800px]">
+        {/* ПРАВАЯ КОЛОНКА: Контент (900px) */}
+        <main className="flex-1 w-full md:w-[900px] pb-32 md:pb-20 pt-10 md:pt-0 max-w-[900px]">
            {children}
         </main>
       </div>
 
-      {/* MOBILE BOTTOM BAR (iOS App Store Style) */}
-      <nav className="md:hidden fixed bottom-0 left-0 w-full bg-[#F2F2F7]/90 backdrop-blur-2xl border-t border-[#C6C6C8] z-50 px-2 pb-[calc(env(safe-area-inset-bottom)+8px)] pt-2 flex justify-around">
-        {[...navItems, { href: '/admin/settings', icon: Settings, text: 'Настройки' }].map(item => {
+      {/* МОБИЛЬНЫЙ BOTTOM TAB BAR */}
+      <nav className="md:hidden fixed bottom-0 left-0 w-full bg-[#F2F2F7]/90 backdrop-blur-2xl border-t border-[#C6C6C8] z-50 px-2 pb-[calc(env(safe-area-inset-bottom)+8px)] pt-3 flex justify-around">
+        {[...navItems, { href: '/admin/settings', icon: <Settings size={24} />, text: 'Настройки' }].map(item => {
           const isActive = pathname === item.href;
-          const Icon = item.icon;
           return (
-            <Link key={item.href} href={item.href} className="flex flex-col items-center gap-1 min-w-[60px] active:opacity-50 transition-opacity">
-              <Icon size={26} className={isActive ? 'text-black fill-black stroke-black' : 'text-[#8E8E93] stroke-[1.5]'} />
-              <span className={`text-[10px] text-center ${isActive ? 'text-black font-semibold' : 'text-[#8E8E93] font-medium'}`}>{item.text}</span>
+            <Link key={item.href} href={item.href} className="flex flex-col items-center gap-1 min-w-[60px] active:opacity-50">
+              <div className={isActive ? 'text-[#000000]' : 'text-[#8E8E93]'}>{item.icon}</div>
+              <span className={`text-[10px] mt-1 ${isActive ? 'text-[#000000] font-semibold' : 'text-[#8E8E93] font-medium'}`}>{item.text}</span>
             </Link>
           )
         })}
       </nav>
 
-      {/* APPLE HIG GLOBAL STYLES (No Shadows, Bubbles, SF Pro sizes) */}
+      {/* ГЛОБАЛЬНЫЕ СТИЛИ (Zero Shadows, Apple HIG) */}
       <style jsx global>{`
-        /* Typography */
-        .ios-large-title { font-size: 34px; font-weight: 700; color: #000000; margin-bottom: 24px; padding: 0 16px; letter-spacing: 0.3px; }
-        @media (min-width: 768px) { .ios-large-title { padding: 0; } }
+        /* Типографика */
+        .ios-large-title { font-size: 34px; font-weight: 700; color: #000000; margin-bottom: 24px; letter-spacing: 0.3px; }
         .ios-title-2 { font-size: 22px; font-weight: 600; color: #000000; margin-bottom: 16px; }
         .ios-section-header { font-size: 13px; text-transform: uppercase; color: #3C3C43; opacity: 0.6; margin-bottom: 8px; margin-left: 16px; font-weight: 400; }
         
-        /* Bubbles (Modules) */
-        .ios-bubble { background-color: #FFFFFF; border-radius: 16px; overflow: hidden; margin-bottom: 32px; }
-        .ios-bubble-margin { margin-left: 16px; margin-right: 16px; }
-        @media (min-width: 768px) { .ios-bubble-margin { margin-left: 0; margin-right: 0; } }
-
-        /* Inset Grouped Lists */
-        .ios-list-row { display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 12px 16px; background-color: #FFFFFF; position: relative; cursor: pointer; transition: background-color 0.2s; }
-        .ios-list-row:active { background-color: #E5E5EA; }
-        .ios-list-row:not(:last-child)::after { content: ''; position: absolute; bottom: 0; left: 16px; right: 0; height: 0.5px; background-color: #C6C6C8; }
+        /* Модули (Баблы) - НОЛЬ ТЕНЕЙ */
+        .ios-module { background-color: #FFFFFF; border-radius: 24px; overflow: hidden; margin-bottom: 32px; }
         
-        /* Buttons */
-        .btn-primary { background-color: #8BFDA8; color: #000000; font-size: 17px; font-weight: 600; border-radius: 14px; min-height: 50px; padding: 0 20px; transition: transform 0.1s, opacity 0.1s; display: inline-flex; align-items: center; justify-content: center; width: 100%; }
+        /* Списки внутри модулей */
+        .ios-list-item { display: flex; align-items: center; justify-content: space-between; padding: 16px; background-color: #FFFFFF; position: relative; transition: background-color 0.2s; cursor: pointer; min-height: 44px; }
+        .ios-list-item:active { background-color: #F2F2F7; }
+        .ios-list-item:not(:last-child)::after { content: ''; position: absolute; bottom: 0; left: 16px; right: 0; height: 1px; background-color: #E5E5EA; }
+        
+        /* Кнопки */
+        .btn-primary { background-color: #8BFDA8; color: #000000; font-size: 17px; font-weight: 600; border-radius: 16px; min-height: 52px; padding: 0 24px; transition: transform 0.1s, opacity 0.1s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-primary:active { transform: scale(0.96); opacity: 0.8; }
         .btn-primary:disabled { opacity: 0.5; pointer-events: none; }
 
-        .btn-secondary { background-color: transparent; color: #000000; font-size: 17px; font-weight: 600; border-radius: 14px; min-height: 50px; padding: 0 20px; border: 2px solid #E5E5EA; transition: background-color 0.1s; display: inline-flex; align-items: center; justify-content: center; width: 100%; }
-        .btn-secondary:active { background-color: #E5E5EA; }
+        .btn-secondary { background-color: #000000; color: #FFFFFF; font-size: 17px; font-weight: 600; border-radius: 16px; min-height: 52px; padding: 0 24px; transition: transform 0.1s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-secondary:active { transform: scale(0.96); opacity: 0.8; }
 
-        .btn-text { color: #8BFDA8; font-size: 17px; font-weight: 400; padding: 8px 16px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
-        .btn-text:active { opacity: 0.5; }
-
-        /* Inputs (Inside Bubble) */
-        .input-bare { font-size: 17px; color: #000000; width: 100%; background: transparent; outline: none; padding: 0; }
-        .input-bare::placeholder { color: rgba(60,60,67,0.3); }
+        /* Поля ввода */
+        .input-ios { background-color: #F5F5F7; border: 1px solid #E5E5EA; border-radius: 14px; padding: 16px; font-size: 17px; color: #000000; outline: none; transition: background-color 0.2s; width: 100%; }
+        .input-ios:focus { background-color: #FFFFFF; }
+        .input-ios::placeholder { color: #8E8E93; }
       `}</style>
     </div>
   );
