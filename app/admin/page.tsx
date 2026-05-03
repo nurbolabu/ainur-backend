@@ -11,10 +11,10 @@ export default function AdminDashboard() {
 
   return (
     <div className="animate-in fade-in duration-300">
-      <h1 className="ios-large-title mt-4">Обзор</h1>
+      <h1 className="ios-large-title">Обзор</h1>
 
-      {/* Метрики (Сетка баблов с исправленными симметричными отступами) */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-[16px] mb-8 px-4 md:px-0">
+      {/* Метрики (Сетка баблов с идеальными симметричными отступами) */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-[16px] mb-8">
         <div className="ios-module p-5 flex flex-col justify-between min-h-[140px] !mb-0">
           <span className="text-[15px] text-[#8E8E93] font-medium">Всего посетителей</span>
           <span className="text-[34px] font-bold text-[#000000]">2,840</span>
@@ -36,7 +36,7 @@ export default function AdminDashboard() {
       <h2 className="ios-section-header">Последние чаты</h2>
       
       {/* Список последних чатов (Inset Grouped с линией 1px) */}
-      <div className="ios-module mx-4 md:mx-0">
+      <div className="ios-module">
         {recentChats.map((chat) => (
           <Link key={chat.id} href={`/admin/chats?id=${chat.id}`} className="ios-list-item group">
             <div className="flex flex-col">
