@@ -35,9 +35,9 @@ export default function StoriesPage() {
   return (
     <div className="animate-in fade-in duration-300">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="ios-large-title mb-0">Истории виджета</h1>
+        <h1 className="ios-large-title mb-0">Stories</h1>
         <label className="btn-primary w-auto cursor-pointer">
-           {isUploading ? <Loader2 className="animate-spin" size={20}/> : null} Загрузить медиа
+           {isUploading ? <Loader2 className="animate-spin" size={20}/> : null} Загрузить 
            <input type="file" accept="image/*,video/*" className="hidden" onChange={handleFileUpload} disabled={isUploading} />
         </label>
       </div>

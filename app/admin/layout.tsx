@@ -21,7 +21,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: '/admin', icon: <LayoutDashboard size={22} />, text: 'Главная' },
     { href: '/admin/catalog', icon: <ShoppingBag size={22} />, text: 'Каталог' },
     { href: '/admin/leads', icon: <Users size={22} />, text: 'Заявки' },
-    { href: '/admin/chats', icon: <MessageSquare size={22} />, text: 'История чатов' },
+    { href: '/admin/chats', icon: <MessageSquare size={22} />, text: 'Чаты' },
     { href: '/admin/stories', icon: <Clapperboard size={22} />, text: 'Stories' }
   ];
 
