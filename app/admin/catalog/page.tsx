@@ -26,9 +26,8 @@ export default function CatalogPage() {
   async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files || e.target.files.length === 0) return;
     setIsUploading(true);
-    const files = Array.from(e.target.files);
     const uploadedUrls: string[] = [];
-    for (const file of files) {
+    for (const file of Array.from(e.target.files)) {
       const fileName = `${Date.now()}_${Math.random()}.${file.name.split('.').pop()}`;
       const { error } = await supabase.storage.from('media').upload(fileName, file);
       if (!error) uploadedUrls.push(supabase.storage.from('media').getPublicUrl(fileName).data.publicUrl);
@@ -69,7 +68,11 @@ export default function CatalogPage() {
     <div className="animate-in fade-in duration-300 w-full pb-10">
       <header className="mb-8 flex flex-col md:flex-row md:justify-between md:items-center px-1 gap-4">
         <h1 className="text-3xl font-bold tracking-tight">Каталог</h1>
-        {!isAdding && <button onClick={() => setIsAdding(true)} className="btn-main w-full md:w-auto"><Plus size={20}/> Добавить</button>}
+        {!isAdding && (
+          <button onClick={() => setIsAdding(true)} className="btn-main w-full md:w-auto">
+            <Plus size={20} className="text-black" /> Добавить
+          </button>
+        )}
       </header>
 
       {isAdding && (
@@ -105,7 +108,7 @@ export default function CatalogPage() {
         </div>
       )}
 
-      {/* ТОВАРЫ (Сетка баблов) */}
+      {/* ТОВАРЫ */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {products.map(p => {
           const img = p.image_url ? p.image_url.split(',')[0] : '';
@@ -115,12 +118,14 @@ export default function CatalogPage() {
                {img ? <img src={img} className="w-full h-full object-cover"/> : <ImageIcon className="text-gray-300" size={56}/>}
             </div>
             <div className="p-5 flex-1 flex flex-col">
-              <h3 className="font-bold text-lg text-black line-clamp-2">{p.name}</h3>
+              <h3 className="font-bold text-xl text-black line-clamp-2">{p.name}</h3>
               <p className="text-xl font-black mt-2 text-gray-500">{Number(p.price).toLocaleString('ru-RU')} ₸</p>
             </div>
             <div className="p-4 flex gap-3">
-               <button onClick={() => startEdit(p)} className="btn-sec flex-1 px-2 py-3"><Edit size={18}/> Редактировать</button>
-               <button onClick={() => handleDelete(p.id)} className="w-[52px] h-[52px] flex items-center justify-center border-2 border-black rounded-[16px] text-red-500 hover:bg-black hover:text-red-400 transition-colors shrink-0"><Trash2 size={20}/></button>
+               {/* Широкая кнопка редактировать */}
+               <button onClick={() => startEdit(p)} className="btn-sec flex-1 px-2"><Edit size={20}/> Редактировать</button>
+               {/* Удалить */}
+               <button onClick={() => handleDelete(p.id)} className="w-[56px] h-[56px] flex items-center justify-center border-2 border-black rounded-[16px] text-red-500 hover:bg-black hover:text-red-400 transition-colors shrink-0"><Trash2 size={20}/></button>
             </div>
           </div>
         )})}

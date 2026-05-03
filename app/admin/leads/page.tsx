@@ -7,15 +7,14 @@ export default function LeadsPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   
   const leads = [
-    { id: '1', name: 'Иван Иванов', phone: '+7 707 123 4567', total: 150000, status: 'new', cart: [{n:'Лендинг', q:1}] },
-    { id: '2', name: 'Анна Смирнова', phone: '+7 705 987 6543', total: 0, status: 'new', cart: null }
+    { id: '1', name: 'Иван Иванов', phone: '+7 707 123 4567', total: 150000, status: 'new', created_at: new Date().toISOString(), cart_items: [{name: 'Лендинг', qty: 1}] },
+    { id: '2', name: 'Анна Смирнова', phone: '+7 705 987 6543', total: 0, status: 'new', created_at: new Date().toISOString(), cart_items: null }
   ];
 
   return (
     <div className="animate-in fade-in duration-300 w-full">
       <h1 className="text-3xl font-bold mb-8 px-1">Заявки</h1>
 
-      {/* Переключатель */}
       <div className="bg-[#E5E5EA] p-1.5 rounded-[16px] flex max-w-sm mb-8 mx-1">
         <button onClick={() => setActiveTab('new')} className={`flex-1 py-2 text-sm font-bold rounded-[12px] transition-all ${activeTab === 'new' ? 'bg-white shadow-sm text-black' : 'text-gray-500'}`}>Новые</button>
         <button onClick={() => setActiveTab('processed')} className={`flex-1 py-2 text-sm font-bold rounded-[12px] transition-all ${activeTab === 'processed' ? 'bg-white shadow-sm text-black' : 'text-gray-500'}`}>Завершенные</button>
@@ -39,10 +38,10 @@ export default function LeadsPage() {
             
             {expandedId === lead.id && (
               <div className="p-6 bg-[#F9F9F9] border-t border-gray-100">
-                {lead.cart ? (
+                {lead.cart_items ? (
                   <div className="mb-6">
                     <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Заказ</h3>
-                    <ul className="text-lg font-medium text-black space-y-2">{lead.cart.map((c, i) => <li key={i}>• {c.n} <span className="text-gray-400">x{c.q}</span></li>)}</ul>
+                    <ul className="text-lg font-medium text-black space-y-2">{lead.cart_items.map((c:any, i:number) => <li key={i}>• {c.name} <span className="text-gray-400">x{c.qty}</span></li>)}</ul>
                     <div className="mt-4 font-black text-xl">Итого: {lead.total.toLocaleString()} ₸</div>
                   </div>
                 ) : <div className="mb-6 text-lg font-medium text-gray-400">Консультация (без корзины)</div>}
@@ -52,7 +51,6 @@ export default function LeadsPage() {
             )}
           </div>
         ))}
-        {leads.filter(l => l.status === activeTab).length === 0 && <div className="p-10 text-center font-bold text-gray-400">Нет заявок</div>}
       </div>
     </div>
   );

@@ -31,7 +31,7 @@ export default function StoriesPage() {
   }
 
   async function handleDelete(id: string) {
-    if (confirm('Удалить эту историю?')) {
+    if (confirm('Удалить эту сторис?')) {
       await supabase.from('stories').delete().eq('id', id);
       fetchStories();
     }
@@ -42,8 +42,8 @@ export default function StoriesPage() {
       <header className="mb-8 flex flex-col md:flex-row md:justify-between md:items-center px-1 gap-4">
         <h1 className="text-3xl font-bold tracking-tight">Stories</h1>
         <label className="btn-main w-full md:w-auto cursor-pointer">
-           {isUploading ? <Loader2 size={20} className="animate-spin text-black"/> : <Plus size={20}/>}
-           {isUploading ? 'Загрузка...' : 'Загрузить'}
+           {isUploading ? <Loader2 size={20} className="animate-spin text-black"/> : <Plus size={20} className="text-black" />}
+           <span className="text-black">{isUploading ? 'Загрузка...' : 'Загрузить'}</span>
            <input type="file" accept="image/*,video/*" className="hidden" onChange={handleFileUpload} disabled={isUploading} />
         </label>
       </header>
@@ -52,9 +52,10 @@ export default function StoriesPage() {
         {stories.map(s => (
           <div key={s.id} className="ios-bubble mb-0 aspect-[9/16] relative bg-black">
             {s.media_url.includes('.mp4') ? <video src={s.media_url} className="w-full h-full object-cover" autoPlay muted loop playsInline /> : <img src={s.media_url} className="w-full h-full object-cover" alt=""/>}
-            <button onClick={() => handleDelete(s.id)} className="absolute top-3 right-3 w-10 h-10 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-red-500 shadow-sm active:scale-95"><Trash2 size={20} /></button>
+            <button onClick={() => handleDelete(s.id)} className="absolute top-3 right-3 w-[40px] h-[40px] bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white active:scale-95"><Trash2 size={20} /></button>
           </div>
         ))}
+        {stories.length === 0 && <div className="col-span-2 md:col-span-4 text-center text-gray-400 py-10 font-bold">У вас пока нет Stories</div>}
       </div>
     </div>
   );

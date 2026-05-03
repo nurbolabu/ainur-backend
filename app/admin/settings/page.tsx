@@ -31,14 +31,17 @@ export default function SettingsPage() {
     <div className="animate-in fade-in duration-300 w-full pb-20">
       <header className="mb-8 flex flex-col md:flex-row md:justify-between md:items-center px-1 gap-4">
         <h1 className="text-3xl font-bold tracking-tight">Настройки</h1>
-        <button onClick={toggleEdit} className="btn-main w-full md:w-auto">
-          {isSaving ? '...' : isEditing ? 'Сохранить' : 'Редактировать'}
-        </button>
+        {isEditing ? (
+          <button onClick={handleSave} className="btn-main w-full md:w-auto">
+            {isSaving ? 'Сохранение...' : 'Сохранить'}
+          </button>
+        ) : (
+          <button onClick={toggleEdit} className="btn-sec w-full md:w-auto">Редактировать</button>
+        )}
       </header>
 
       <div className="space-y-6">
         
-        {/* БАБЛ: Внешний вид */}
         <section className="ios-bubble p-6 md:p-8 mb-0">
           <h2 className="text-xl font-bold mb-6">Внешний вид</h2>
           <div className="grid gap-5">
@@ -60,7 +63,6 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        {/* БАБЛ: База знаний ИИ */}
         <section className="ios-bubble p-6 md:p-8 mb-0">
           <h2 className="text-xl font-bold mb-6">База знаний ИИ</h2>
           <div className="grid gap-5">

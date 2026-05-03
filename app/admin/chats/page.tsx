@@ -33,7 +33,8 @@ export default function ChatsPage() {
                     <span className="font-bold text-lg text-black">Клиент #{dialog.id}</span>
                     <span className="text-sm font-bold text-gray-400">{dialog.time}</span>
                   </div>
-                  <div className="text-sm text-gray-500 truncate">{dialog.messages[0].text}</div>
+                  {/* ИСПРАВЛЕНИЕ: Добавлен ? для безопасности */}
+                  <div className="text-sm text-gray-500 truncate">{dialog.messages[0]?.text}</div>
                 </div>
               </button>
             ))}
@@ -41,7 +42,7 @@ export default function ChatsPage() {
         </div>
 
         {/* ПРАВЫЙ БАБЛ (Окно переписки) */}
-        <div className={`ios-bubble mb-0 flex-1 flex-col ${!activeChatId ? 'hidden md:flex items-center justify-center bg-transparent border-2 border-dashed border-gray-300' : 'flex'}`}>
+        <div className={`ios-bubble mb-0 flex-1 flex-col ${!activeChatId ? 'hidden md:flex items-center justify-center bg-[#F5F5F7] border-2 border-dashed border-gray-300' : 'flex'}`}>
           {!activeChatId ? (
             <div className="text-gray-400 font-bold text-lg flex items-center gap-3"><MessageSquare size={24}/> Выберите диалог</div>
           ) : (
@@ -53,7 +54,8 @@ export default function ChatsPage() {
               </div>
               
               <div className="flex-1 p-6 md:p-8 overflow-y-auto flex flex-col gap-4 bg-white">
-                {activeChat.messages.map((msg, i) => (
+                {/* ИСПРАВЛЕНИЕ ОШИБКИ VERCEL: Добавлен ? после activeChat */}
+                {activeChat?.messages.map((msg, i) => (
                   <div key={i} className={`flex w-full ${msg.role === 'ai' ? 'justify-start' : 'justify-end'}`}>
                     <div className={`max-w-[80%] px-5 py-3 text-[16px] leading-snug rounded-[20px] ${
                       msg.role === 'ai' ? 'bg-[#F2F2F7] text-black rounded-bl-[4px]' : 'bg-[#8BFDA8] text-black rounded-br-[4px]'

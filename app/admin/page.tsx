@@ -13,7 +13,7 @@ export default function AdminDashboard() {
     <div className="animate-in fade-in duration-300 w-full">
       <h1 className="text-3xl font-bold mb-8 px-1">Обзор</h1>
 
-      {/* СТАТИСТИКА (Симметричный gap-4) */}
+      {/* Симметричные отступы gap-4 на мобильном */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
         <div className="ios-bubble p-5 flex flex-col justify-center items-center text-center min-h-[120px] mb-0">
           <span className="text-gray-500 font-bold uppercase tracking-wider text-xs mb-2">Посетители</span>
@@ -35,7 +35,6 @@ export default function AdminDashboard() {
 
       <h2 className="text-xl font-bold text-gray-400 mb-5 px-1">Последние диалоги</h2>
 
-      {/* ИСТОРИЯ ЧАТОВ */}
       <div className="space-y-4">
         {recentChats.map((chat) => (
           <Link key={chat.id} href={`/admin/chats?id=${chat.id}`} className="ios-bubble flex items-center justify-between p-5 hover:scale-[0.99] transition-transform group mb-0">
