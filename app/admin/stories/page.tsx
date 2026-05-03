@@ -31,28 +31,28 @@ export default function StoriesPage() {
   }
 
   async function handleDelete(id: string) {
-    if (confirm('Удалить эту сторис?')) {
+    if (confirm('Удалить эту историю?')) {
       await supabase.from('stories').delete().eq('id', id);
       fetchStories();
     }
   }
 
   return (
-    <div className="animate-in fade-in duration-300">
-      <div className="flex justify-between items-center pr-4 md:pr-0 mb-4">
-        <h1 className="ios-large-title mb-0 mt-4">Stories</h1>
-        <label className="btn-text cursor-pointer">
+    <div className="animate-in fade-in duration-300 w-full pb-20">
+      <header className="mb-8 flex flex-col md:flex-row md:justify-between md:items-center px-1 gap-4">
+        <h1 className="text-3xl font-bold tracking-tight">Stories</h1>
+        <label className="btn-main w-full md:w-auto cursor-pointer">
            {isUploading ? <Loader2 size={20} className="animate-spin text-black"/> : <Plus size={20}/>}
-           {isUploading ? 'Идет загрузка' : 'Загрузить'}
+           {isUploading ? 'Загрузка...' : 'Загрузить'}
            <input type="file" accept="image/*,video/*" className="hidden" onChange={handleFileUpload} disabled={isUploading} />
         </label>
-      </div>
+      </header>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 ios-bubble-margin">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {stories.map(s => (
           <div key={s.id} className="ios-bubble mb-0 aspect-[9/16] relative bg-black">
             {s.media_url.includes('.mp4') ? <video src={s.media_url} className="w-full h-full object-cover" autoPlay muted loop playsInline /> : <img src={s.media_url} className="w-full h-full object-cover" alt=""/>}
-            <button onClick={() => handleDelete(s.id)} className="absolute top-3 right-3 w-[40px] h-[40px] bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white"><Trash2 size={20} /></button>
+            <button onClick={() => handleDelete(s.id)} className="absolute top-3 right-3 w-10 h-10 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-red-500 shadow-sm active:scale-95"><Trash2 size={20} /></button>
           </div>
         ))}
       </div>
