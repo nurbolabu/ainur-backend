@@ -48,8 +48,8 @@ export default function CatalogPage() {
   return (
     <div className="animate-in fade-in duration-300">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="ios-large-title mb-0">Каталог товаров</h1>
-        {!isAdding && <button onClick={() => setIsAdding(true)} className="btn-primary w-auto">Добавить товар</button>}
+        <h1 className="ios-large-title mb-0">Каталог</h1>
+        {!isAdding && <button onClick={() => setIsAdding(true)} className="btn-primary w-auto">Добавить</button>}
       </div>
 
       {isAdding && (
@@ -90,9 +90,20 @@ export default function CatalogPage() {
               <p className="text-[15px] text-[#8E8E93] mt-1 line-clamp-2">{p.description}</p>
               <div className="text-[20px] font-bold mt-4 text-[#000000]">{Number(p.price).toLocaleString()} ₸</div>
             </div>
-            <div className="flex items-center gap-2 p-4 pt-0">
-               <button onClick={() => {setEditId(p.id); setNewProduct({...p, image_urls: p.image_url ? p.image_url.split(',') : []}); setIsAdding(true);}} className="w-11 h-11 bg-[#F5F5F7] rounded-[14px] flex items-center justify-center text-[#000000]"><Edit size={20}/></button>
-               <button onClick={() => handleDelete(p.id)} className="w-11 h-11 bg-[#F5F5F7] rounded-[14px] flex items-center justify-center text-red-500"><Trash2 size={20}/></button>
+            {/* ИЗМЕНЕННЫЙ БЛОК С КНОПКАМИ */}
+            <div className="flex items-center gap-3 p-4 pt-0">
+               <button 
+                 onClick={() => {setEditId(p.id); setNewProduct({...p, image_urls: p.image_url ? p.image_url.split(',') : []}); setIsAdding(true);}} 
+                 className="flex-1 h-[44px] bg-[#F5F5F7] rounded-[14px] flex items-center justify-center gap-2 text-[#000000] font-medium text-[15px] transition-colors active:bg-[#E5E5EA]"
+               >
+                 <Edit size={18}/> Редактировать
+               </button>
+               <button 
+                 onClick={() => handleDelete(p.id)} 
+                 className="w-[44px] h-[44px] bg-[#F5F5F7] rounded-[14px] flex items-center justify-center text-red-500 shrink-0 transition-colors active:bg-[#E5E5EA]"
+               >
+                 <Trash2 size={20}/>
+               </button>
             </div>
           </div>
         )})}

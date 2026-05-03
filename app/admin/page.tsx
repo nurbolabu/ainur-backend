@@ -13,21 +13,21 @@ export default function AdminDashboard() {
     <div className="animate-in fade-in duration-300">
       <h1 className="ios-large-title">Обзор</h1>
 
-      {/* Метрики (Сетка баблов) */}
+      {/* Метрики (Сетка баблов с идеальными симметричными отступами) */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-[16px] mb-8">
-        <div className="ios-module p-5 flex flex-col justify-between min-h-[140px] mb-0">
+        <div className="ios-module p-5 flex flex-col justify-between min-h-[140px] !mb-0">
           <span className="text-[15px] text-[#8E8E93] font-medium">Всего посетителей</span>
           <span className="text-[34px] font-bold text-[#000000]">2,840</span>
         </div>
-        <div className="ios-module p-5 flex flex-col justify-between min-h-[140px] mb-0">
+        <div className="ios-module p-5 flex flex-col justify-between min-h-[140px] !mb-0">
           <span className="text-[15px] text-[#8E8E93] font-medium">Активные чаты</span>
           <span className="text-[34px] font-bold text-[#000000]">12</span>
         </div>
-        <div className="ios-module p-5 flex flex-col justify-between min-h-[140px] mb-0">
+        <div className="ios-module p-5 flex flex-col justify-between min-h-[140px] !mb-0">
           <span className="text-[15px] text-[#8E8E93] font-medium">Новые заявки</span>
           <span className="text-[34px] font-bold text-[#000000]">8</span>
         </div>
-        <div className="ios-module p-5 flex flex-col justify-between min-h-[140px] mb-0 bg-[#8BFDA8]">
+        <div className="ios-module p-5 flex flex-col justify-between min-h-[140px] !mb-0 bg-[#8BFDA8]">
           <span className="text-[15px] text-[#000000] font-medium opacity-60">Конверсия</span>
           <span className="text-[34px] font-bold text-[#000000]">4.2%</span>
         </div>
