@@ -1,89 +1,52 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js';
-import { ChevronDown, CheckCircle2, Clock } from 'lucide-react';
-
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
-const MY_PROJECT_ID = '8c49172a-333f-4708-ad0c-f08d70045891';
+import { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 
 export default function LeadsPage() {
-  const [leads, setLeads] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState<'new' | 'processed'>('new');
   const [expandedId, setExpandedId] = useState<string | null>(null);
-
-  useEffect(() => {
-    // В будущем тут будет реальный fetch из Supabase
-    setLeads([
-      { id: '1', name: 'Иван Иванов', phone: '+7 707 123 4567', total: 150000, status: 'new', created_at: new Date().toISOString(), cart_items: [{name: 'Лендинг', qty: 1}] },
-      { id: '2', name: 'Анна Смирнова', phone: '+7 705 987 6543', total: 0, status: 'new', created_at: new Date().toISOString(), cart_items: null },
-      { id: '3', name: 'ООО Ромашка', phone: '+7 701 555 3322', total: 450000, status: 'processed', created_at: new Date().toISOString(), cart_items: [{name: 'Интернет-магазин', qty: 1}] }
-    ]);
-  }, []);
-
-  const filteredLeads = leads.filter(l => l.status === activeTab);
-
-  function toggleStatus(id: string, currentStatus: string) {
-    const newStatus = currentStatus === 'new' ? 'processed' : 'new';
-    setLeads(leads.map(l => l.id === id ? { ...l, status: newStatus } : l));
-    setExpandedId(null);
-  }
+  
+  const leads = [
+    { id: '1', name: 'Иван Иванов', phone: '+7 707 123 4567', total: 150000, status: 'new', cart: [{n:'Лендинг', q:1}] },
+    { id: '2', name: 'Анна Смирнова', phone: '+7 705 987 6543', total: 0, status: 'new', cart: null }
+  ];
 
   return (
-    <div className="animate-in fade-in duration-500 max-w-4xl mx-auto">
-      <header className="mb-6"><h1 className="text-3xl font-bold tracking-tight">Заявки</h1></header>
+    <div className="animate-in fade-in duration-300">
+      <h1 className="ios-large-title mt-4">Заявки</h1>
 
-      {/* Статистика */}
-      <div className="grid grid-cols-2 gap-4 mb-8">
-        <div className="ios-bubble p-4 flex items-center justify-between">
-          <div><div className="text-gray-500 text-sm">Новые</div><div className="text-3xl font-bold mt-1">{leads.filter(l=>l.status==='new').length}</div></div>
-          <div className="w-12 h-12 rounded-full bg-[#f5f5f7] text-gray-500 flex items-center justify-center"><Clock size={22}/></div>
-        </div>
-        <div className="ios-bubble p-4 flex items-center justify-between">
-          <div><div className="text-gray-500 text-sm">Обработанные</div><div className="text-3xl font-bold mt-1">{leads.filter(l=>l.status==='processed').length}</div></div>
-          <div className="w-12 h-12 rounded-full bg-[#8BFDA8]/20 text-green-600 flex items-center justify-center"><CheckCircle2 size={22}/></div>
+      {/* iOS Segmented Control */}
+      <div className="px-4 md:px-0 mb-6">
+        <div className="bg-[#E3E3E8] p-[2px] rounded-[9px] flex max-w-sm">
+          <button onClick={() => setActiveTab('new')} className={`flex-1 py-1.5 text-[13px] font-semibold rounded-[7px] transition-all ${activeTab === 'new' ? 'bg-white shadow-[0_1px_3px_rgba(0,0,0,0.12)] text-black' : 'text-black'}`}>Новые</button>
+          <button onClick={() => setActiveTab('processed')} className={`flex-1 py-1.5 text-[13px] font-semibold rounded-[7px] transition-all ${activeTab === 'processed' ? 'bg-white shadow-[0_1px_3px_rgba(0,0,0,0.12)] text-black' : 'text-black'}`}>Обработанные</button>
         </div>
       </div>
 
-      {/* Переключатель */}
-      <div className="flex p-1 bg-gray-200 rounded-2xl w-full max-w-xs mx-auto md:mx-0 mb-8">
-        <button onClick={() => setActiveTab('new')} className={`flex-1 py-2 text-sm font-bold rounded-xl ${activeTab === 'new' ? 'bg-white shadow-sm text-black' : 'text-gray-500'}`}>Новые</button>
-        <button onClick={() => setActiveTab('processed')} className={`flex-1 py-2 text-sm font-bold rounded-xl ${activeTab === 'processed' ? 'bg-white shadow-sm text-black' : 'text-gray-500'}`}>Обработанные</button>
-      </div>
-
-      {/* Список баблов */}
-      <div className="space-y-4">
-        {filteredLeads.map(lead => (
-          <div key={lead.id} className="ios-bubble transition-all">
-            <button onClick={() => setExpandedId(expandedId === lead.id ? null : lead.id)} className="w-full flex items-center justify-between p-5 text-left active:bg-gray-50">
+      <div className="ios-bubble ios-bubble-margin">
+        {leads.filter(l => l.status === activeTab).map(lead => (
+          <div key={lead.id}>
+            <button onClick={() => setExpandedId(expandedId === lead.id ? null : lead.id)} className="ios-list-row w-full text-left">
               <div>
-                <div className="font-bold text-lg">{lead.name}</div>
-                <div className="text-gray-500 text-sm mt-1">{lead.phone} • {new Date(lead.created_at).toLocaleDateString('ru-RU')}</div>
+                <div className="text-[17px] font-medium text-black">{lead.name}</div>
+                <div className="text-[15px] text-[#3C3C43] opacity-60 mt-0.5">{lead.phone}</div>
               </div>
-              <div className="flex items-center gap-4">
-                {lead.total > 0 && <span className="font-bold text-black">{lead.total.toLocaleString('ru-RU')} ₸</span>}
-                <ChevronDown size={20} className={`text-gray-400 transition-transform ${expandedId === lead.id ? 'rotate-180' : ''}`} />
+              <div className="flex items-center gap-3">
+                {lead.total > 0 && <span className="text-[17px] text-[#3C3C43] opacity-60">{lead.total.toLocaleString()} ₸</span>}
+                <ChevronDown size={20} className={`text-[#C6C6C8] transition-transform ${expandedId === lead.id ? 'rotate-180' : ''}`} />
               </div>
             </button>
-            
             {expandedId === lead.id && (
-              <div className="p-5 pt-0 border-t border-gray-100 bg-gray-50/50">
-                {lead.cart_items && (
-                  <div className="mb-6 mt-4">
-                    <div className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-3">Заказ</div>
-                    <ul className="space-y-2 text-base">
-                      {lead.cart_items.map((item:any, i:number) => <li key={i}>• {item.name} <span className="text-gray-500">x{item.qty}</span></li>)}
-                    </ul>
-                  </div>
-                )}
-                {!lead.cart_items && <div className="mb-6 mt-4 text-gray-500">Простая заявка</div>}
-                
-                <button onClick={() => toggleStatus(lead.id, lead.status)} className={lead.status === 'new' ? 'btn-main w-full' : 'btn-sec w-full'}>
-                  {lead.status === 'new' ? 'Отметить как Обработанное' : 'Вернуть в Новые'}
-                </button>
+              <div className="p-4 bg-[#F2F2F7]/50 border-b border-[#C6C6C8]">
+                {lead.cart ? (
+                  <ul className="mb-4 text-[15px] text-black space-y-1">{lead.cart.map((c, i) => <li key={i}>• {c.n} x{c.q}</li>)}</ul>
+                ) : <div className="mb-4 text-[15px] text-[#8E8E93]">Обычная заявка</div>}
+                <button className="btn-primary min-h-[44px]">Отметить как готовое</button>
               </div>
             )}
           </div>
         ))}
+        {leads.filter(l => l.status === activeTab).length === 0 && <div className="p-6 text-center text-[#8E8E93] text-[17px]">Пусто</div>}
       </div>
     </div>
   );

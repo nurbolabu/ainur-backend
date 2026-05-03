@@ -1,55 +1,56 @@
 'use client';
 import Link from 'next/link';
-import { MessageSquare, ChevronRight } from 'lucide-react';
+import { ChevronRight, MessageSquare } from 'lucide-react';
 
 export default function AdminDashboard() {
   const recentChats = [
-    { id: '842', name: 'Клиент #842', date: 'Только что', message: 'Здравствуйте, сколько стоит дизайн?' },
-    { id: '841', name: 'Клиент #841', date: '10 мин назад', message: 'Оформил заказ в корзине.' },
-    { id: '840', name: 'Клиент #840', date: 'Час назад', message: 'Расскажите про услуги' },
+    { id: '842', time: '14:30', msg: 'Здравствуйте! Как оформить...' },
+    { id: '841', time: 'Вчера', msg: 'Где вы находитесь?' },
+    { id: '840', time: 'Вторник', msg: 'Спасибо, жду звонка' },
   ];
 
   return (
-    <div className="animate-in fade-in duration-500 w-full">
-      
-      {/* СТАТИСТИКА (4 раздельные белые карточки) */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-12">
-        <div className="card-ios p-6 flex flex-col items-center justify-center text-center h-[160px]">
-          <span className="text-gray-400 font-bold uppercase tracking-wider text-xs mb-2">Посетители</span>
-          <span className="text-4xl font-black text-black">1,240</span>
+    <div className="animate-in fade-in duration-300">
+      <h1 className="ios-large-title mt-4">Сегодня</h1>
+
+      {/* Статистика: Сетка баблов */}
+      <div className="grid grid-cols-2 gap-4 ios-bubble-margin mb-8">
+        <div className="ios-bubble mb-0 p-4 min-h-[110px] flex flex-col justify-between">
+          <span className="text-[13px] text-[#3C3C43] font-medium">Посетители</span>
+          <span className="text-[28px] font-bold text-black">1,240</span>
         </div>
-        <div className="card-ios p-6 flex flex-col items-center justify-center text-center h-[160px]">
-          <span className="text-gray-400 font-bold uppercase tracking-wider text-xs mb-2">Нажатия</span>
-          <span className="text-4xl font-black text-black">456</span>
+        <div className="ios-bubble mb-0 p-4 min-h-[110px] flex flex-col justify-between">
+          <span className="text-[13px] text-[#3C3C43] font-medium">Нажатия</span>
+          <span className="text-[28px] font-bold text-black">456</span>
         </div>
-        <div className="card-ios p-6 flex flex-col items-center justify-center text-center h-[160px]">
-          <span className="text-gray-400 font-bold uppercase tracking-wider text-xs mb-2">Заявки</span>
-          <span className="text-4xl font-black text-black">24</span>
+        <div className="ios-bubble mb-0 p-4 min-h-[110px] flex flex-col justify-between">
+          <span className="text-[13px] text-[#3C3C43] font-medium">Новые заявки</span>
+          <span className="text-[28px] font-bold text-black">24</span>
         </div>
-        <div className="card-ios p-6 flex flex-col items-center justify-center text-center h-[160px] bg-black">
-          <span className="text-gray-400 font-bold uppercase tracking-wider text-xs mb-2">Конверсия</span>
-          <span className="text-4xl font-black text-[#8BFDA8]">5.2%</span>
+        <div className="ios-bubble mb-0 p-4 min-h-[110px] flex flex-col justify-between bg-[#8BFDA8]">
+          <span className="text-[13px] text-black/60 font-medium">Конверсия</span>
+          <span className="text-[28px] font-bold text-black">5.2%</span>
         </div>
       </div>
 
-      <h2 className="text-2xl font-bold text-gray-400 mb-6 px-2">Последние диалоги</h2>
-
-      {/* ИСТОРИЯ ЧАТОВ (Каждый чат — отдельная карточка) */}
-      <div className="space-y-4">
+      <h2 className="ios-section-header">Последние диалоги</h2>
+      
+      {/* Inset Grouped List для чатов */}
+      <div className="ios-bubble ios-bubble-margin">
         {recentChats.map((chat) => (
-          <Link key={chat.id} href={`/admin/chats?id=${chat.id}`} className="card-ios flex items-center justify-between p-5 hover:scale-[0.99] transition-transform active:bg-gray-50 group">
-            <div className="flex items-center gap-5 overflow-hidden">
-              <div className="w-14 h-14 rounded-full bg-[#F2F2F7] flex items-center justify-center text-gray-400 shrink-0 group-hover:bg-black group-hover:text-[#8BFDA8] transition-colors">
-                <MessageSquare size={24} />
+          <Link key={chat.id} href={`/admin/chats?id=${chat.id}`} className="ios-list-row group">
+            <div className="flex items-center gap-3 overflow-hidden">
+              <div className="w-10 h-10 rounded-full bg-[#F2F2F7] flex items-center justify-center text-[#8E8E93] shrink-0">
+                <MessageSquare size={20} />
               </div>
               <div className="overflow-hidden">
-                <div className="font-bold text-xl text-black">{chat.name}</div>
-                <div className="text-gray-500 text-base mt-1 truncate">{chat.message}</div>
+                <div className="text-[17px] font-medium text-black">Клиент #{chat.id}</div>
+                <div className="text-[15px] text-[#3C3C43] opacity-60 truncate">{chat.msg}</div>
               </div>
             </div>
-            <div className="flex items-center gap-4 shrink-0 ml-4">
-              <span className="text-sm font-bold text-gray-400">{chat.date}</span>
-              <ChevronRight size={24} className="text-gray-300" />
+            <div className="flex items-center gap-2 shrink-0 pl-4">
+              <span className="text-[15px] text-[#3C3C43] opacity-60">{chat.time}</span>
+              <ChevronRight size={20} className="text-[#C6C6C8]" />
             </div>
           </Link>
         ))}

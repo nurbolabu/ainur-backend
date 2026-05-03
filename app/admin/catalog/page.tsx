@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import { Plus, Trash2, X, Upload, Loader2, Image as ImageIcon, Edit } from 'lucide-react';
+import { Loader2, Trash2, Image as ImageIcon } from 'lucide-react';
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
 const MY_PROJECT_ID = '8c49172a-333f-4708-ad0c-f08d70045891';
@@ -11,8 +11,7 @@ export default function CatalogPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [editId, setEditId] = useState<string | null>(null);
-  const [newProduct, setNewProduct] = useState({ name: '', description: '', price: '', image_urls: [] as string[] });
+  const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '', image_urls: [] as string[] });
 
   async function fetchProducts() {
     setIsLoading(true);
@@ -37,96 +36,72 @@ export default function CatalogPage() {
     setIsUploading(false);
   }
 
-  function removeUploadedImage(index: number) {
-    setNewProduct(prev => ({ ...prev, image_urls: prev.image_urls.filter((_, i) => i !== index) }));
-  }
-
   async function handleSave() {
     if (!newProduct.name || !newProduct.price) return alert('Укажите название и цену');
-    const pData = { project_id: MY_PROJECT_ID, name: newProduct.name, description: newProduct.description, price: Number(newProduct.price), image_url: newProduct.image_urls.join(',') };
-    if (editId) await supabase.from('products').update(pData).eq('id', editId);
-    else await supabase.from('products').insert([pData]);
-    setNewProduct({ name: '', description: '', price: '', image_urls: [] });
-    setEditId(null); setIsAdding(false); fetchProducts();
-  }
-
-  async function startEdit(p: any) {
-    setEditId(p.id);
-    setNewProduct({ name: p.name, description: p.description || '', price: p.price, image_urls: p.image_url ? p.image_url.split(',') : [] });
-    setIsAdding(true); window.scrollTo({ top: 0, behavior: 'smooth' });
+    await supabase.from('products').insert([{ project_id: MY_PROJECT_ID, name: newProduct.name, description: newProduct.description, price: Number(newProduct.price), image_url: newProduct.image_urls.join(',') }]);
+    setNewProduct({ name: '', price: '', description: '', image_urls: [] });
+    setIsAdding(false); fetchProducts();
   }
 
   async function handleDelete(id: string) {
-    if (confirm('Точно удалить этот товар?')) {
+    if (confirm('Точно удалить товар?')) {
       await supabase.from('products').delete().eq('id', id);
       fetchProducts();
     }
   }
 
-  if (isLoading) return <div className="p-8 text-gray-500 font-bold">Загрузка каталога...</div>;
+  if (isLoading) return <div className="p-8 text-[#8E8E93] text-[17px] text-center">Загрузка каталога...</div>;
 
   return (
-    <div className="animate-in fade-in duration-500 w-full pb-10">
-      <header className="mb-8 flex justify-between items-center px-2">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-400">Каталог</h1>
-        {!isAdding && <button onClick={() => setIsAdding(true)} className="btn-main"><Plus size={20}/> Добавить товар</button>}
-      </header>
+    <div className="animate-in fade-in duration-300">
+      <div className="flex justify-between items-center pr-4 md:pr-0 mb-4">
+        <h1 className="ios-large-title mb-0 mt-4">Каталог</h1>
+        {!isAdding && <button onClick={() => setIsAdding(true)} className="btn-text">Добавить</button>}
+      </div>
 
-      {/* ФОРМА ДОБАВЛЕНИЯ (Большой белый бабл) */}
       {isAdding && (
-        <div className="card-ios p-8 mb-10">
-          <h2 className="text-2xl font-bold mb-8">{editId ? 'Редактировать товар' : 'Новый товар'}</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <input type="text" value={newProduct.name} onChange={e => setNewProduct({...newProduct, name: e.target.value})} className="input-ios" placeholder="Название (например: Лендинг)" />
-            <input type="number" value={newProduct.price} onChange={e => setNewProduct({...newProduct, price: e.target.value})} className="input-ios" placeholder="Цена (₸)" />
+        <div className="ios-bubble-margin mb-8">
+          <h2 className="ios-section-header">Новый товар</h2>
+          <div className="ios-bubble mb-6">
+            <div className="ios-list-row cursor-default bg-white"><input type="text" className="input-bare" placeholder="Название услуги" value={newProduct.name} onChange={e => setNewProduct({...newProduct, name: e.target.value})} /></div>
+            <div className="ios-list-row cursor-default bg-white"><input type="number" className="input-bare" placeholder="Цена (₸)" value={newProduct.price} onChange={e => setNewProduct({...newProduct, price: e.target.value})} /></div>
+            <div className="ios-list-row cursor-default bg-white py-3 h-auto"><textarea rows={3} className="input-bare resize-none" placeholder="Описание..." value={newProduct.description} onChange={e => setNewProduct({...newProduct, description: e.target.value})}></textarea></div>
           </div>
           
-          <textarea rows={4} value={newProduct.description} onChange={e => setNewProduct({...newProduct, description: e.target.value})} className="input-ios resize-none mb-8" placeholder="Подробное описание товара..."></textarea>
-
-          <div className="mb-10">
-            <label className="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Фотографии</label>
-            <div className="flex flex-wrap gap-4 items-start">
-              {newProduct.image_urls.map((url, i) => (
-                <div key={i} className="relative w-28 h-28 rounded-[20px] border border-gray-200 overflow-hidden group">
-                  <img src={url} className="w-full h-full object-cover" alt="" />
-                  <button onClick={() => removeUploadedImage(i)} className="absolute top-2 right-2 bg-black/50 text-white rounded-full p-1.5"><X size={16}/></button>
-                </div>
-              ))}
-              <label className="w-28 h-28 flex flex-col items-center justify-center bg-[#F2F2F7] border-2 border-dashed border-gray-300 rounded-[20px] cursor-pointer hover:bg-gray-200 transition-colors">
-                {isUploading ? <Loader2 className="animate-spin text-gray-400" size={28}/> : <Upload className="text-gray-400" size={28} />}
-                <input type="file" multiple accept="image/*" className="hidden" onChange={handleFileUpload} disabled={isUploading}/>
-              </label>
-            </div>
+          <h2 className="ios-section-header">Фотографии</h2>
+          <div className="ios-bubble p-4 flex gap-3 flex-wrap bg-white mb-6">
+             {newProduct.image_urls.map((url, i) => (<img key={i} src={url} className="w-[72px] h-[72px] rounded-[10px] object-cover" />))}
+             <label className="w-[72px] h-[72px] rounded-[10px] border border-[#C6C6C8] bg-[#F2F2F7] flex items-center justify-center cursor-pointer">
+                {isUploading ? <Loader2 className="animate-spin text-[#8E8E93]" size={20}/> : <span className="text-[#000000] font-bold text-2xl">+</span>}
+                <input type="file" multiple accept="image/*" className="hidden" onChange={handleFileUpload} />
+             </label>
           </div>
 
-          <div className="flex flex-col md:flex-row gap-4 justify-end pt-8 border-t border-gray-100">
-            <button onClick={() => {setIsAdding(false); setEditId(null); setNewProduct({name:'', description:'', price:'', image_urls:[]})}} className="btn-sec w-full md:w-auto">Отмена</button>
-            <button onClick={handleSave} className="btn-main w-full md:w-auto">Сохранить товар</button>
+          <div className="flex gap-4">
+             <button className="btn-secondary" onClick={() => setIsAdding(false)}>Отмена</button>
+             <button className="btn-primary" onClick={handleSave} disabled={isUploading}>Сохранить</button>
           </div>
         </div>
       )}
 
-      {/* КАРТОЧКИ ТОВАРОВ (Каждая — отдельный бабл) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.map(p => {
-          const img = p.image_url ? p.image_url.split(',')[0] : '';
-          return (
-          <div key={p.id} className="card-ios flex flex-col h-full hover:shadow-md transition-shadow">
-            <div className="h-60 w-full bg-[#F2F2F7] flex items-center justify-center relative">
-               {img ? <img src={img} className="w-full h-full object-cover"/> : <ImageIcon className="text-gray-300" size={56}/>}
+      {!isAdding && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ios-bubble-margin">
+          {products.map(p => {
+            const img = p.image_url ? p.image_url.split(',')[0] : '';
+            return (
+            <div key={p.id} className="ios-bubble flex flex-col mb-0 bg-white group">
+              <div className="h-[200px] w-full bg-[#F2F2F7] flex items-center justify-center relative">
+                 {img ? <img src={img} className="w-full h-full object-cover"/> : <ImageIcon className="text-[#C6C6C8]" size={40}/>}
+                 <button onClick={() => handleDelete(p.id)} className="absolute top-3 right-3 w-[40px] h-[40px] rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white"><Trash2 size={20}/></button>
+              </div>
+              <div className="p-4 flex-1">
+                <h3 className="text-[17px] font-semibold text-black leading-tight line-clamp-2">{p.name}</h3>
+                <p className="text-[20px] font-bold mt-1 text-[#8E8E93]">{Number(p.price).toLocaleString()} ₸</p>
+              </div>
             </div>
-            <div className="p-6 flex-1 flex flex-col justify-center text-center">
-              <h3 className="font-bold text-xl text-black line-clamp-2">{p.name}</h3>
-              <p className="text-2xl font-black mt-3 text-[#8E8E93]">{Number(p.price).toLocaleString('ru-RU')} ₸</p>
-            </div>
-            <div className="p-5 flex gap-3 border-t border-gray-100">
-               <button onClick={() => startEdit(p)} className="btn-sec flex-1 py-3 text-sm px-0">Изменить</button>
-               <button onClick={() => handleDelete(p.id)} className="w-[52px] h-[52px] flex items-center justify-center border-2 border-black rounded-[16px] text-red-500 hover:bg-black hover:text-red-400 transition-colors shrink-0"><Trash2 size={22}/></button>
-            </div>
-          </div>
-        )})}
-      </div>
+          )})}
+        </div>
+      )}
     </div>
   );
 }
