@@ -5,54 +5,52 @@ import { ChevronLeft, MessageSquare } from 'lucide-react';
 export default function ChatsPage() {
   const [activeChatId, setActiveChatId] = useState<string | null>('842');
 
-  // Заглушка. Позже подтянем из Supabase
   const dialogs = [
-    { id: '842', date: '02.05.2026, 14:30', messages: [{role: 'client', text: 'Привет!'}, {role: 'ai', text: 'Здравствуйте! Чем могу помочь?'}] },
-    { id: '841', date: '01.05.2026, 09:15', messages: [{role: 'client', text: 'Где вы находитесь?'}] }
+    { id: '842', date: '02.05.2026', time: '14:30', messages: [{role: 'client', text: 'Привет!'}, {role: 'ai', text: 'Здравствуйте! Чем могу помочь?'}] },
+    { id: '841', date: '01.05.2026', time: '09:15', messages: [{role: 'client', text: 'Сколько стоит дизайн?'}] }
   ];
-
   const activeChat = dialogs.find(d => d.id === activeChatId);
 
   return (
-    <div className="animate-in fade-in duration-500 h-[calc(100vh-100px)] flex flex-col max-w-6xl mx-auto pb-20 md:pb-0">
-      <header className="mb-6 shrink-0"><h1 className="text-3xl font-bold tracking-tight">Чаты</h1></header>
-      
-      {/* Контейнер равной высоты */}
-      <div className="flex gap-6 flex-1 overflow-hidden pb-6">
+    <div className="animate-in fade-in duration-500 flex flex-col h-[calc(100vh-100px)] md:h-[600px] w-full">
+      <h1 className="text-2xl font-bold text-gray-400 mb-6 px-2 shrink-0">История чатов</h1>
+
+      {/* Огромный белый бабл на весь экран */}
+      <div className="card-ios flex overflow-hidden flex-1 w-full">
         
-        {/* Список баблов (Скрывается на мобильном, если открыт чат) */}
-        <div className={`w-full md:w-80 space-y-3 overflow-y-auto ${activeChatId ? 'hidden md:flex' : 'flex'}`}>
-          {dialogs.map((dialog) => (
-            <button key={dialog.id} onClick={() => setActiveChatId(dialog.id)} 
-              className={`ios-bubble w-full flex items-center gap-4 p-4 text-left hover:scale-[0.99] transition-all border-[3px] ${activeChatId === dialog.id ? 'border-[#8BFDA8]' : 'border-transparent'}`}>
-              <div className="w-12 h-12 rounded-full bg-[#f5f5f7] flex items-center justify-center text-gray-400 flex-shrink-0"><MessageSquare size={22} /></div>
-              <div className="overflow-hidden">
-                <div className="font-bold text-lg">Клиент #{dialog.id}</div>
-                <div className="text-gray-500 text-sm truncate mt-0.5">Последнее сообщение...</div>
-              </div>
-              <div className="text-xs text-gray-400 mb-auto">{dialog.date.split(',')[1]}</div>
-            </button>
-          ))}
+        {/* Список (Слева) */}
+        <div className={`w-full md:w-[340px] border-r border-gray-100 flex-col overflow-y-auto ${activeChatId ? 'hidden md:flex' : 'flex'}`}>
+          <div className="p-6 border-b border-gray-50 bg-[#F2F2F7]">
+            <h2 className="font-bold text-xl">Все диалоги</h2>
+          </div>
+          <div className="divide-y divide-gray-50">
+            {dialogs.map((dialog) => (
+              <button key={dialog.id} onClick={() => setActiveChatId(dialog.id)} 
+                className={`w-full flex items-start gap-4 p-5 text-left transition-colors ${activeChatId === dialog.id ? 'bg-[#8BFDA8]/10' : 'bg-white hover:bg-gray-50'}`}>
+                <div className="w-[48px] h-[48px] rounded-full bg-[#F2F2F7] flex items-center justify-center shrink-0 text-gray-400"><MessageSquare size={20}/></div>
+                <div className="flex-1 overflow-hidden">
+                  <div className="font-bold text-[18px] text-black mb-1">Клиент #{dialog.id}</div>
+                  <div className="text-[15px] text-gray-500 truncate">{dialog.messages[0].text}</div>
+                </div>
+                <div className="text-[13px] font-bold text-gray-400">{dialog.time}</div>
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Окно самого чата (Один большой белый "баббл") */}
-        <div className={`flex-1 ios-bubble flex-col ${!activeChatId ? 'hidden md:flex items-center justify-center bg-transparent border-2 border-dashed border-gray-300 text-gray-300' : 'flex'}`}>
-          {!activeChatId ? (
-            <div className="text-gray-400 font-bold text-lg flex items-center gap-3"><MessageSquare size={28}/> Выберите диалог</div>
-          ) : (
+        {/* Зона переписки (Справа) */}
+        <div className={`flex-1 flex-col bg-white ${!activeChatId ? 'hidden md:flex' : 'flex'}`}>
+          {activeChat ? (
             <>
-              {/* Шапка чата для мобилок */}
-              <div className="p-4 border-b border-gray-100 flex items-center gap-3 bg-white shrink-0 md:hidden">
-                <button onClick={() => setActiveChatId(null)} className="p-2 -ml-2 text-black bg-gray-100 rounded-full"><ChevronLeft size={20} /></button>
-                <span className="font-bold text-xl">Диалог #{activeChatId}</span>
+              <div className="flex items-center gap-3 p-5 border-b border-gray-100 shrink-0">
+                <button onClick={() => setActiveChatId(null)} className="md:hidden p-2 bg-[#F2F2F7] rounded-full text-black active:scale-95"><ChevronLeft size={24} /></button>
+                <div className="font-bold text-xl">Диалог #{activeChatId}</div>
               </div>
-              
-              {/* Зона сообщений (iMessage Style) */}
-              <div className="flex-1 p-6 overflow-y-auto flex flex-col gap-3 bg-white">
-                {activeChat?.messages.map((msg, i) => (
+              <div className="flex-1 p-6 md:p-8 overflow-y-auto flex flex-col gap-4">
+                {activeChat.messages.map((msg, i) => (
                   <div key={i} className={`flex w-full ${msg.role === 'ai' ? 'justify-start' : 'justify-end'}`}>
-                    <div className={`max-w-[80%] px-5 py-3.5 text-[16px] leading-snug rounded-[22px] ${
-                      msg.role === 'ai' ? 'bg-[#f5f5f7] text-black rounded-bl-sm' : 'bg-[#8BFDA8] text-black rounded-br-sm'
+                    <div className={`max-w-[80%] px-5 py-3.5 text-[16px] leading-snug rounded-[24px] ${
+                      msg.role === 'ai' ? 'bg-[#F2F2F7] text-black rounded-bl-sm' : 'bg-[#8BFDA8] text-black rounded-br-sm'
                     }`}>
                       {msg.text}
                     </div>
@@ -60,8 +58,9 @@ export default function ChatsPage() {
                 ))}
               </div>
             </>
-          )}
+          ) : <div className="flex-1 flex items-center justify-center text-gray-300 font-bold text-xl">Выберите диалог</div>}
         </div>
+
       </div>
     </div>
   );
