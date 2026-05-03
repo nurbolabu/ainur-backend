@@ -48,8 +48,8 @@ export default function CatalogPage() {
   return (
     <div className="animate-in fade-in duration-300">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="ios-large-title mb-0">Каталог товаров</h1>
-        {!isAdding && <button onClick={() => setIsAdding(true)} className="btn-primary w-auto">Добавить товар</button>}
+        <h1 className="ios-large-title mb-0">Каталог</h1>
+        {!isAdding && <button onClick={() => setIsAdding(true)} className="btn-primary w-auto">Добавить</button>}
       </div>
 
       {isAdding && (
