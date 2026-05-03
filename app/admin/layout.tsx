@@ -28,10 +28,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="min-h-[100dvh] bg-[#F2F2F7] flex justify-center font-sans text-black">
-      <div className="flex w-full md:max-w-[1220px] gap-5 md:pt-10 px-4 md:px-0">
+      <div className="flex w-full md:max-w-[1220px] gap-6 md:pt-10 px-4 md:px-0">
         
-        {/* ЛЕВОЕ МЕНЮ (Shape 280x520) */}
-        <aside className="hidden md:block w-[280px] h-[520px] bg-white rounded-[24px] p-5 shrink-0 border border-[#E5E5EA] sticky top-10">
+        {/* ЛЕВОЕ МЕНЮ (Белая карточка 280x520) */}
+        <aside className="hidden md:block w-[280px] h-[520px] bg-white rounded-[24px] p-5 shrink-0 shadow-sm sticky top-10">
           <Link href="/admin/settings" className="mb-8 px-2 flex items-center gap-3 hover:opacity-80 transition-opacity">
              <div className="w-10 h-10 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center border border-gray-200">
                 {logo ? <img src={logo} className="w-full h-full object-cover" alt="" /> : <span className="font-bold text-black">A</span>}
@@ -59,7 +59,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </main>
       </div>
 
-      {/* МОБИЛЬНОЕ МЕНЮ (Крупные круглые кнопки) */}
+      {/* МОБИЛЬНОЕ МЕНЮ */}
       <nav className="md:hidden fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-2xl border-t border-gray-200 z-50 px-2 pb-[calc(env(safe-area-inset-bottom)+10px)] pt-3 flex justify-around">
         {navItems.map(item => {
           const isActive = pathname === item.href;
@@ -72,13 +72,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           )
         })}
       </nav>
-
-      <style jsx global>{`
-        .card-ios { @apply bg-white rounded-[24px] border border-[#E5E5EA] overflow-hidden; }
-        .btn-primary { @apply bg-[#8BFDA8] text-black font-bold rounded-[16px] px-6 py-3.5 transition-all active:scale-95 hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2; }
-        .btn-secondary { @apply bg-black text-white font-bold rounded-[16px] px-6 py-3.5 transition-all active:scale-95 hover:opacity-90 flex items-center justify-center gap-2; }
-        .input-ios { @apply bg-[#F2F2F7] border border-[#E5E5EA] rounded-[16px] px-4 py-3.5 outline-none focus:bg-white focus:border-gray-400 transition-all text-base; }
-      `}</style>
     </div>
   );
 }

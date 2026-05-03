@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight, MessageSquare } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
 export default function ChatsPage() {
   const [activeChatId, setActiveChatId] = useState<string | null>('842');
@@ -16,7 +16,8 @@ export default function ChatsPage() {
     <div className="animate-in fade-in duration-500 w-full md:w-[900px]">
       <h1 className="text-[#8E8E93] text-xl font-bold mb-4 ml-2">История чатов</h1>
       
-      <div className="card-ios h-[600px] flex">
+      {/* ГЛАВНЫЙ КОНТЕНТ (Большая белая карточка 900x600) */}
+      <div className="bg-white rounded-[24px] shadow-sm h-[600px] flex overflow-hidden">
         
         {/* ЛЕВАЯ КОЛОНКА (300px) */}
         <div className="w-full md:w-[300px] border-r border-gray-100 flex flex-col overflow-y-auto divide-y divide-gray-50">
@@ -38,11 +39,11 @@ export default function ChatsPage() {
              <div className="flex-1 flex items-center justify-center text-gray-300">Выберите диалог</div>
           ) : (
             <>
-              <div className="p-4 border-b border-gray-50 flex items-center justify-between">
-                <span className="font-bold">Диалог №{activeChatId}</span>
+              <div className="p-4 border-b border-gray-50 flex items-center justify-between shadow-sm z-10">
+                <span className="font-bold text-lg">Диалог №{activeChatId}</span>
                 <span className="text-xs text-gray-400 font-bold uppercase tracking-widest">Live</span>
               </div>
-              <div className="flex-1 p-6 overflow-y-auto flex flex-col gap-4">
+              <div className="flex-1 p-6 overflow-y-auto flex flex-col gap-4 bg-white">
                 {activeChat.messages.map((msg, i) => (
                   <div key={i} className={`flex w-full ${msg.role === 'ai' ? 'justify-start' : 'justify-end'}`}>
                     <div className={`max-w-[80%] px-5 py-3 text-[16px] leading-snug rounded-[22px] ${
