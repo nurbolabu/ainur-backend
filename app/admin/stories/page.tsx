@@ -31,30 +31,33 @@ export default function StoriesPage() {
   }
 
   async function handleDelete(id: string) {
-    if (confirm('Удалить стори?')) {
+    if (confirm('Удалить эту сторис?')) {
       await supabase.from('stories').delete().eq('id', id);
       fetchStories();
     }
   }
 
   return (
-    <div className="animate-in fade-in duration-300">
-      <div className="flex justify-between items-center pr-4 md:pr-0">
-        <h1 className="ios-title mt-4 mb-4">Stories</h1>
-        <label className="btn-text mb-4 cursor-pointer flex items-center gap-1">
-           {isUploading ? <Loader2 size={24} className="animate-spin"/> : <Plus size={28}/>}
+    <div className="animate-in fade-in duration-500 max-w-5xl mx-auto">
+      <header className="mb-8 flex justify-between items-center px-2">
+        <h1 className="text-3xl font-bold tracking-tight">Stories</h1>
+        <label className="btn-sec w-auto px-6 cursor-pointer">
+           {isUploading ? <Loader2 size={24} className="animate-spin text-gray-400"/> : <Upload size={20}/>}
+           {isUploading ? 'Загрузка...' : 'Загрузить файл'}
            <input type="file" accept="image/*,video/*" className="hidden" onChange={handleFileUpload} disabled={isUploading} />
         </label>
-      </div>
+      </header>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-4 md:px-0">
-        {stories.map((story) => (
-          <div key={story.id} className="ios-bubble m-0 relative aspect-[9/16] bg-black">
-            {story.media_url.includes('.mp4') ? <video src={story.media_url} className="w-full h-full object-cover" autoPlay muted loop playsInline /> : <img src={story.media_url} className="w-full h-full object-cover" alt=""/>}
-            <button onClick={() => handleDelete(story.id)} className="absolute bottom-3 right-3 w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-red-500 shadow-sm active:scale-95"><Trash2 size={20} /></button>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 px-4 md:px-0">
+        {stories.map(s => (
+          <div key={s.id} className="ios-bubble aspect-[9/16] relative bg-black group m-0">
+            {s.media_url.includes('.mp4') ? <video src={s.media_url} className="w-full h-full object-cover" autoPlay muted loop playsInline /> : <img src={s.media_url} className="w-full h-full object-cover" alt=""/>}
+            <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+               <button onClick={() => handleDelete(s.id)} className="w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-red-500 shadow-sm active:scale-95"><Trash2 size={20} /></button>
+            </div>
           </div>
         ))}
-        {stories.length === 0 && <div className="aspect-[9/16] bg-[#E3E3E8] rounded-[10px] flex items-center justify-center text-[#8E8E93] border border-[#C6C6C8]">Пусто</div>}
+        {stories.length === 0 && <div className="ios-bubble aspect-[9/16] flex flex-col items-center justify-center text-[#8E8E93] bg-[#EDEDED]">Пусто</div>}
       </div>
     </div>
   );
