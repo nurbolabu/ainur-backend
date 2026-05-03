@@ -1,78 +1,83 @@
-'use client'
-import React, { useState } from 'react';
-import { Save, XCircle } from 'lucide-react';
+'use client';
+import { useState, useEffect } from 'react';
+import { createClient } from '@supabase/supabase-js';
+import { ChevronRight, Search } from 'lucide-react';
+
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
+const MY_PROJECT_ID = '8c49172a-333f-4708-ad0c-f08d70045891';
 
 export default function SettingsPage() {
-  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({ company_name: 'Название', theme_color: '#8BFDA8', logo_url: '', system_prompt: '', knowledge_base: '', welcome_message: '' });
 
-  const handleSave = async () => {
-    setLoading(true);
-    // Здесь будет логика: 
-    // const { error } = await supabase.from('projects').update({ ... }).eq('id', MY_PROJECT_ID)
-    setTimeout(() => setLoading(false), 1000); // Имитация
-  };
+  useEffect(() => {
+    supabase.from('projects').select('*').eq('id', MY_PROJECT_ID).single().then(({ data }) => {
+      if (data) setFormData({ ...formData, ...data });
+    });
+  }, []);
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      <header className="flex justify-between items-end">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Настройки</h1>
-          <p className="text-[#8E8E93]">Управление внешним видом и логикой ИИ</p>
-        </div>
-      </header>
+    <div className="animate-in fade-in duration-300">
+      <h1 className="ios-title mt-4">Настройки</h1>
 
-      <section className="grid gap-6">
-        {/* Основные настройки */}
-        <div className="bg-white/70 backdrop-blur-md border border-white rounded-[30px] p-8 shadow-sm">
-          <h2 className="text-lg font-semibold mb-6">Внешний вид виджета</h2>
-          <div className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-sm font-medium ml-1">Название компании</label>
-                <input type="text" placeholder="AI NUR" className="w-full bg-[#f5f5f7] border-gray-100 border focus:bg-white focus:ring-2 focus:ring-[#8BFDA8] rounded-2xl px-4 py-3 outline-none transition-all" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium ml-1">Основной цвет (HEX)</label>
-                <div className="flex gap-3">
-                  <input type="text" defaultValue="#8BFDA8" className="flex-grow bg-[#f5f5f7] border-gray-100 border rounded-2xl px-4 py-3 outline-none" />
-                  <div className="w-12 h-12 rounded-2xl shadow-inner border border-black/5" style={{ backgroundColor: '#8BFDA8' }}></div>
-                </div>
-              </div>
+      {/* iOS Search Bar */}
+      <div className="px-4 md:px-0 mb-6">
+        <div className="bg-[#E3E3E8]/60 flex items-center gap-2 px-3 py-1.5 rounded-[10px]">
+          <Search size={18} className="text-[#8E8E93]" />
+          <input type="text" placeholder="Поиск" className="bg-transparent border-none outline-none text-[17px] w-full placeholder:text-[#8E8E93]" />
+        </div>
+      </div>
+
+      {/* Apple ID Style Card */}
+      <div className="ios-list p-3">
+        <button className="flex items-center justify-between active:opacity-50 transition-opacity w-full text-left">
+          <div className="flex items-center gap-4">
+            <div className="w-[60px] h-[60px] rounded-full bg-gray-200 overflow-hidden">
+              {formData.logo_url ? <img src={formData.logo_url} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-[#8BFDA8]"></div>}
+            </div>
+            <div>
+              <div className="text-[20px] font-normal text-black leading-tight">{formData.company_name}</div>
+              <div className="text-[13px] font-normal text-[#8E8E93] mt-0.5">Аккаунт, настройки и другое</div>
             </div>
           </div>
-        </div>
+          <ChevronRight size={20} className="text-[#C7C7CC]" />
+        </button>
+      </div>
 
-        {/* База знаний ИИ */}
-        <div className="bg-white/70 backdrop-blur-md border border-white rounded-[30px] p-8 shadow-sm">
-          <h2 className="text-lg font-semibold mb-6">Интеллект (Llama 3.1)</h2>
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-sm font-medium ml-1">Системный промпт (Роль)</label>
-              <textarea rows={3} className="w-full bg-[#f5f5f7] border-gray-100 border focus:bg-white rounded-2xl px-4 py-3 outline-none transition-all resize-none" defaultValue="Ты — профессиональный ассистент компании AI NUR..." />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium ml-1">База знаний (Контекст)</label>
-              <textarea rows={6} className="w-full bg-[#f5f5f7] border-gray-100 border focus:bg-white rounded-2xl px-4 py-3 outline-none transition-all resize-none" placeholder="Введите цены, услуги и FAQ..." />
-            </div>
+      <div className="ios-list">
+        <button className="ios-list-item group">
+          <span className="ios-list-text">Роль ИИ</span>
+          <div className="ios-list-value"><span className="truncate max-w-[120px]">Ассистент</span> <ChevronRight size={20} className="text-[#C7C7CC]" /></div>
+        </button>
+        <button className="ios-list-item group">
+          <span className="ios-list-text">База знаний</span>
+          <div className="ios-list-value"><ChevronRight size={20} className="text-[#C7C7CC]" /></div>
+        </button>
+        <button className="ios-list-item group">
+          <span className="ios-list-text">Приветствие</span>
+          <div className="ios-list-value"><ChevronRight size={20} className="text-[#C7C7CC]" /></div>
+        </button>
+      </div>
+
+      <div className="ios-list">
+        <button className="ios-list-item group">
+          <span className="ios-list-text">Логотип (URL)</span>
+          <div className="ios-list-value"><ChevronRight size={20} className="text-[#C7C7CC]" /></div>
+        </button>
+        <div className="ios-list-item">
+          <span className="ios-list-text">Цвет виджета</span>
+          <div className="flex items-center gap-3">
+            <span className="text-[17px] text-[#8E8E93] uppercase">{formData.theme_color}</span>
+            <input type="color" value={formData.theme_color} readOnly className="w-8 h-8 rounded-full border-none p-0 bg-transparent" />
           </div>
         </div>
+      </div>
 
-        {/* Кнопки действий */}
-        <div className="flex gap-4 pt-4">
-          <button 
-            onClick={handleSave}
-            disabled={loading}
-            className="flex-1 md:flex-none md:min-w-[200px] bg-[#8BFDA8] text-black font-bold py-4 rounded-2xl active:scale-95 transition-transform flex items-center justify-center gap-2 shadow-lg shadow-[#8BFDA8]/20 disabled:opacity-50"
-          >
-            <Save className="w-5 h-5" />
-            {loading ? 'Сохранение...' : 'Сохранить изменения'}
-          </button>
-          <button className="hidden md:flex items-center gap-2 px-8 py-4 bg-black text-white font-bold rounded-2xl active:scale-95 transition-transform">
-            <XCircle className="w-5 h-5" />
-            Отмена
-          </button>
-        </div>
-      </section>
+      <div className="ios-list">
+        <button className="ios-list-item group">
+          <span className="ios-list-text">Подписка и оплата</span>
+          <div className="ios-list-value"><div className="w-5 h-5 rounded-full bg-red-500 text-white text-[12px] flex items-center justify-center font-bold">1</div><ChevronRight size={20} className="text-[#C7C7CC]" /></div>
+        </button>
+      </div>
     </div>
   );
 }

@@ -1,60 +1,41 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js';
-import { Plus, Trash2, Edit, X, Upload, Loader2, Image as ImageIcon } from 'lucide-react';
-
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
-const MY_PROJECT_ID = '8c49172a-333f-4708-ad0c-f08d70045891';
+import { useState } from 'react';
+import { Plus, ChevronRight, Image as ImageIcon } from 'lucide-react';
 
 export default function CatalogPage() {
-  const [products, setProducts] = useState<any[]>([]);
   const [isAdding, setIsAdding] = useState(false);
-  const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '', image_urls: [] as string[] });
-
-  useEffect(() => {
-    supabase.from('products').select('*').eq('project_id', MY_PROJECT_ID).order('created_at', { ascending: false })
-      .then(({ data }) => data && setProducts(data));
-  }, []);
+  const products = [{ id: '1', name: 'Создание Лендинга', price: 150000 }];
 
   return (
-    <div className="animate-in fade-in duration-500 w-full md:w-[900px]">
-      <header className="mb-8 flex justify-between items-center px-2">
-        <h1 className="text-[#8E8E93] text-2xl font-bold">Каталог</h1>
-        {!isAdding && <button onClick={() => setIsAdding(true)} className="bg-[#8BFDA8] text-black font-bold rounded-[16px] px-6 py-3 transition-transform active:scale-95 flex items-center gap-2 shadow-sm"><Plus size={20}/> Добавить</button>}
-      </header>
+    <div className="animate-in fade-in duration-300">
+      <div className="flex justify-between items-center pr-4 md:pr-0">
+        <h1 className="ios-title mt-4 mb-4">Каталог</h1>
+        {!isAdding && <button onClick={() => setIsAdding(true)} className="text-[#007AFF] text-[17px] active:opacity-50 mb-4"><Plus size={24}/></button>}
+      </div>
 
-      {/* ФОРМА (Белая карточка) */}
       {isAdding && (
-        <div className="bg-white rounded-[24px] shadow-sm p-6 md:p-8 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <input className="bg-[#F2F2F7] border border-[#E5E5EA] rounded-[16px] px-4 py-3.5 outline-none focus:bg-white transition-all w-full text-black" placeholder="Название услуги" value={newProduct.name} onChange={e => setNewProduct({...newProduct, name: e.target.value})} />
-            <input className="bg-[#F2F2F7] border border-[#E5E5EA] rounded-[16px] px-4 py-3.5 outline-none focus:bg-white transition-all w-full text-black" type="number" placeholder="Цена (₸)" value={newProduct.price} onChange={e => setNewProduct({...newProduct, price: e.target.value})} />
+        <div className="mx-4 md:mx-0 mb-8">
+          <div className="ios-list mb-4">
+            <div className="p-2 border-b border-[#E5E5EA]"><input className="input-ios" placeholder="Название" /></div>
+            <div className="p-2"><input className="input-ios" type="number" placeholder="Цена (₸)" /></div>
           </div>
-          <textarea className="bg-[#F2F2F7] border border-[#E5E5EA] rounded-[16px] px-4 py-3.5 outline-none focus:bg-white transition-all w-full text-black mb-6 resize-none" rows={3} placeholder="Описание услуги..." value={newProduct.description} onChange={e => setNewProduct({...newProduct, description: e.target.value})} />
-          
-          <div className="flex gap-3 justify-end border-t border-gray-50 pt-6">
-            <button onClick={() => setIsAdding(false)} className="bg-black text-white font-bold rounded-[16px] px-8 py-3.5 transition-transform active:scale-95">Отмена</button>
-            <button className="bg-[#8BFDA8] text-black font-bold rounded-[16px] px-8 py-3.5 transition-transform active:scale-95">Сохранить</button>
+          <div className="flex gap-3">
+             <button className="btn-secondary" onClick={() => setIsAdding(false)}>Отмена</button>
+             <button className="btn-primary">Сохранить</button>
           </div>
         </div>
       )}
 
-      {/* СПИСОК ТОВАРОВ (Отдельные карточки) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div className="ios-list">
         {products.map(p => (
-          <div key={p.id} className="bg-white rounded-[24px] shadow-sm flex flex-col overflow-hidden group">
-            <div className="h-44 bg-[#F2F2F7] flex items-center justify-center border-b border-gray-100 relative">
-               {p.image_url ? <img src={p.image_url.split(',')[0]} className="w-full h-full object-cover" alt="" /> : <ImageIcon size={40} className="text-gray-300" />}
+          <button key={p.id} className="ios-list-item flex items-center gap-3">
+            <div className="w-12 h-12 bg-[#F2F2F7] rounded-[8px] flex items-center justify-center shrink-0"><ImageIcon size={20} className="text-[#C7C7CC]"/></div>
+            <div className="flex-1 text-left">
+              <div className="ios-list-text">{p.name}</div>
+              <div className="text-[15px] text-[#8E8E93] mt-0.5">{p.price.toLocaleString()} ₸</div>
             </div>
-            <div className="p-5 flex-1">
-              <h3 className="font-bold text-lg line-clamp-1">{p.name}</h3>
-              <p className="text-2xl font-black mt-2">{Number(p.price).toLocaleString()} ₸</p>
-            </div>
-            <div className="p-4 bg-gray-50/50 flex gap-2 border-t border-gray-50">
-               <button className="flex-1 py-2 bg-white shadow-sm rounded-xl font-bold text-sm">Изменить</button>
-               <button className="w-10 h-10 flex items-center justify-center bg-white shadow-sm rounded-xl text-red-500"><Trash2 size={18}/></button>
-            </div>
-          </div>
+            <ChevronRight size={20} className="text-[#C7C7CC]" />
+          </button>
         ))}
       </div>
     </div>
