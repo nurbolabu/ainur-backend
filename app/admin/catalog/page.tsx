@@ -53,7 +53,7 @@ export default function CatalogPage() {
       </div>
 
       {isAdding && (
-        <div className="ios-module p-6">
+        <div className="ios-module p-6 mx-4 md:mx-0">
           <h2 className="ios-title-2">{editId ? 'Редактировать товар' : 'Новый товар'}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <input className="input-ios" placeholder="Название товара" value={newProduct.name} onChange={e => setNewProduct({...newProduct, name: e.target.value})} />
@@ -61,7 +61,7 @@ export default function CatalogPage() {
           </div>
           <textarea className="input-ios resize-none mb-6" rows={3} placeholder="Описание товара..." value={newProduct.description} onChange={e => setNewProduct({...newProduct, description: e.target.value})} />
           
-          <h2 className="ios-section-header">Фотографии</h2>
+          <h2 className="ios-section-header ml-0">Фотографии</h2>
           <div className="flex gap-4 mb-8 flex-wrap">
             {newProduct.image_urls.map((url, i) => (<img key={i} src={url} className="w-[80px] h-[80px] rounded-[16px] object-cover" />))}
             <label className="w-[80px] h-[80px] rounded-[16px] bg-[#F5F5F7] border border-[#E5E5EA] flex items-center justify-center cursor-pointer">
@@ -77,7 +77,7 @@ export default function CatalogPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[16px] mb-8 px-4 md:px-0">
         {products.map(p => {
           const img = p.image_url ? p.image_url.split(',')[0] : '';
           return (
@@ -90,7 +90,6 @@ export default function CatalogPage() {
               <p className="text-[15px] text-[#8E8E93] mt-1 line-clamp-2">{p.description}</p>
               <div className="text-[20px] font-bold mt-4 text-[#000000]">{Number(p.price).toLocaleString()} ₸</div>
             </div>
-            {/* ИЗМЕНЕННЫЙ БЛОК С КНОПКАМИ */}
             <div className="flex items-center gap-3 p-4 pt-0">
                <button 
                  onClick={() => {setEditId(p.id); setNewProduct({...p, image_urls: p.image_url ? p.image_url.split(',') : []}); setIsAdding(true);}} 

@@ -25,13 +25,13 @@ export default function LeadsPage() {
     <div className="animate-in fade-in duration-300">
       <h1 className="ios-large-title">Заявки</h1>
 
-      {/* iOS Segmented Control */}
-      <div className="bg-[#E5E5EA] p-1 rounded-[10px] flex max-w-sm mb-8 mx-4 md:mx-0">
-        <button onClick={() => setActiveTab('new')} className={`flex-1 py-1.5 text-[13px] font-semibold rounded-[8px] transition-all ${activeTab === 'new' ? 'bg-[#FFFFFF] text-[#000000]' : 'text-[#000000] opacity-60'}`}>Новые</button>
-        <button onClick={() => setActiveTab('processed')} className={`flex-1 py-1.5 text-[13px] font-semibold rounded-[8px] transition-all ${activeTab === 'processed' ? 'bg-[#FFFFFF] text-[#000000]' : 'text-[#000000] opacity-60'}`}>Обработанные</button>
+      {/* iOS Segmented Control - увеличенная высота и на всю ширину карточки */}
+      <div className="bg-[#E5E5EA] p-1.5 rounded-[12px] flex w-full mb-8 mx-4 md:mx-0" style={{ maxWidth: 'calc(100% - 32px)' }}>
+        <button onClick={() => setActiveTab('new')} className={`flex-1 py-2 text-[14px] font-semibold rounded-[10px] transition-all ${activeTab === 'new' ? 'bg-[#FFFFFF] text-[#000000] shadow-[0_1px_3px_rgba(0,0,0,0.12)]' : 'text-[#000000] opacity-60'}`}>Новые</button>
+        <button onClick={() => setActiveTab('processed')} className={`flex-1 py-2 text-[14px] font-semibold rounded-[10px] transition-all ${activeTab === 'processed' ? 'bg-[#FFFFFF] text-[#000000] shadow-[0_1px_3px_rgba(0,0,0,0.12)]' : 'text-[#000000] opacity-60'}`}>Обработанные</button>
       </div>
 
-      <div className="ios-module">
+      <div className="ios-module mx-4 md:mx-0">
         {filteredLeads.map(lead => (
           <div key={lead.id} className="relative">
             <button onClick={() => setExpandedId(expandedId === lead.id ? null : lead.id)} className="ios-list-item w-full text-left">
