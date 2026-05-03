@@ -19,26 +19,40 @@ export default function SettingsPage() {
   async function handleSave() {
     setIsSaving(true);
     await supabase.from('projects').update(formData).eq('id', MY_PROJECT_ID);
-    setIsSaving(false); setIsEditing(false);
+    setIsSaving(false);
+    setIsEditing(false); // Выходим из режима
   }
+
+  const toggleEdit = () => {
+    if (isEditing) { handleSave(); } else { setIsEditing(true); }
+  };
 
   return (
     <div className="animate-in fade-in duration-300 w-full pb-20">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-        <h1 className="ios-large-title mb-0">Настройки</h1>
+      <header className="mb-8 flex flex-col md:flex-row md:justify-between md:items-center px-1 gap-4">
+        <h1 className="text-3xl font-bold tracking-tight">Настройки</h1>
         {isEditing ? (
-          <button onClick={handleSave} className="btn-main w-full md:w-auto">{isSaving ? 'Сохранение...' : 'Сохранить'}</button>
+          <button onClick={handleSave} className="btn-main w-full md:w-auto">
+            {isSaving ? 'Сохранение...' : 'Сохранить'}
+          </button>
         ) : (
-          <button onClick={() => setIsEditing(true)} className="btn-sec w-full md:w-auto">Редактировать</button>
+          <button onClick={toggleEdit} className="btn-sec w-full md:w-auto">Редактировать</button>
         )}
-      </div>
+      </header>
 
       <div className="space-y-6">
-        <section className="ios-bubble p-6 md:p-8 !mb-0">
+        
+        <section className="ios-bubble p-6 md:p-8 mb-0">
           <h2 className="text-xl font-bold mb-6">Внешний вид</h2>
           <div className="grid gap-5">
-            <div><label className="block text-sm font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Название</label><input className="input-ios" disabled={!isEditing} value={formData.company_name} onChange={e => setFormData({...formData, company_name: e.target.value})} /></div>
-            <div><label className="block text-sm font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Логотип (URL)</label><input className="input-ios" disabled={!isEditing} value={formData.logo_url} onChange={e => setFormData({...formData, logo_url: e.target.value})} /></div>
+            <div>
+               <label className="block text-sm font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Название</label>
+               <input className="input-ios" disabled={!isEditing} value={formData.company_name} onChange={e => setFormData({...formData, company_name: e.target.value})} />
+            </div>
+            <div>
+               <label className="block text-sm font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Логотип (URL)</label>
+               <input className="input-ios" disabled={!isEditing} value={formData.logo_url} onChange={e => setFormData({...formData, logo_url: e.target.value})} />
+            </div>
             <div>
                <label className="block text-sm font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Акцентный цвет</label>
                <div className={`flex items-center gap-4 bg-[#EDEDED] rounded-[16px] px-4 py-2 border border-gray-200 ${!isEditing && 'opacity-60'}`}>
@@ -49,12 +63,21 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        <section className="ios-bubble p-6 md:p-8 !mb-0">
+        <section className="ios-bubble p-6 md:p-8 mb-0">
           <h2 className="text-xl font-bold mb-6">База знаний ИИ</h2>
           <div className="grid gap-5">
-            <div><label className="block text-sm font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Роль ИИ</label><textarea rows={2} disabled={!isEditing} className="input-ios resize-none" value={formData.system_prompt} onChange={e => setFormData({...formData, system_prompt: e.target.value})} /></div>
-            <div><label className="block text-sm font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Знания для ИИ</label><textarea rows={5} disabled={!isEditing} className="input-ios resize-none" value={formData.knowledge_base} onChange={e => setFormData({...formData, knowledge_base: e.target.value})} /></div>
-            <div><label className="block text-sm font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Приветствие</label><input type="text" disabled={!isEditing} className="input-ios" value={formData.welcome_message} onChange={e => setFormData({...formData, welcome_message: e.target.value})} /></div>
+            <div>
+               <label className="block text-sm font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Роль ИИ</label>
+               <textarea rows={2} disabled={!isEditing} className="input-ios resize-none" value={formData.system_prompt} onChange={e => setFormData({...formData, system_prompt: e.target.value})} />
+            </div>
+            <div>
+               <label className="block text-sm font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Знания для ИИ</label>
+               <textarea rows={5} disabled={!isEditing} className="input-ios resize-none" value={formData.knowledge_base} onChange={e => setFormData({...formData, knowledge_base: e.target.value})} />
+            </div>
+            <div>
+               <label className="block text-sm font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Приветствие</label>
+               <input type="text" disabled={!isEditing} className="input-ios" value={formData.welcome_message} onChange={e => setFormData({...formData, welcome_message: e.target.value})} />
+            </div>
           </div>
         </section>
       </div>

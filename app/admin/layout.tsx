@@ -30,7 +30,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       
       <div className="flex w-full md:max-w-[1200px] gap-8 md:pt-10 px-4 md:px-0">
         
-        {/* SIDEBAR */}
+        {/* SIDEBAR (Белый бабл 280px) */}
         <aside className="hidden md:flex w-[280px] h-fit bg-white rounded-[24px] p-6 flex-col sticky top-10 border border-gray-100">
           <Link href="/admin/settings" className="flex items-center gap-4 mb-10 px-2 cursor-pointer hover:opacity-80 transition-opacity">
             <div className="w-12 h-12 rounded-[14px] bg-[#F2F2F7] overflow-hidden flex items-center justify-center border border-gray-200 shrink-0">
@@ -61,7 +61,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* MAIN CONTENT */}
         <main className="flex-1 w-full pb-32 md:pb-20 pt-8 md:pt-0 max-w-[900px]">
-          <div className="flex md:hidden items-center gap-3 mb-8">
+          <div className="flex md:hidden items-center gap-3 mb-8 px-1">
             <Link href="/admin/settings" className="w-11 h-11 rounded-full bg-white shadow-sm overflow-hidden flex items-center justify-center shrink-0 border border-gray-200">
               {projectData?.logo_url ? <img src={projectData.logo_url} className="w-full h-full object-cover" alt="" /> : <span className="font-bold text-gray-500">A</span>}
             </Link>
@@ -86,11 +86,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </nav>
 
       <style jsx global>{`
-        /* Убраны двойные отступы у заголовков */
-        .ios-large-title { font-size: 34px; font-weight: 700; color: #000000; margin-bottom: 24px; letter-spacing: 0.3px; }
-        .ios-title-2 { font-size: 22px; font-weight: 600; color: #000000; margin-bottom: 16px; }
-        .ios-section-header { font-size: 13px; text-transform: uppercase; color: #3C3C43; opacity: 0.6; margin-bottom: 8px; font-weight: 400; }
-        
         .ios-bubble { background-color: #FFFFFF; border-radius: 24px; overflow: hidden; margin-bottom: 24px; border: 1px solid #E5E5EA; }
         
         .btn-main { background-color: #8BFDA8; color: #000000; font-weight: 700; border-radius: 16px; padding: 14px 24px; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 16px; border: 2px solid #8BFDA8; cursor: pointer; }
