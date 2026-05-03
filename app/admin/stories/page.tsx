@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import { Loader2, Trash2 } from 'lucide-react';
+import { Loader2, Trash2, Plus } from 'lucide-react';
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
 const MY_PROJECT_ID = '8c49172a-333f-4708-ad0c-f08d70045891';
@@ -33,21 +33,21 @@ export default function StoriesPage() {
   }
 
   return (
-    <div className="animate-in fade-in duration-300">
-      <div className="flex justify-between items-center mb-6">
+    <div className="animate-in fade-in duration-300 w-full">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <h1 className="ios-large-title mb-0">Stories</h1>
-        <label className="btn-primary w-auto cursor-pointer">
-           {isUploading ? <Loader2 className="animate-spin" size={20}/> : null} Загрузить
+        <label className="btn-main w-full md:w-auto cursor-pointer">
+           {isUploading ? <Loader2 className="animate-spin text-black" size={20}/> : <Plus className="text-black" size={20}/>}
+           {isUploading ? 'Загрузка...' : 'Загрузить'}
            <input type="file" accept="image/*,video/*" className="hidden" onChange={handleFileUpload} disabled={isUploading} />
         </label>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-[16px]">
         {stories.map((s, index) => (
-          <div key={s.id} className="ios-module mb-0 aspect-[9/16] relative bg-[#000000]">
-            {s.media_url.includes('.mp4') ? <video src={s.media_url} className="w-full h-full object-cover opacity-80" autoPlay muted loop /> : <img src={s.media_url} className="w-full h-full object-cover opacity-80"/>}
-            <div className="absolute top-4 left-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-[8px] text-white text-[13px] font-bold">#{index + 1}</div>
-            <button onClick={() => handleDelete(s.id)} className="absolute bottom-4 right-4 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white"><Trash2 size={20}/></button>
+          <div key={s.id} className="ios-bubble !mb-0 aspect-[9/16] relative bg-[#000000]">
+            {s.media_url.includes('.mp4') ? <video src={s.media_url} className="w-full h-full object-cover opacity-90" autoPlay muted loop /> : <img src={s.media_url} className="w-full h-full object-cover opacity-90"/>}
+            <button onClick={() => handleDelete(s.id)} className="absolute top-3 right-3 w-10 h-10 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-red-500 hover:scale-105 transition-transform"><Trash2 size={20}/></button>
           </div>
         ))}
       </div>
