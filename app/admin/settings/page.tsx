@@ -28,7 +28,7 @@ export default function SettingsPage() {
   return (
     <div className="animate-in fade-in duration-300 relative">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="ios-large-title mb-0">Настройки проекта</h1>
+        <h1 className="ios-large-title mb-0">Настройки</h1>
         <button onClick={handleSave} className="btn-primary w-auto">Сохранить</button>
       </div>
 
