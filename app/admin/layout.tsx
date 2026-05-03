@@ -1,45 +1,61 @@
-import React from 'react';
-import { LayoutDashboard, ShoppingBag, MessageCircle, Settings, PlayCircle } from 'lucide-react';
+'use client';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { LayoutDashboard, Settings, ShoppingBag, Clapperboard, Users, MessageSquare } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+
   const navItems = [
-    { name: 'Дашборд', icon: LayoutDashboard, href: '/admin' },
-    { name: 'Каталог', icon: ShoppingBag, href: '/admin/catalog' },
-    { name: 'Чаты', icon: MessageCircle, href: '/admin/chats' },
-    { name: 'Сторис', icon: PlayCircle, href: '/admin/stories' },
-    { name: 'Настройки', icon: Settings, href: '/admin/settings' },
+    { href: '/admin', icon: <LayoutDashboard size={20} />, text: 'Главная' },
+    { href: '/admin/leads', icon: <Users size={20} />, text: 'Заявки' },
+    { href: '/admin/chats', icon: <MessageSquare size={20} />, text: 'История чатов' },
+    { href: '/admin/catalog', icon: <ShoppingBag size={20} />, text: 'Каталог' },
+    { href: '/admin/stories', icon: <Clapperboard size={20} />, text: 'Сторисы' },
+    { href: '/admin/settings', icon: <Settings size={20} />, text: 'Настройки' }
   ];
 
   return (
-    <div className="min-h-screen bg-[#f5f5f7] text-black font-sans antialiased">
-      {/* Desktop Sidebar */}
-      <aside className="fixed left-0 top-0 hidden h-full w-64 border-r border-white/20 bg-white/60 backdrop-blur-xl md:flex flex-col p-6 z-50">
-        <div className="mb-8 px-2 font-bold text-xl tracking-tight">Aura Admin</div>
-        <nav className="space-y-2">
-          {navItems.map((item) => (
-            <a key={item.name} href={item.href} className="flex items-center gap-3 px-4 py-3 rounded-2xl transition-all hover:bg-black/5 active:scale-95 group">
-              <item.icon className="w-5 h-5 text-[#8E8E93] group-hover:text-black" />
-              <span className="font-medium">{item.name}</span>
-            </a>
-          ))}
-        </nav>
-      </aside>
+    <div className="min-h-screen bg-[#f5f5f7] flex justify-center font-sans text-black">
+      <div className="flex w-full max-w-[1220px] gap-5 pt-10">
+        
+        {/* ЛЕВОЕ МЕНЮ (Shape 280x520) */}
+        <aside className="hidden md:block w-[280px] h-[520px] bg-white rounded-[24px] p-5 shrink-0 shadow-sm border border-gray-100">
+          <div className="mb-8 px-2 flex items-center gap-3">
+             <div className="w-8 h-8 rounded-lg bg-black flex items-center justify-center text-[#8BFDA8] font-bold">A</div>
+             <span className="font-bold text-xl tracking-tight">AI NUR</span>
+          </div>
 
-      {/* Main Content */}
-      <main className="md:pl-64 pb-24 md:pb-0">
-        <div className="p-6 md:p-10 max-w-5xl mx-auto">
-          {children}
-        </div>
-      </main>
+          <nav className="flex flex-col gap-2">
+            {navItems.map(item => {
+              const isActive = pathname === item.href;
+              return (
+                <Link key={item.href} href={item.href} 
+                  className={`flex items-center gap-3 px-4 py-3 rounded-[12px] transition-all duration-200 font-medium ${isActive ? 'bg-black text-white' : 'text-gray-500 hover:bg-gray-50'}`}>
+                  <div className={isActive ? 'text-[#8BFDA8]' : 'text-gray-400'}>{item.icon}</div>
+                  <span>{item.text}</span>
+                </Link>
+              )
+            })}
+          </nav>
+        </aside>
 
-      {/* Mobile Bottom Tab Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white/80 backdrop-blur-2xl border-t border-black/5 flex items-center justify-around px-4 md:hidden z-50 pb-safe">
-        {navItems.map((item) => (
-          <a key={item.name} href={item.href} className="flex flex-col items-center gap-1">
-            <item.icon className="w-6 h-6 text-[#8E8E93]" />
-            <span className="text-[10px] font-medium text-[#8E8E93]">{item.name}</span>
-          </a>
-        ))}
+        {/* ГЛАВНЫЙ КОНТЕНТ */}
+        <main className="flex-1 pb-20">
+           {children}
+        </main>
+      </div>
+
+      {/* Мобильное меню (оставляем старую логику, но в новых цветах) */}
+      <nav className="md:hidden fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-2xl border-t border-gray-200 z-50 px-2 pb-6 pt-2 flex justify-around">
+        {navItems.map(item => {
+          const isActive = pathname === item.href;
+          return (
+            <Link key={item.href} href={item.href} className="flex flex-col items-center">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isActive ? 'bg-black text-[#8BFDA8]' : 'text-gray-400'}`}>{item.icon}</div>
+            </Link>
+          )
+        })}
       </nav>
     </div>
   );
