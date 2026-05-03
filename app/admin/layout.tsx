@@ -29,11 +29,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="min-h-[100dvh] bg-[#F2F2F7] flex justify-center font-sans text-black">
       <div className="flex w-full md:max-w-[1220px] gap-6 md:pt-10 px-4 md:px-0">
         
-        {/* ДЕСКТОП: Боковое меню (Стиль macOS/iPadOS) */}
+        {/* ДЕСКТОП: Боковое меню */}
         <aside className="hidden md:block w-[260px] shrink-0 sticky top-10 h-fit">
-          <div className="mb-6 px-4 flex items-center gap-3">
-             <div className="w-10 h-10 rounded-[10px] bg-black flex items-center justify-center text-[#8BFDA8] font-bold text-lg">A</div>
-             <span className="font-semibold text-xl tracking-tight">AI NUR</span>
+          <div className="mb-8 px-4 flex items-center gap-3">
+             <div className="w-11 h-11 rounded-[10px] bg-black flex items-center justify-center text-[#8BFDA8] font-bold text-xl shadow-sm">A</div>
+             <span className="font-bold text-[22px] tracking-tight">AI NUR</span>
           </div>
 
           <nav className="flex flex-col gap-1">
@@ -43,7 +43,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               return (
                 <Link key={item.href} href={item.href} 
                   className={`flex items-center gap-3 px-4 py-2.5 rounded-[10px] transition-colors ${isActive ? 'bg-[#E3E3E8] text-black font-semibold' : 'text-[#8E8E93] hover:bg-[#E3E3E8]/50 font-normal'}`}>
-                  <Icon size={20} className={isActive ? 'text-black' : 'text-[#8E8E93]'} />
+                  <Icon size={22} className={isActive ? 'text-black' : 'text-[#8E8E93]'} />
                   <span className="text-[17px]">{item.text}</span>
                 </Link>
               )
@@ -52,7 +52,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </aside>
 
         {/* ГЛАВНЫЙ КОНТЕНТ */}
-        <main className="flex-1 w-full pb-28 md:pb-20 pt-12 md:pt-0 max-w-[800px]">
+        <main className="flex-1 w-full pb-28 md:pb-20 pt-10 md:pt-0 max-w-[840px]">
            {children}
         </main>
       </div>
@@ -64,7 +64,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           const Icon = item.icon;
           return (
             <Link key={item.href} href={item.href} className="flex flex-col items-center gap-1 active:opacity-50 transition-opacity w-[60px]">
-              <Icon size={24} className={isActive ? 'text-black fill-current stroke-2' : 'text-[#999999] stroke-[1.5]'} />
+              <Icon size={26} className={isActive ? 'text-black fill-current stroke-2' : 'text-[#999999] stroke-[1.5]'} />
               <span className={`text-[10px] text-center ${isActive ? 'text-black font-semibold' : 'text-[#999999] font-medium'}`}>{item.text}</span>
             </Link>
           )
@@ -73,21 +73,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       {/* ГЛОБАЛЬНЫЕ СТИЛИ (Строго по Apple HIG) */}
       <style jsx global>{`
-        .ios-title { @apply text-[34px] font-bold tracking-tight text-black mb-4 px-4 md:px-0; }
+        .ios-title { @apply text-[34px] font-bold tracking-tight text-black mb-6 px-4 md:px-0; }
         .ios-section-title { @apply text-[13px] font-normal text-[#8E8E93] uppercase tracking-wide mb-2 ml-4; }
         
-        /* Группированные списки как в Настройках */
-        .ios-list { @apply bg-white rounded-[10px] flex flex-col mb-8 overflow-hidden mx-4 md:mx-0; }
+        /* Баблы (Белые карточки) */
+        .ios-bubble { @apply bg-white rounded-[10px] flex flex-col mb-8 mx-4 md:mx-0 shadow-[0_1px_2px_rgba(0,0,0,0.04)]; }
         .ios-list-item { @apply flex items-center justify-between p-3.5 bg-white active:bg-[#E5E5EA] transition-colors relative min-h-[44px]; }
+        /* Тонкая линия разделитель не доходящая до левого края */
         .ios-list-item:not(:last-child)::after { content: ''; position: absolute; bottom: 0; left: 16px; right: 0; height: 0.5px; background-color: #C6C6C8; }
+        .ios-list-item:first-child { border-top-left-radius: 10px; border-top-right-radius: 10px; }
+        .ios-list-item:last-child { border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; }
         
         .ios-list-text { @apply text-[17px] font-normal text-black; }
-        .ios-list-value { @apply text-[17px] font-normal text-[#8E8E93] flex items-center gap-2; }
-
+        
         /* Поля ввода и кнопки */
-        .input-ios { @apply bg-[#E3E3E8]/60 rounded-[10px] px-4 py-2.5 outline-none focus:bg-[#E3E3E8] transition-all text-[17px] text-black w-full; }
-        .btn-primary { @apply bg-black text-[#8BFDA8] text-[17px] font-semibold rounded-[10px] px-4 py-3 transition-all active:scale-95 disabled:opacity-50 w-full text-center; }
-        .btn-secondary { @apply bg-[#E3E3E8] text-black text-[17px] font-semibold rounded-[10px] px-4 py-3 transition-all active:scale-95 w-full text-center; }
+        .input-ios { @apply bg-transparent px-4 py-3 outline-none text-[17px] text-black w-full; }
+        .btn-primary { @apply bg-[#8BFDA8] text-black text-[17px] font-semibold rounded-[10px] px-4 py-3 transition-all active:opacity-70 disabled:opacity-50 text-center flex items-center justify-center gap-2; }
+        .btn-secondary { @apply bg-[#E3E3E8] text-black text-[17px] font-semibold rounded-[10px] px-4 py-3 transition-all active:opacity-70 text-center flex items-center justify-center gap-2; }
+        .btn-text { @apply text-[#8BFDA8] text-[17px] font-medium active:opacity-50 transition-opacity; }
       `}</style>
     </div>
   );

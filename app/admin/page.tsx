@@ -6,36 +6,33 @@ export default function AdminDashboard() {
   const recentChats = [
     { id: '842', time: '14:30', msg: 'Здравствуйте! Как оформить...' },
     { id: '841', time: 'Вчера', msg: 'Где вы находитесь?' },
-    { id: '840', time: 'Вторник', msg: 'Спасибо, жду звонка' },
   ];
 
   return (
     <div className="animate-in fade-in duration-300">
       <h1 className="ios-title mt-4">Сегодня</h1>
 
-      {/* Статистика (Виджеты iOS) */}
       <div className="grid grid-cols-2 gap-4 px-4 md:px-0 mb-8">
-        <div className="bg-white rounded-[20px] p-4 flex flex-col justify-between h-[110px] shadow-sm">
+        <div className="ios-bubble mb-0 p-4 flex flex-col justify-between h-[110px]">
           <span className="text-[15px] font-medium text-[#8E8E93]">Посетители</span>
           <span className="text-[28px] font-semibold text-black">1,240</span>
         </div>
-        <div className="bg-white rounded-[20px] p-4 flex flex-col justify-between h-[110px] shadow-sm">
+        <div className="ios-bubble mb-0 p-4 flex flex-col justify-between h-[110px]">
           <span className="text-[15px] font-medium text-[#8E8E93]">Нажатия</span>
           <span className="text-[28px] font-semibold text-black">456</span>
         </div>
-        <div className="bg-white rounded-[20px] p-4 flex flex-col justify-between h-[110px] shadow-sm">
+        <div className="ios-bubble mb-0 p-4 flex flex-col justify-between h-[110px]">
           <span className="text-[15px] font-medium text-[#8E8E93]">Заявки</span>
           <span className="text-[28px] font-semibold text-black">24</span>
         </div>
-        <div className="bg-white rounded-[20px] p-4 flex flex-col justify-between h-[110px] shadow-sm relative overflow-hidden">
+        <div className="ios-bubble mb-0 p-4 flex flex-col justify-between h-[110px] relative overflow-hidden bg-[#8BFDA8]/10 border-[#8BFDA8]/30">
           <span className="text-[15px] font-medium text-[#8E8E93] z-10">Конверсия</span>
           <span className="text-[28px] font-semibold text-black z-10">5.2%</span>
-          <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-[#8BFDA8]/30 rounded-full blur-xl"></div>
         </div>
       </div>
 
       <h2 className="ios-section-title">Последние диалоги</h2>
-      <div className="ios-list">
+      <div className="ios-bubble">
         {recentChats.map((chat) => (
           <Link key={chat.id} href={`/admin/chats?id=${chat.id}`} className="ios-list-item">
             <div className="flex items-center gap-3 overflow-hidden">

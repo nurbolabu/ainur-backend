@@ -6,8 +6,8 @@ export default function LeadsPage() {
   const [activeTab, setActiveTab] = useState<'new' | 'processed'>('new');
   
   const leads = [
-    { id: '1', name: 'Иван Иванов', phone: '+7 707 123', total: 150000, status: 'new' },
-    { id: '2', name: 'Анна Смирнова', phone: '+7 705 987', total: 0, status: 'new' }
+    { id: '1', name: 'Иван Иванов', phone: '+7 707 123 4567', total: 150000, status: 'new' },
+    { id: '2', name: 'Анна Смирнова', phone: '+7 705 987 6543', total: 0, status: 'new' }
   ];
 
   return (
@@ -22,19 +22,20 @@ export default function LeadsPage() {
         </div>
       </div>
 
-      <div className="ios-list">
+      <div className="ios-bubble">
         {leads.filter(l => l.status === activeTab).map(lead => (
           <button key={lead.id} className="ios-list-item w-full text-left">
             <div>
               <div className="ios-list-text">{lead.name}</div>
               <div className="text-[15px] text-[#8E8E93] mt-0.5">{lead.phone}</div>
             </div>
-            <div className="ios-list-value">
-              {lead.total > 0 && <span className="text-black">{lead.total.toLocaleString()} ₸</span>}
+            <div className="flex items-center gap-2">
+              {lead.total > 0 && <span className="text-[17px] text-[#8E8E93]">{lead.total.toLocaleString()} ₸</span>}
               <ChevronRight size={20} className="text-[#C7C7CC]" />
             </div>
           </button>
         ))}
+        {leads.filter(l => l.status === activeTab).length === 0 && <div className="p-4 text-center text-[#8E8E93]">Нет заявок</div>}
       </div>
     </div>
   );
