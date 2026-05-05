@@ -47,23 +47,22 @@ export default function CatalogPage() {
 
   return (
     <div className="animate-in fade-in duration-300">
-      <div className="flex justify-between items-center mb-6 px-4 md:px-0">
+      <div className="flex justify-between items-center mb-6 px-1 md:px-0">
         <h1 className="ios-large-title mb-0">Каталог</h1>
-        {/* Кнопка стала компактной по высоте */}
         {!isAdding && !editId && (
           <button 
             onClick={() => { setIsAdding(true); setEditId(null); setNewProduct({ name: '', description: '', price: '', image_urls: [] }); }} 
-            className="btn-primary w-auto !min-h-[40px] !h-[40px] !py-0 !px-5 !text-[15px] !rounded-[12px]"
+            className="btn-primary !min-h-[44px] !h-[44px] !py-0 !px-5 !text-[15px]"
           >
             Добавить
           </button>
         )}
       </div>
 
-      {/* ФОРМА ДЛЯ НОВОГО ТОВАРА (сверху) */}
-      {isAdding && !editId && (
-        <div className="ios-module p-6 mx-4 md:mx-0">
-          <h2 className="ios-title-2">Новый товар</h2>
+      {/* ФОРМА (Новый товар или Редактирование) */}
+      {(isAdding || editId) && (
+        <div className="ios-module p-6 mx-1 md:mx-0">
+          <h2 className="ios-title-2">{editId ? 'Редактировать товар' : 'Новый товар'}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <input className="input-ios" placeholder="Название товара" value={newProduct.name} onChange={e => setNewProduct({...newProduct, name: e.target.value})} />
             <input className="input-ios" type="number" placeholder="Цена (₸)" value={newProduct.price} onChange={e => setNewProduct({...newProduct, price: e.target.value})} />
@@ -73,7 +72,7 @@ export default function CatalogPage() {
           <h2 className="ios-section-header ml-0">Фотографии</h2>
           <div className="flex gap-4 mb-8 flex-wrap">
             {newProduct.image_urls.map((url, i) => (<img key={i} src={url} className="w-[80px] h-[80px] rounded-[16px] object-cover" />))}
-            <label className="w-[80px] h-[80px] rounded-[16px] bg-[#F5F5F7] border border-[#E5E5EA] flex items-center justify-center cursor-pointer">
+            <label className="w-[80px] h-[80px] rounded-[16px] bg-[#F5F5F7] border border-[#E5E5EA] flex items-center justify-center cursor-pointer transition-colors hover:bg-[#E5E5EA]">
               {isUploading ? <Loader2 className="animate-spin text-[#8E8E93]"/> : <span className="text-[24px] text-[#8E8E93]">+</span>}
               <input type="file" multiple accept="image/*" className="hidden" onChange={handleFileUpload} />
             </label>
@@ -87,69 +86,43 @@ export default function CatalogPage() {
       )}
 
       {/* СЕТКА ТОВАРОВ */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 md:px-0">
-        {products.map(p => {
-          // ИНЛАЙН-РЕДАКТИРОВАНИЕ: Если мы редактируем ЭТОТ товар, карточка расширяется на всю ширину сетки
-          if (editId === p.id) {
+      {!isAdding && !editId && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[16px] px-1 md:px-0">
+          {products.map(p => {
+            const img = p.image_url ? p.image_url.split(',')[0] : '';
             return (
-              <div key={p.id} className="ios-module p-6 mb-0 md:col-span-2 lg:col-span-3">
-                <h2 className="ios-title-2">Редактировать товар</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                  <input className="input-ios" placeholder="Название товара" value={newProduct.name} onChange={e => setNewProduct({...newProduct, name: e.target.value})} />
-                  <input className="input-ios" type="number" placeholder="Цена (₸)" value={newProduct.price} onChange={e => setNewProduct({...newProduct, price: e.target.value})} />
-                </div>
-                <textarea className="input-ios resize-none mb-6" rows={3} placeholder="Описание товара..." value={newProduct.description} onChange={e => setNewProduct({...newProduct, description: e.target.value})} />
-                
-                <h2 className="ios-section-header ml-0">Фотографии</h2>
-                <div className="flex gap-4 mb-8 flex-wrap">
-                  {newProduct.image_urls.map((url, i) => (<img key={i} src={url} className="w-[80px] h-[80px] rounded-[16px] object-cover" />))}
-                  <label className="w-[80px] h-[80px] rounded-[16px] bg-[#F5F5F7] border border-[#E5E5EA] flex items-center justify-center cursor-pointer">
-                    {isUploading ? <Loader2 className="animate-spin text-[#8E8E93]"/> : <span className="text-[24px] text-[#8E8E93]">+</span>}
-                    <input type="file" multiple accept="image/*" className="hidden" onChange={handleFileUpload} />
-                  </label>
-                </div>
-
-                <div className="flex gap-4">
-                   <button className="btn-secondary w-auto" onClick={() => setEditId(null)}>Отмена</button>
-                   <button className="btn-primary w-auto" onClick={handleSave}>Сохранить</button>
-                </div>
+            <div key={p.id} className="ios-module mb-0 flex flex-col">
+              <div className="h-[200px] bg-[#F5F5F7] relative">
+                 {img && <img src={img} className="w-full h-full object-cover" />}
               </div>
-            );
-          }
-
-          // ОБЫЧНАЯ КАРТОЧКА ТОВАРА
-          const img = p.image_url ? p.image_url.split(',')[0] : '';
-          return (
-          <div key={p.id} className="ios-module mb-0 flex flex-col">
-            <div className="h-[200px] bg-[#F5F5F7] relative">
-               {img && <img src={img} className="w-full h-full object-cover" />}
+              <div className="p-5 flex-1">
+                <h3 className="text-[17px] font-semibold text-[#000000] line-clamp-1">{p.name}</h3>
+                <p className="text-[15px] text-[#8E8E93] mt-1 line-clamp-2">{p.description}</p>
+                <div className="text-[20px] font-bold mt-4 text-[#000000]">{Number(p.price).toLocaleString()} ₸</div>
+              </div>
+              <div className="flex items-center gap-3 p-4 pt-0">
+                 <button 
+                   onClick={() => {
+                     setEditId(p.id); 
+                     setIsAdding(false); 
+                     setNewProduct({...p, image_urls: p.image_url ? p.image_url.split(',') : []}); 
+                     window.scrollTo({ top: 0, behavior: 'smooth' });
+                   }} 
+                   className="flex-1 h-[44px] bg-[#F5F5F7] rounded-[12px] flex items-center justify-center gap-2 text-[#000000] font-medium text-[15px] transition-colors active:bg-[#E5E5EA]"
+                 >
+                   <Edit size={18}/>
+                 </button>
+                 <button 
+                   onClick={() => handleDelete(p.id)} 
+                   className="w-[44px] h-[44px] bg-[#F5F5F7] rounded-[12px] flex items-center justify-center text-[#FF3B30] shrink-0 transition-colors active:bg-[#FFD1CE]"
+                 >
+                   <Trash2 size={20}/>
+                 </button>
+              </div>
             </div>
-            <div className="p-5 flex-1">
-              <h3 className="text-[17px] font-semibold text-[#000000] line-clamp-1">{p.name}</h3>
-              <p className="text-[15px] text-[#8E8E93] mt-1 line-clamp-2">{p.description}</p>
-              <div className="text-[20px] font-bold mt-4 text-[#000000]">{Number(p.price).toLocaleString()} ₸</div>
-            </div>
-            <div className="flex items-center gap-3 p-4 pt-0">
-               <button 
-                 onClick={() => {
-                   setEditId(p.id); 
-                   setIsAdding(false); 
-                   setNewProduct({...p, image_urls: p.image_url ? p.image_url.split(',') : []}); 
-                 }} 
-                 className="flex-1 h-[44px] bg-[#F5F5F7] rounded-[14px] flex items-center justify-center gap-2 text-[#000000] font-medium text-[15px] transition-colors active:bg-[#E5E5EA]"
-               >
-                 <Edit size={18}/> Редактировать
-               </button>
-               <button 
-                 onClick={() => handleDelete(p.id)} 
-                 className="w-[44px] h-[44px] bg-[#F5F5F7] rounded-[14px] flex items-center justify-center text-red-500 shrink-0 transition-colors active:bg-[#E5E5EA]"
-               >
-                 <Trash2 size={20}/>
-               </button>
-            </div>
-          </div>
-        )})}
-      </div>
+          )})}
+        </div>
+      )}
     </div>
   );
 }
