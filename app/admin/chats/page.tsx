@@ -5,7 +5,6 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 export default function ChatsPage() {
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
 
-  // Для теста добавил больше сообщений Анне, чтобы показать как работает внутренний скролл
   const dialogs = [
     { 
       id: '842', time: '14:30', name: 'Анна', status: 'online', 
@@ -26,25 +25,22 @@ export default function ChatsPage() {
   const activeChat = dialogs.find(d => d.id === activeChatId);
 
   return (
-    // md:h-[550px] задает общую высоту блока (Заголовок + Контейнер), чтобы она идеально совпадала с меню слева
-    <div className="animate-in fade-in duration-300 flex flex-col h-[calc(100dvh-180px)] md:h-[550px] w-full px-1 md:px-0">
+    // md:h-[560px] — это точная сумма высот всех элементов левого меню (Сайдбара).
+    // Заголовок (mb-6 + height) + flex-1 контейнер чатов = ровно 560px.
+    <div className="animate-in fade-in duration-300 flex flex-col h-full md:h-[560px] w-full px-1 md:px-0">
       
-      {/* Заголовок страницы (shrink-0 чтобы не сжимался) */}
+      {/* Заголовок страницы */}
       <div className={`mb-6 shrink-0 ${activeChatId ? 'hidden md:block' : 'block'}`}>
         <h1 className="ios-large-title mb-0">Чаты</h1>
       </div>
 
-      {/* ГЛАВНЫЙ КОНТЕЙНЕР
-        flex-1 заставляет этот блок занять всё оставшееся место от 550px.
-        overflow-hidden предотвращает растягивание блока контентом.
-      */}
-      <div className="flex-1 flex flex-col md:flex-row w-full bg-transparent md:bg-[#FFFFFF] md:rounded-[24px] md:overflow-hidden">
+      {/* ГЛАВНЫЙ КОНТЕЙНЕР */}
+      <div className="flex-1 flex flex-col md:flex-row w-full bg-transparent md:bg-[#FFFFFF] md:rounded-[24px] md:overflow-hidden min-h-0">
         
         {/* ЛЕВАЯ КОЛОНКА (Список чатов) */}
         <div className={`w-full md:w-[320px] md:border-r border-[#E5E5EA] flex flex-col bg-transparent md:bg-[#FFFFFF] shrink-0 
           ${activeChatId ? 'hidden md:flex' : 'flex'} h-full overflow-hidden`}>
           
-          {/* Прокрутка списка чатов */}
           <div className="flex-1 overflow-y-auto space-y-3 md:space-y-0 pb-4 md:pb-0">
             {dialogs.map((dialog) => (
               <button key={dialog.id} onClick={() => setActiveChatId(dialog.id)} 
@@ -70,17 +66,24 @@ export default function ChatsPage() {
           </div>
         </div>
 
-        {/* ПРАВАЯ КОЛОНКА (Сам диалог чата) */}
-        <div className={`flex-1 flex flex-col bg-[#FFFFFF] rounded-[24px] md:rounded-none
-          ${!activeChatId ? 'hidden md:flex' : 'flex'} h-full overflow-hidden`}>
+        {/* ПРАВАЯ КОЛОНКА (Сам диалог чата)
+            Мобильная магия: Если чат открыт на телефоне, он становится fixed (поверх всего приложения). 
+            Это решает проблему с отступами и перекрытием нижним меню навигации.
+        */}
+        <div className={`
+          ${!activeChatId ? 'hidden md:flex' : 'flex'} 
+          md:relative flex-col bg-[#FFFFFF] md:rounded-none h-full overflow-hidden
+          ${activeChatId ? 'fixed inset-0 z-[60]' : ''}
+        `}>
           
           {activeChat ? (
             <>
-              {/* Шапка диалога (shrink-0 фиксирует её сверху) */}
-              <div className="flex items-center justify-between px-2 py-2 border-b border-[#E5E5EA] bg-[#F9F9F9] md:bg-[#FFFFFF]/90 backdrop-blur-md shrink-0 z-10">
+              {/* Шапка диалога (С учетом безопасной зоны сверху для телефона) */}
+              <div className="flex items-center justify-between px-2 pb-2 border-b border-[#E5E5EA] bg-[#F9F9F9] md:bg-[#FFFFFF]/90 backdrop-blur-md shrink-0 z-10 pt-[calc(env(safe-area-inset-top)+12px)] md:pt-2">
                 
+                {/* Кнопка "Назад" - теперь ЧЕРНАЯ (#000000) */}
                 <button onClick={() => setActiveChatId(null)} 
-                  className="md:hidden text-[#007AFF] flex items-center font-normal text-[17px] active:opacity-50 px-1 transition-opacity">
+                  className="md:hidden text-[#000000] flex items-center font-normal text-[17px] active:opacity-50 px-1 transition-opacity">
                   <ChevronLeft size={28} strokeWidth={2} className="-ml-2" />
                   <span className="-ml-1">Назад</span>
                 </button>
@@ -104,7 +107,7 @@ export default function ChatsPage() {
                 <div className="w-[70px]"></div>
               </div>
               
-              {/* Область сообщений (flex-1 и overflow-y-auto делают внутренний скролл) */}
+              {/* Область сообщений со скроллом */}
               <div className="flex-1 p-4 md:p-6 overflow-y-auto flex flex-col gap-4 bg-[#FFFFFF]">
                 {activeChat.messages.map((msg, i) => (
                   <div key={i} className={`flex w-full shrink-0 ${msg.role === 'ai' ? 'justify-start' : 'justify-end'}`}>
@@ -117,7 +120,7 @@ export default function ChatsPage() {
                 ))}
               </div>
 
-              {/* Поле ввода (shrink-0 жестко фиксирует его внизу контейнера) */}
+              {/* Поле ввода (С учетом безопасной зоны снизу) */}
               <div className="p-3 border-t border-[#E5E5EA] bg-[#FFFFFF] shrink-0 pb-[calc(env(safe-area-inset-bottom)+12px)] md:pb-4 z-10">
                 {activeChat.status === 'online' ? (
                   <div className="flex items-center gap-2">
