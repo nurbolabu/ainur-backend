@@ -16,16 +16,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     const checkAuth = async () => {
-      // 1. Проверяем сессию пользователя
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session) {
-        router.push('/login'); // Если не авторизован - на страницу входа
+        router.push('/login');
         return;
       }
 
-      // 2. Ищем проект, привязанный к этому пользователю
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('projects')
         .select('id, logo_url, company_name')
         .eq('user_id', session.user.id)
@@ -33,25 +31,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       if (data) {
         setProjectData(data);
-        // СОХРАНЯЕМ ID ПРОЕКТА локально. 
-        // Теперь все внутренние страницы (Настройки, Каталог) будут брать ID отсюда!
         localStorage.setItem('ainur_admin_project_id', data.id);
       }
-      
       setIsLoading(false);
     };
 
     checkAuth();
   }, [router]);
 
-  // Функция выхода из аккаунта
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    localStorage.removeItem('ainur_admin_project_id');
-    router.push('/login');
-  };
-
-  // Пока данные загружаются, показываем пустой серый экран, чтобы не было "мерцания" интерфейса
   if (isLoading) return <div className="min-h-[100dvh] bg-[#F2F2F7]"></div>;
 
   const navItems = [
@@ -64,7 +51,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="min-h-[100dvh] bg-[#F2F2F7] flex justify-center font-sans text-[#000000] selection:bg-[#8BFDA8]">
-      
       <div className="flex w-full md:max-w-[1200px] gap-[20px] md:pt-10 px-4 md:px-0">
         
         <aside className="hidden md:flex w-[280px] h-fit bg-[#FFFFFF] rounded-[24px] p-6 flex-col sticky top-10 shrink-0 shadow-sm border border-[#E5E5EA]">
@@ -73,11 +59,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 {projectData?.logo_url ? <img src={projectData.logo_url} className="w-full h-full object-cover" /> : <span className="font-bold text-[#8E8E93] text-[24px]">A</span>}
              </div>
              <span className="font-semibold text-[17px] tracking-tight line-clamp-1 w-full px-2">{projectData?.company_name || 'Настройки'}</span>
-             
-             {/* Кнопка Выхода */}
-             <button onClick={handleSignOut} className="mt-2 text-[13px] text-[#FF3B30] font-medium active:opacity-50 transition-opacity">
-               Выйти
-             </button>
+             {/* Кнопка "Выйти" удалена отсюда */}
           </div>
 
           <nav className="flex flex-col gap-1">
@@ -118,7 +100,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         })}
       </nav>
 
-      {/* ... СТИЛИ ОСТАЮТСЯ БЕЗ ИЗМЕНЕНИЙ (Скрыл для краткости) ... */}
       <style jsx global>{`
         .ios-large-title { font-size: 34px; font-weight: 700; color: #000000; margin-bottom: 24px; letter-spacing: 0.3px; }
         .ios-title-2 { font-size: 22px; font-weight: 600; color: #000000; margin-bottom: 16px; letter-spacing: -0.4px; }

@@ -32,18 +32,15 @@ export default function CatalogPage() {
     setIsLoading(false);
   }
 
-  // ЗАГРУЗКА КАРТИНКИ С УСТРОЙСТВА
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setIsUploading(true);
-    // Генерируем уникальное имя файла, чтобы они не перезаписывали друг друга
     const fileExt = file.name.split('.').pop();
     const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
     const filePath = `${fileName}`;
 
-    // Загружаем в бакет 'products'
     const { error: uploadError } = await supabase.storage.from('products').upload(filePath, file);
 
     if (uploadError) {
@@ -52,13 +49,11 @@ export default function CatalogPage() {
       return;
     }
 
-    // Получаем публичную ссылку на загруженный файл
     const { data: { publicUrl } } = supabase.storage.from('products').getPublicUrl(filePath);
     setNewProduct({ ...newProduct, image_url: publicUrl });
     setIsUploading(false);
   }
 
-  // ОТКРЫТИЕ МОДАЛКИ ДЛЯ ДОБАВЛЕНИЯ
   function openAddModal() {
     setIsEditing(false);
     setEditId(null);
@@ -66,7 +61,6 @@ export default function CatalogPage() {
     setIsModalOpen(true);
   }
 
-  // ОТКРЫТИЕ МОДАЛКИ ДЛЯ РЕДАКТИРОВАНИЯ
   function openEditModal(product: any) {
     setIsEditing(true);
     setEditId(product.id);
@@ -79,12 +73,10 @@ export default function CatalogPage() {
     setIsModalOpen(true);
   }
 
-  // СОХРАНЕНИЕ (И создание, и обновление)
   async function handleSaveProduct() {
     if (!projectId) return;
     
     if (isEditing && editId) {
-      // ОБНОВЛЯЕМ СУЩЕСТВУЮЩИЙ
       const { error } = await supabase.from('products').update({
         name: newProduct.name,
         description: newProduct.description,
@@ -97,7 +89,6 @@ export default function CatalogPage() {
         fetchProducts(projectId);
       }
     } else {
-      // ДОБАВЛЯЕМ НОВЫЙ
       const { error } = await supabase.from('products').insert([{ 
         ...newProduct, 
         project_id: projectId,
@@ -145,13 +136,10 @@ export default function CatalogPage() {
           {filteredProducts.map((product) => (
             <div key={product.id} className="ios-module !mb-0 p-4 flex gap-4 relative">
               
-              {/* Явные кнопки управления сверху справа */}
-              <div className="absolute top-3 right-3 flex gap-2">
+              {/* Только кнопка редактирования */}
+              <div className="absolute top-3 right-3">
                 <button onClick={() => openEditModal(product)} className="w-8 h-8 rounded-full bg-[#F2F2F7] flex items-center justify-center text-[#8E8E93] active:scale-95 transition-transform">
                   <Pencil size={14} />
-                </button>
-                <button onClick={() => handleDelete(product.id)} className="w-8 h-8 rounded-full bg-[#FF3B30]/10 flex items-center justify-center text-[#FF3B30] active:scale-95 transition-transform">
-                  <Trash2 size={14} />
                 </button>
               </div>
 
@@ -163,7 +151,7 @@ export default function CatalogPage() {
                 )}
               </div>
               
-              <div className="flex-1 flex flex-col justify-between py-0.5 pr-16">
+              <div className="flex-1 flex flex-col justify-between py-0.5 pr-12">
                 <div>
                   <h3 className="font-semibold text-[17px] text-[#000000] line-clamp-1">{product.name}</h3>
                   <p className="text-[13px] text-[#8E8E93] line-clamp-2 leading-snug">{product.description}</p>
@@ -188,7 +176,6 @@ export default function CatalogPage() {
                 <h2 className="ios-title-2">{isEditing ? 'Редактировать товар' : 'Новый товар'}</h2>
                 
                 <div className="space-y-4">
-                   {/* Блок загрузки картинки */}
                    <div className="flex items-center gap-4">
                      <div className="w-16 h-16 rounded-[12px] bg-[#F2F2F7] border border-[#E5E5EA] flex items-center justify-center overflow-hidden shrink-0">
                        {isUploading ? <Loader2 className="animate-spin text-[#8E8E93]" size={20} /> :
@@ -205,7 +192,17 @@ export default function CatalogPage() {
                    <input className="input-ios" placeholder="Цена (только цифры)" type="number" value={newProduct.price} onChange={e => setNewProduct({...newProduct, price: e.target.value})} />
                 </div>
                 
-                <div className="flex gap-3 mt-8">
+                {/* Кнопка удаления (показывается только при редактировании) */}
+                {isEditing && (
+                  <button 
+                    onClick={() => { if(editId) { handleDelete(editId); setIsModalOpen(false); } }} 
+                    className="w-full mt-6 h-[44px] rounded-[12px] bg-[#FF3B30]/10 text-[#FF3B30] font-medium flex items-center justify-center gap-2 active:scale-95 transition-transform"
+                  >
+                    <Trash2 size={18} /> Удалить товар
+                  </button>
+                )}
+                
+                <div className="flex gap-3 mt-6">
                    <button onClick={() => setIsModalOpen(false)} className="flex-1 h-[50px] rounded-[14px] font-semibold text-[#8E8E93] bg-[#F2F2F7] active:scale-95 transition-transform">Отмена</button>
                    <button onClick={handleSaveProduct} disabled={isUploading || !newProduct.name || !newProduct.price} className="flex-1 btn-primary disabled:opacity-50">Сохранить</button>
                 </div>
