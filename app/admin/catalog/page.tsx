@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import { Loader2, Trash2, Edit } from 'lucide-react';
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
-const MY_PROJECT_ID = '8c49172a-333f-4708-ad0c-f08d70045891';
+const MY_PROJECT_ID = localStorage.getItem('ainur_admin_project_id');
 
 export default function CatalogPage() {
   const [products, setProducts] = useState<any[]>([]);

@@ -1,21 +1,58 @@
 'use client';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { LayoutDashboard, Settings, ShoppingBag, Clapperboard, Users, MessageSquare } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
-const MY_PROJECT_ID = '8c49172a-333f-4708-ad0c-f08d70045891';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+  
   const [projectData, setProjectData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    supabase.from('projects').select('logo_url, company_name').eq('id', MY_PROJECT_ID).single()
-      .then(({ data }) => { if (data) setProjectData(data); });
-  }, []);
+    const checkAuth = async () => {
+      // 1. Проверяем сессию пользователя
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        router.push('/login'); // Если не авторизован - на страницу входа
+        return;
+      }
+
+      // 2. Ищем проект, привязанный к этому пользователю
+      const { data, error } = await supabase
+        .from('projects')
+        .select('id, logo_url, company_name')
+        .eq('user_id', session.user.id)
+        .single();
+
+      if (data) {
+        setProjectData(data);
+        // СОХРАНЯЕМ ID ПРОЕКТА локально. 
+        // Теперь все внутренние страницы (Настройки, Каталог) будут брать ID отсюда!
+        localStorage.setItem('ainur_admin_project_id', data.id);
+      }
+      
+      setIsLoading(false);
+    };
+
+    checkAuth();
+  }, [router]);
+
+  // Функция выхода из аккаунта
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    localStorage.removeItem('ainur_admin_project_id');
+    router.push('/login');
+  };
+
+  // Пока данные загружаются, показываем пустой серый экран, чтобы не было "мерцания" интерфейса
+  if (isLoading) return <div className="min-h-[100dvh] bg-[#F2F2F7]"></div>;
 
   const navItems = [
     { href: '/admin', icon: <LayoutDashboard size={22} />, text: 'Главная' },
@@ -28,16 +65,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-[100dvh] bg-[#F2F2F7] flex justify-center font-sans text-[#000000] selection:bg-[#8BFDA8]">
       
-      {/* СЕТКА (Max 1200px) */}
       <div className="flex w-full md:max-w-[1200px] gap-[20px] md:pt-10 px-4 md:px-0">
         
-        {/* ЛЕВАЯ КОЛОНКА: Сайдбар (280px) */}
-        <aside className="hidden md:flex w-[280px] h-fit bg-[#FFFFFF] rounded-[24px] p-6 flex-col sticky top-10 shrink-0">
+        <aside className="hidden md:flex w-[280px] h-fit bg-[#FFFFFF] rounded-[24px] p-6 flex-col sticky top-10 shrink-0 shadow-sm border border-[#E5E5EA]">
           <div className="mb-10 flex flex-col items-center justify-center text-center">
-             <div className="w-[64px] h-[64px] rounded-full bg-[#F2F2F7] overflow-hidden flex items-center justify-center mb-3">
+             <div className="w-[64px] h-[64px] rounded-[20px] bg-[#F5F5F7] overflow-hidden flex items-center justify-center mb-3 border border-[#E5E5EA]">
                 {projectData?.logo_url ? <img src={projectData.logo_url} className="w-full h-full object-cover" /> : <span className="font-bold text-[#8E8E93] text-[24px]">A</span>}
              </div>
-             <span className="font-semibold text-[17px] tracking-tight">{projectData?.company_name || 'AI NUR'}</span>
+             <span className="font-semibold text-[17px] tracking-tight line-clamp-1 w-full px-2">{projectData?.company_name || 'Настройки'}</span>
+             
+             {/* Кнопка Выхода */}
+             <button onClick={handleSignOut} className="mt-2 text-[13px] text-[#FF3B30] font-medium active:opacity-50 transition-opacity">
+               Выйти
+             </button>
           </div>
 
           <nav className="flex flex-col gap-1">
@@ -61,13 +101,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
         </aside>
 
-        {/* ПРАВАЯ КОЛОНКА: Контент (900px) */}
         <main className="flex-1 w-full max-w-[900px] pb-32 md:pb-20 pt-10 md:pt-0">
            {children}
         </main>
       </div>
 
-      {/* МОБИЛЬНЫЙ BOTTOM TAB BAR */}
       <nav className="md:hidden fixed bottom-0 left-0 w-full bg-[#F2F2F7]/90 backdrop-blur-xl border-t border-[#C6C6C8] z-50 px-2 pb-[calc(env(safe-area-inset-bottom)+8px)] pt-3 flex justify-around">
         {[...navItems, { href: '/admin/settings', icon: <Settings size={24} />, text: 'Настройки' }].map(item => {
           const isActive = pathname === item.href;
@@ -80,25 +118,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         })}
       </nav>
 
-      {/* ГЛОБАЛЬНЫЕ СТИЛИ (Строго без теней) */}
+      {/* ... СТИЛИ ОСТАЮТСЯ БЕЗ ИЗМЕНЕНИЙ (Скрыл для краткости) ... */}
       <style jsx global>{`
         .ios-large-title { font-size: 34px; font-weight: 700; color: #000000; margin-bottom: 24px; letter-spacing: 0.3px; }
         .ios-title-2 { font-size: 22px; font-weight: 600; color: #000000; margin-bottom: 16px; letter-spacing: -0.4px; }
         .ios-section-header { font-size: 13px; text-transform: uppercase; color: #3C3C43; opacity: 0.6; margin-bottom: 8px; margin-left: 16px; font-weight: 400; }
-        
         .ios-module { background-color: #FFFFFF; border-radius: 24px; overflow: hidden; margin-bottom: 32px; border: none; box-shadow: none; }
-        
         .ios-list-item { display: flex; align-items: center; justify-content: space-between; padding: 16px; background-color: #FFFFFF; position: relative; transition: background-color 0.2s; cursor: pointer; min-height: 44px; border: none; outline: none; }
         .ios-list-item:active { background-color: #F2F2F7; }
         .ios-list-item:not(:last-child)::after { content: ''; position: absolute; bottom: 0; left: 16px; right: 0; height: 1px; background-color: #E5E5EA; }
-        
         .btn-primary { background-color: #8BFDA8; color: #000000; font-size: 17px; font-weight: 600; border-radius: 14px; min-height: 50px; padding: 0 24px; transition: transform 0.1s, opacity 0.1s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: none; cursor: pointer; }
         .btn-primary:active { transform: scale(0.96); opacity: 0.8; }
         .btn-primary:disabled { opacity: 0.5; pointer-events: none; }
-
         .btn-secondary { background-color: #000000; color: #FFFFFF; font-size: 17px; font-weight: 600; border-radius: 14px; min-height: 50px; padding: 0 24px; transition: transform 0.1s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: none; cursor: pointer; }
         .btn-secondary:active { transform: scale(0.96); opacity: 0.8; }
-
         .input-ios { background-color: #F5F5F7; border: 1px solid #E5E5EA; border-radius: 14px; padding: 16px; font-size: 17px; color: #000000; outline: none; transition: all 0.2s ease; width: 100%; font-family: inherit; }
         .input-ios:focus { background-color: #FFFFFF; border-color: #8BFDA8; }
         .input-ios::placeholder { color: #8E8E93; }
