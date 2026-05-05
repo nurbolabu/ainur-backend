@@ -13,18 +13,31 @@ export async function OPTIONS() {
 }
 
 // Подключаем БД и нейросеть Groq
-// Подключаем БД и нейросеть Groq
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY! });
 
 export async function POST(req: Request) {
   try {
-    const { projectId, message, conversationId } = await req.json();
+    const { projectId, message, conversationId, aiDisabled } = await req.json();
 
     if (!projectId) {
       return NextResponse.json({ reply: "Нет ID проекта" }, { headers: corsHeaders });
     }
 
+    // ==========================================
+    // ЛОГИКА ПЕРЕХВАТА МЕНЕДЖЕРОМ
+    // ==========================================
+    if (aiDisabled) {
+      // Если менеджер в чате, просто сохраняем сообщение клиента и молчим
+      if (conversationId) {
+        await supabase.from('messages').insert([
+          { project_id: projectId, conversation_id: conversationId, role: 'user', content: message }
+        ]);
+      }
+      return NextResponse.json({ reply: "" }, { headers: corsHeaders });
+    }
+
+    // 1. Получаем настройки проекта (базу знаний)
     const { data: project, error: dbError } = await supabase
       .from('projects')
       .select('company_name, system_prompt, knowledge_base')
@@ -35,6 +48,29 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Проект не найден' }, { status: 404, headers: corsHeaders });
     }
 
+    // ==========================================
+    // ИСТОРИЯ ЧАТА (ПАМЯТЬ ИИ)
+    // ==========================================
+    let historyForAI: any[] = [];
+    if (conversationId) {
+      const { data: history } = await supabase
+        .from('messages')
+        .select('role, content')
+        .eq('conversation_id', conversationId)
+        .order('created_at', { ascending: true })
+        .limit(10); // Берем последние 10 сообщений
+        
+      if (history) {
+        historyForAI = history.map(m => ({
+          // Groq понимает только роли system, user, assistant. 
+          // Если писал менеджер ('manager'), мы передаем это ИИ как ответ 'assistant', чтобы он знал контекст.
+          role: m.role === 'user' ? 'user' : 'assistant', 
+          content: m.content
+        }));
+      }
+    }
+
+    // 2. Формируем строгий системный промпт
     const systemPrompt = `
       Ты профессиональный ИИ-ассистент компании "${project.company_name}".
       ${project.system_prompt || ''}
@@ -47,12 +83,16 @@ export async function POST(req: Request) {
       Отвечай кратко, не более 2-3 предложений. На русском языке.
     `;
 
-    // Запрашиваем ответ у Llama 3.1
+    // 3. Склеиваем всё вместе: Промпт + История + Текущий вопрос
+    const messagesToGroq = [
+      { role: 'system', content: systemPrompt },
+      ...historyForAI,
+      { role: 'user', content: message }
+    ];
+
+    // 4. Запрашиваем ответ у Llama 3.1
     const chatCompletion = await groq.chat.completions.create({
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: message }
-      ],
+      messages: messagesToGroq,
       model: 'llama-3.1-8b-instant', 
       temperature: 0.1, // Строгий режим, без фантазий
       max_tokens: 256,
@@ -60,10 +100,11 @@ export async function POST(req: Request) {
 
     const reply = chatCompletion.choices[0]?.message?.content || "Извините, не смог сгенерировать ответ.";
 
+    // 5. Сохраняем вопрос пользователя и ответ ИИ в базу
     if (conversationId) {
       await supabase.from('messages').insert([
-        { conversation_id: conversationId, role: 'user', content: message },
-        { conversation_id: conversationId, role: 'assistant', content: reply }
+        { project_id: projectId, conversation_id: conversationId, role: 'user', content: message },
+        { project_id: projectId, conversation_id: conversationId, role: 'assistant', content: reply }
       ]);
     }
 

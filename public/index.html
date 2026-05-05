@@ -156,13 +156,13 @@
         .ainur-social-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: opacity 0.2s, transform 0.2s; color: white; text-decoration: none;}
         .ainur-social-icon:active { transform: scale(0.95); opacity: 0.8;}
         
-        .brand-ig { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%); }
-        .brand-wa { background: #25D366; }
-        .brand-tg { background: #0088cc; }
-        .brand-yt { background: #FF0000; }
-        .brand-vk { background: #0077FF; }
-        .brand-2gis { background: #A5CE39; }
-        .brand-address { background: #FF3B30; }
+        .brand-ig { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%) !important; color: #FFFFFF !important; }
+.brand-wa { background: #25D366 !important; color: #FFFFFF !important; }
+.brand-tg { background: #0088cc !important; color: #FFFFFF !important; }
+.brand-yt { background: #FF0000 !important; color: #FFFFFF !important; }
+.brand-vk { background: #0077FF !important; color: #FFFFFF !important; }
+.brand-2gis { background: #A5CE39 !important; color: #FFFFFF !important; }
+.brand-address { background: #FF3B30 !important; color: #FFFFFF !important; }
         
         .ainur-catalog-list { margin-top: 30px; width: 100%; display: flex; flex-direction: column; gap: 15px; }
         .ainur-product-card { background: #f5f5f7; border-radius: 20px; padding: 12px; display: flex; flex-direction: column; gap: 12px;}
@@ -569,7 +569,7 @@
 
     <script>
         const API_BASE = 'https://ainur-backend-eta.vercel.app/api'; 
-        const MY_PROJECT_ID = '8c49172a-333f-4708-ad0c-f08d70045891';
+        const MY_PROJECT_ID = '80f5479f-10dd-4859-aa56-234f4879396c';
 
         function trackWidgetEvent(eventName, eventData = {}) {
             fetch(`${API_BASE}/analytics`, {
