@@ -8,26 +8,57 @@ const MY_PROJECT_ID = '8c49172a-333f-4708-ad0c-f08d70045891';
 
 type SettingsTab = 'VISUAL' | 'AI' | 'CONTACTS' | 'PLANS';
 
+// Функция для автоопределения контрастности (темный или светлый текст нужен)
+function getContrastColor(hexcolor: string) {
+  // Убираем решетку, если есть
+  const hex = hexcolor.replace('#', '');
+  if (hex.length !== 6) return '#000000'; // fallback
+  
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  
+  // Формула YIQ для восприятия яркости глазом
+  const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+  
+  // Если цвет светлый - возвращаем черный, если темный - белый
+  return (yiq >= 128) ? '#000000' : '#FFFFFF';
+}
+
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<SettingsTab | null>(null);
   const [isYearly, setIsYearly] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
   
+  // Добавили поле theme_text_color
   const [formData, setFormData] = useState({ 
-    company_name: '', theme_color: '#8BFDA8', system_prompt: '', 
+    company_name: '', theme_color: '#8BFDA8', theme_text_color: '#000000', system_prompt: '', 
     knowledge_base: '', whatsapp: '', instagram: '', address: '' 
   });
 
   useEffect(() => {
     supabase.from('projects').select('*').eq('id', MY_PROJECT_ID).single()
       .then(({ data }) => { 
-        if (data) setFormData({ 
-          company_name: data.company_name || '', theme_color: data.theme_color || '#8BFDA8', 
-          system_prompt: data.system_prompt || '', knowledge_base: data.knowledge_base || '',
-          whatsapp: data.whatsapp || '', instagram: data.instagram || '', address: data.address || ''
-        }); 
+        if (data) {
+          // Если цвета текста в БД еще нет, считаем его автоматически
+          const textColor = data.theme_text_color || getContrastColor(data.theme_color || '#8BFDA8');
+          setFormData({ 
+            company_name: data.company_name || '', 
+            theme_color: data.theme_color || '#8BFDA8', 
+            theme_text_color: textColor,
+            system_prompt: data.system_prompt || '', knowledge_base: data.knowledge_base || '',
+            whatsapp: data.whatsapp || '', instagram: data.instagram || '', address: data.address || ''
+          }); 
+        }
       });
   }, []);
+
+  const handleColorChange = (hex: string) => {
+    // При смене основного цвета, мы АВТОМАТИЧЕСКИ предлагаем лучший цвет текста
+    const suggestedTextColor = getContrastColor(hex);
+    setFormData({ ...formData, theme_color: hex, theme_text_color: suggestedTextColor });
+    setIsDirty(true);
+  };
 
   const handleChange = (field: string, value: string) => { 
     setFormData({...formData, [field]: value}); 
@@ -65,7 +96,6 @@ export default function SettingsPage() {
         <div className={`w-full md:w-[300px] md:border-r border-[#E5E5EA] flex flex-col bg-transparent md:bg-[#FFFFFF] shrink-0 
           ${activeTab ? 'hidden md:flex' : 'flex'} h-full overflow-y-auto`}>
           
-          {/* Исправлены отступы на мобилке (были p-4, стали px-0) */}
           <div className="flex flex-col px-0 md:px-0 space-y-6 md:space-y-0">
             <div className="ios-module md:rounded-none md:!mb-0">
               {menuItems.map((item) => (
@@ -111,21 +141,13 @@ export default function SettingsPage() {
               {/* Шапка детальных настроек */}
               <div className="border-b border-[#E5E5EA] bg-[#F9F9F9] md:bg-[#FFFFFF]/90 backdrop-blur-md shrink-0 z-10 pt-[env(safe-area-inset-top)] md:pt-0">
                 <div className="relative flex items-center justify-between px-4 py-3 min-h-[56px] md:min-h-[64px]">
-                  {/* Назад для мобилки */}
                   <button onClick={() => setActiveTab(null)} className="md:hidden text-[#000000] flex items-center active:opacity-50">
                     <ChevronLeft size={28} className="-ml-2" /> <span className="font-medium">Назад</span>
                   </button>
-                  
-                  {/* Заголовок по центру */}
                   <span className="font-semibold text-[17px] absolute left-1/2 -translate-x-1/2 md:relative md:left-0 md:translate-x-0">
                     {menuItems.find(i => i.id === activeTab)?.label || 'Настройки'}
                   </span>
-                  
-                  {/* Кнопка Сохранить (Зеленая как в каталоге) */}
-                  <button 
-                    onClick={handleSave} 
-                    className={`btn-primary !min-h-[36px] !h-[36px] !px-4 !text-[14px] !rounded-[10px] ${!isDirty && 'opacity-50 pointer-events-none'}`}
-                  >
+                  <button onClick={handleSave} className={`btn-primary !bg-[#8BFDA8] !text-[#000000] !min-h-[36px] !h-[36px] !px-4 !text-[14px] !rounded-[10px] ${!isDirty && 'opacity-50 pointer-events-none'}`}>
                     Сохранить
                   </button>
                 </div>
@@ -135,23 +157,63 @@ export default function SettingsPage() {
               <div className="flex-1 overflow-y-auto p-4 md:p-8 bg-[#FFFFFF]">
                 
                 {activeTab === 'VISUAL' && (
-                  <div className="space-y-6">
+                  <div className="space-y-8">
                     <div>
                       <label className="ios-section-header ml-0">Название компании</label>
                       <input className="input-ios" value={formData.company_name} onChange={e => handleChange('company_name', e.target.value)} />
                     </div>
+                    
                     <div>
-                      <label className="ios-section-header ml-0">Цвет бренда</label>
+                      <label className="ios-section-header ml-0">Главный цвет бренда (Фон)</label>
                       <div className="flex items-center gap-4 bg-[#F5F5F7] p-4 rounded-[14px] border border-[#E5E5EA]">
                         <div className="w-10 h-10 rounded-full border border-[#E5E5EA] overflow-hidden shrink-0">
-                          <input type="color" className="w-[150%] h-[150%] -translate-x-1/4 -translate-y-1/4 cursor-pointer" value={formData.theme_color} onChange={e => handleChange('theme_color', e.target.value)} />
+                          <input type="color" className="w-[150%] h-[150%] -translate-x-1/4 -translate-y-1/4 cursor-pointer" value={formData.theme_color} onChange={e => handleColorChange(e.target.value)} />
                         </div>
                         <span className="font-mono font-bold uppercase tracking-wider">{formData.theme_color}</span>
                       </div>
                     </div>
+
+                    {/* Блок настройки текста внутри элементов бренда */}
+                    <div>
+                      <label className="ios-section-header ml-0">Текст на кнопках</label>
+                      <div className="flex flex-col bg-[#F5F5F7] p-4 rounded-[14px] border border-[#E5E5EA] gap-4">
+                        
+                        {/* Селектор из двух жестких вариантов */}
+                        <div className="flex bg-[#E5E5EA] p-1 rounded-[10px]">
+                          <button 
+                            onClick={() => handleChange('theme_text_color', '#000000')} 
+                            className={`flex-1 py-1.5 text-[14px] font-medium rounded-[7px] transition-all ${formData.theme_text_color === '#000000' ? 'bg-[#FFFFFF] text-[#000000] shadow-sm' : 'text-[#8E8E93]'}`}
+                          >
+                            Черный
+                          </button>
+                          <button 
+                            onClick={() => handleChange('theme_text_color', '#FFFFFF')} 
+                            className={`flex-1 py-1.5 text-[14px] font-medium rounded-[7px] transition-all ${formData.theme_text_color === '#FFFFFF' ? 'bg-[#FFFFFF] text-[#000000] shadow-sm' : 'text-[#8E8E93]'}`}
+                          >
+                            Белый
+                          </button>
+                        </div>
+
+                        {/* Наглядное превью (Чтобы клиент сразу видел, что он натворил) */}
+                        <div className="flex items-center justify-center py-4 border-t border-[#E5E5EA] mt-2">
+                           <div 
+                             className="px-6 py-3 rounded-[14px] font-semibold text-[15px] shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-colors"
+                             style={{ backgroundColor: formData.theme_color, color: formData.theme_text_color }}
+                           >
+                             Попробовать виджет
+                           </div>
+                        </div>
+
+                      </div>
+                      <p className="text-[13px] text-[#8E8E93] mt-2 ml-4">
+                        Этот цвет будет применяться только поверх вашего главного цвета (на кнопках и отправленных сообщениях).
+                      </p>
+                    </div>
+
                   </div>
                 )}
 
+                {/* Остальной код вкладок AI, CONTACTS, PLANS остался без изменений */}
                 {activeTab === 'AI' && (
                   <div className="space-y-6">
                     <div>
