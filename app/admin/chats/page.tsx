@@ -25,16 +25,15 @@ export default function ChatsPage() {
   const activeChat = dialogs.find(d => d.id === activeChatId);
 
   return (
-    // md:h-[560px] — это точная сумма высот всех элементов левого меню (Сайдбара).
-    // Заголовок (mb-6 + height) + flex-1 контейнер чатов = ровно 560px.
-    <div className="animate-in fade-in duration-300 flex flex-col h-full md:h-[560px] w-full px-1 md:px-0">
+    // md:h-[572px] — это математически точная высота левого меню (Сайдбара).
+    <div className="animate-in fade-in duration-300 flex flex-col h-full md:h-[572px] w-full px-1 md:px-0">
       
       {/* Заголовок страницы */}
-      <div className={`mb-6 shrink-0 ${activeChatId ? 'hidden md:block' : 'block'}`}>
-        <h1 className="ios-large-title mb-0">Чаты</h1>
-      </div>
+      <h1 className={`ios-large-title shrink-0 ${activeChatId ? 'hidden md:block' : 'block'}`}>
+        Чаты
+      </h1>
 
-      {/* ГЛАВНЫЙ КОНТЕЙНЕР */}
+      {/* ГЛАВНЫЙ КОНТЕЙНЕР (Занимает все оставшееся место от 572px) */}
       <div className="flex-1 flex flex-col md:flex-row w-full bg-transparent md:bg-[#FFFFFF] md:rounded-[24px] md:overflow-hidden min-h-0">
         
         {/* ЛЕВАЯ КОЛОНКА (Список чатов) */}
@@ -66,10 +65,7 @@ export default function ChatsPage() {
           </div>
         </div>
 
-        {/* ПРАВАЯ КОЛОНКА (Сам диалог чата)
-            Мобильная магия: Если чат открыт на телефоне, он становится fixed (поверх всего приложения). 
-            Это решает проблему с отступами и перекрытием нижним меню навигации.
-        */}
+        {/* ПРАВАЯ КОЛОНКА (Сам диалог чата) */}
         <div className={`
           ${!activeChatId ? 'hidden md:flex' : 'flex'} 
           md:relative flex-col bg-[#FFFFFF] md:rounded-none h-full overflow-hidden
@@ -78,36 +74,38 @@ export default function ChatsPage() {
           
           {activeChat ? (
             <>
-              {/* Шапка диалога (С учетом безопасной зоны сверху для телефона) */}
-              <div className="flex items-center justify-between px-2 pb-2 border-b border-[#E5E5EA] bg-[#F9F9F9] md:bg-[#FFFFFF]/90 backdrop-blur-md shrink-0 z-10 pt-[calc(env(safe-area-inset-top)+12px)] md:pt-2">
-                
-                {/* Кнопка "Назад" - теперь ЧЕРНАЯ (#000000) */}
-                <button onClick={() => setActiveChatId(null)} 
-                  className="md:hidden text-[#000000] flex items-center font-normal text-[17px] active:opacity-50 px-1 transition-opacity">
-                  <ChevronLeft size={28} strokeWidth={2} className="-ml-2" />
-                  <span className="-ml-1">Назад</span>
-                </button>
-                
-                <div className="hidden md:block w-[70px]"></div>
+              {/* Шапка диалога (Решение проблемы с центрированием заголовка) */}
+              <div className="border-b border-[#E5E5EA] bg-[#F9F9F9] md:bg-[#FFFFFF]/90 backdrop-blur-md shrink-0 z-10 pt-[env(safe-area-inset-top)]">
+                {/* Внутренний контейнер с position: relative для абсолютной кнопки */}
+                <div className="relative flex items-center justify-center px-2 py-2 min-h-[56px] md:min-h-[60px]">
+                  
+                  {/* Кнопка "Назад" - Абсолютное позиционирование слева, чтобы не двигала центр */}
+                  <div className="absolute left-2 flex items-center md:hidden">
+                    <button onClick={() => setActiveChatId(null)} 
+                      className="text-[#000000] flex items-center font-normal text-[17px] active:opacity-50 px-1 transition-opacity">
+                      <ChevronLeft size={28} strokeWidth={2} className="-ml-2" />
+                      <span className="-ml-1">Назад</span>
+                    </button>
+                  </div>
 
-                {/* Имя и Статус */}
-                <div className="flex flex-col items-center flex-1 pr-8 md:pr-0">
-                  <span className="font-semibold text-[17px] text-[#000000]">{activeChat.name}</span>
-                  {activeChat.status === 'online' ? (
-                    <span className="text-[13px] text-[#8E8E93] flex items-center gap-1 mt-0.5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#34C759]"></div> В сети
-                    </span>
-                  ) : (
-                    <span className="text-[13px] text-[#8E8E93] flex items-center gap-1 mt-0.5">
-                      Был(а) недавно
-                    </span>
-                  )}
+                  {/* Имя и Статус - Идеально по центру */}
+                  <div className="flex flex-col items-center">
+                    <span className="font-semibold text-[17px] text-[#000000] text-center">{activeChat.name}</span>
+                    {activeChat.status === 'online' ? (
+                      <span className="text-[13px] text-[#8E8E93] flex items-center gap-1 mt-0.5">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#34C759]"></div> В сети
+                      </span>
+                    ) : (
+                      <span className="text-[13px] text-[#8E8E93] flex items-center gap-1 mt-0.5">
+                        Был(а) недавно
+                      </span>
+                    )}
+                  </div>
+
                 </div>
-                
-                <div className="w-[70px]"></div>
               </div>
               
-              {/* Область сообщений со скроллом */}
+              {/* Область сообщений */}
               <div className="flex-1 p-4 md:p-6 overflow-y-auto flex flex-col gap-4 bg-[#FFFFFF]">
                 {activeChat.messages.map((msg, i) => (
                   <div key={i} className={`flex w-full shrink-0 ${msg.role === 'ai' ? 'justify-start' : 'justify-end'}`}>
@@ -120,7 +118,7 @@ export default function ChatsPage() {
                 ))}
               </div>
 
-              {/* Поле ввода (С учетом безопасной зоны снизу) */}
+              {/* Поле ввода */}
               <div className="p-3 border-t border-[#E5E5EA] bg-[#FFFFFF] shrink-0 pb-[calc(env(safe-area-inset-bottom)+12px)] md:pb-4 z-10">
                 {activeChat.status === 'online' ? (
                   <div className="flex items-center gap-2">
