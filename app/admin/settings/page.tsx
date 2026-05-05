@@ -4,7 +4,6 @@ import { createClient } from '@supabase/supabase-js';
 import { ChevronLeft, ChevronRight, ExternalLink, Check } from 'lucide-react';
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
-const MY_PROJECT_ID = localStorage.getItem('ainur_admin_project_id');
 
 type SettingsTab = 'VISUAL' | 'AI' | 'CONTACTS' | 'PLANS';
 
@@ -19,6 +18,7 @@ function getContrastColor(hexcolor: string) {
 }
 
 export default function SettingsPage() {
+  const [projectId, setProjectId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<SettingsTab | null>(null);
   const [isYearly, setIsYearly] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
@@ -28,39 +28,44 @@ export default function SettingsPage() {
     knowledge_base: '', whatsapp: '', instagram: '', telegram: '', youtube: '', vk: '', twogis: '', address: '' 
   });
 
+  // 1. Получаем ID проекта при загрузке страницы
   useEffect(() => {
-    supabase.from('projects').select('*').eq('id', MY_PROJECT_ID).single()
-      .then(({ data }) => { 
-        if (data) {
-          // Читаем из JSONB колонки social_links
-          let links = data.social_links || {};
-          if (typeof links === 'string') {
-              try { links = JSON.parse(links); } catch(e) { links = {}; }
-          }
-          
-          const textColor = data.theme_text_color || getContrastColor(data.theme_color || '#8BFDA8');
-          
-          setFormData({ 
-            company_name: data.company_name || '', 
-            theme_color: data.theme_color || '#8BFDA8', 
-            theme_text_color: textColor,
-            system_prompt: data.system_prompt || '', 
-            knowledge_base: data.knowledge_base || '',
-            
-            // Читаем адрес из правильной колонки
-            address: data.contacts_address || '', 
-            
-            // Читаем соцсети из объекта links
-            whatsapp: links.whatsapp || '', 
-            instagram: links.instagram || '', 
-            telegram: links.telegram || '',
-            youtube: links.youtube || '',
-            vk: links.vk || '',
-            twogis: links.twogis || ''
-          }); 
-        }
-      });
+    if (typeof window !== 'undefined') {
+      const storedId = localStorage.getItem('ainur_admin_project_id');
+      if (storedId) {
+        setProjectId(storedId);
+        loadSettings(storedId);
+      }
+    }
   }, []);
+
+  // 2. Загружаем данные ИМЕННО ЭТОГО проекта
+  const loadSettings = async (id: string) => {
+    const { data } = await supabase.from('projects').select('*').eq('id', id).single();
+    if (data) {
+      let links = data.social_links || {};
+      if (typeof links === 'string') {
+          try { links = JSON.parse(links); } catch(e) { links = {}; }
+      }
+      
+      const textColor = data.theme_text_color || getContrastColor(data.theme_color || '#8BFDA8');
+      
+      setFormData({ 
+        company_name: data.company_name || '', 
+        theme_color: data.theme_color || '#8BFDA8', 
+        theme_text_color: textColor,
+        system_prompt: data.system_prompt || '', 
+        knowledge_base: data.knowledge_base || '',
+        address: data.contacts_address || '', 
+        whatsapp: links.whatsapp || '', 
+        instagram: links.instagram || '', 
+        telegram: links.telegram || '',
+        youtube: links.youtube || '',
+        vk: links.vk || '',
+        twogis: links.twogis || ''
+      }); 
+    }
+  };
 
   const handleColorChange = (hex: string) => {
     const suggestedTextColor = getContrastColor(hex);
@@ -74,15 +79,15 @@ export default function SettingsPage() {
   };
 
   async function handleSave() {
+    if (!projectId) return alert('Ошибка: ID проекта не найден');
+    
     await supabase.from('projects').update({
       company_name: formData.company_name,
       theme_color: formData.theme_color,
       theme_text_color: formData.theme_text_color,
       system_prompt: formData.system_prompt,
       knowledge_base: formData.knowledge_base,
-      contacts_address: formData.address, // Записываем в правильную колонку
-      
-      // Упаковываем все соцсети обратно в JSONB объект!
+      contacts_address: formData.address,
       social_links: {
           whatsapp: formData.whatsapp,
           instagram: formData.instagram,
@@ -91,7 +96,7 @@ export default function SettingsPage() {
           vk: formData.vk,
           twogis: formData.twogis
       }
-    }).eq('id', MY_PROJECT_ID);
+    }).eq('id', projectId);
     
     setIsDirty(false);
     alert('Настройки успешно сохранены');
@@ -144,7 +149,7 @@ export default function SettingsPage() {
                 </div>
                 <ChevronRight size={18} className="text-[#C6C6C8]" />
               </button>
-              <a href={`https://ainur.kz/preview/${MY_PROJECT_ID}`} target="_blank" className="ios-list-item w-full border-none flex items-center justify-between">
+              <a href={`https://ainur.kz/preview/${projectId}`} target="_blank" className="ios-list-item w-full border-none flex items-center justify-between">
                 <div className="flex flex-col">
                   <span className="text-[17px] font-semibold text-[#000000]">Прототип виджета</span>
                   <span className="text-[13px] text-[#8E8E93]">Открыть превью</span>
@@ -162,7 +167,6 @@ export default function SettingsPage() {
           
           {activeTab ? (
             <>
-              {/* Шапка */}
               <div className="border-b border-[#E5E5EA] bg-[#F9F9F9] md:bg-[#FFFFFF]/90 backdrop-blur-md shrink-0 z-10 pt-[env(safe-area-inset-top)] md:pt-0">
                 <div className="relative flex items-center justify-between px-4 py-3 min-h-[56px] md:min-h-[64px]">
                   <button onClick={() => setActiveTab(null)} className="md:hidden text-[#000000] flex items-center active:opacity-50">
@@ -177,16 +181,13 @@ export default function SettingsPage() {
                 </div>
               </div>
 
-              {/* Контент */}
               <div className="flex-1 overflow-y-auto p-4 md:p-8 bg-[#FFFFFF]">
-                
                 {activeTab === 'VISUAL' && (
                   <div className="space-y-8">
                     <div>
                       <label className="ios-section-header ml-0">Название компании</label>
                       <input className="input-ios" value={formData.company_name} onChange={e => handleChange('company_name', e.target.value)} />
                     </div>
-                    
                     <div>
                       <label className="ios-section-header ml-0">Главный цвет бренда (Фон)</label>
                       <div className="flex items-center gap-4 bg-[#F5F5F7] p-4 rounded-[14px] border border-[#E5E5EA]">
@@ -196,7 +197,6 @@ export default function SettingsPage() {
                         <span className="font-mono font-bold uppercase tracking-wider">{formData.theme_color}</span>
                       </div>
                     </div>
-
                     <div>
                       <label className="ios-section-header ml-0">Текст на кнопках</label>
                       <div className="flex flex-col bg-[#F5F5F7] p-4 rounded-[14px] border border-[#E5E5EA] gap-4">
@@ -210,9 +210,6 @@ export default function SettingsPage() {
                            </div>
                         </div>
                       </div>
-                      <p className="text-[13px] text-[#8E8E93] mt-2 ml-4">
-                        Этот цвет будет применяться только поверх вашего главного цвета.
-                      </p>
                     </div>
                   </div>
                 )}
@@ -232,34 +229,13 @@ export default function SettingsPage() {
 
                 {activeTab === 'CONTACTS' && (
                   <div className="space-y-6">
-                    <div>
-                      <label className="ios-section-header ml-0">WhatsApp</label>
-                      <input className="input-ios" placeholder="https://wa.me/7..." value={formData.whatsapp} onChange={e => handleChange('whatsapp', e.target.value)} />
-                    </div>
-                    <div>
-                      <label className="ios-section-header ml-0">Instagram</label>
-                      <input className="input-ios" placeholder="https://instagram.com/..." value={formData.instagram} onChange={e => handleChange('instagram', e.target.value)} />
-                    </div>
-                    <div>
-                      <label className="ios-section-header ml-0">Telegram</label>
-                      <input className="input-ios" placeholder="https://t.me/..." value={formData.telegram} onChange={e => handleChange('telegram', e.target.value)} />
-                    </div>
-                    <div>
-                      <label className="ios-section-header ml-0">YouTube</label>
-                      <input className="input-ios" placeholder="https://youtube.com/..." value={formData.youtube} onChange={e => handleChange('youtube', e.target.value)} />
-                    </div>
-                    <div>
-                      <label className="ios-section-header ml-0">VKontakte</label>
-                      <input className="input-ios" placeholder="https://vk.com/..." value={formData.vk} onChange={e => handleChange('vk', e.target.value)} />
-                    </div>
-                    <div>
-                      <label className="ios-section-header ml-0">2GIS</label>
-                      <input className="input-ios" placeholder="Ссылка на 2GIS" value={formData.twogis} onChange={e => handleChange('twogis', e.target.value)} />
-                    </div>
-                    <div>
-                      <label className="ios-section-header ml-0">Физический адрес</label>
-                      <textarea className="input-ios resize-none" rows={2} placeholder="Город, улица, дом..." value={formData.address} onChange={e => handleChange('address', e.target.value)} />
-                    </div>
+                    <div><label className="ios-section-header ml-0">WhatsApp</label><input className="input-ios" placeholder="https://wa.me/7..." value={formData.whatsapp} onChange={e => handleChange('whatsapp', e.target.value)} /></div>
+                    <div><label className="ios-section-header ml-0">Instagram</label><input className="input-ios" placeholder="https://instagram.com/..." value={formData.instagram} onChange={e => handleChange('instagram', e.target.value)} /></div>
+                    <div><label className="ios-section-header ml-0">Telegram</label><input className="input-ios" placeholder="https://t.me/..." value={formData.telegram} onChange={e => handleChange('telegram', e.target.value)} /></div>
+                    <div><label className="ios-section-header ml-0">YouTube</label><input className="input-ios" placeholder="https://youtube.com/..." value={formData.youtube} onChange={e => handleChange('youtube', e.target.value)} /></div>
+                    <div><label className="ios-section-header ml-0">VKontakte</label><input className="input-ios" placeholder="https://vk.com/..." value={formData.vk} onChange={e => handleChange('vk', e.target.value)} /></div>
+                    <div><label className="ios-section-header ml-0">2GIS</label><input className="input-ios" placeholder="Ссылка на 2GIS" value={formData.twogis} onChange={e => handleChange('twogis', e.target.value)} /></div>
+                    <div><label className="ios-section-header ml-0">Физический адрес</label><textarea className="input-ios resize-none" rows={2} placeholder="Город, улица, дом..." value={formData.address} onChange={e => handleChange('address', e.target.value)} /></div>
                   </div>
                 )}
 
@@ -272,7 +248,6 @@ export default function SettingsPage() {
                         <button onClick={() => setIsYearly(true)} className={`px-3 py-1.5 text-[12px] font-bold rounded-[7px] transition-all ${isYearly ? 'bg-white shadow-sm' : 'text-[#8E8E93]'}`}>Год -20%</button>
                       </div>
                     </div>
-                    
                     <div className="grid grid-cols-1 gap-4">
                       {plans.map((plan) => (
                         <div key={plan.name} className={`p-5 rounded-[20px] border-2 transition-all ${plan.recommended ? 'border-[#8BFDA8] bg-[#8BFDA8]/5' : 'border-[#F2F2F7]'}`}>
@@ -284,11 +259,7 @@ export default function SettingsPage() {
                             {plan.recommended && <span className="bg-[#8BFDA8] text-[10px] font-black px-2 py-1 rounded-full uppercase">Популярный</span>}
                           </div>
                           <ul className="space-y-2 mb-6">
-                            {plan.features.map(f => (
-                              <li key={f} className="flex items-center gap-2 text-[14px] text-[#3C3C43]">
-                                <Check size={14} className="text-[#34C759]" /> {f}
-                              </li>
-                            ))}
+                            {plan.features.map(f => <li key={f} className="flex items-center gap-2 text-[14px] text-[#3C3C43]"><Check size={14} className="text-[#34C759]" /> {f}</li>)}
                           </ul>
                           <button className="btn-secondary w-full !min-h-[44px] !h-[44px] !text-[15px]">Выбрать тариф</button>
                         </div>
@@ -296,7 +267,6 @@ export default function SettingsPage() {
                     </div>
                   </div>
                 )}
-
               </div>
             </>
           ) : (
@@ -305,7 +275,6 @@ export default function SettingsPage() {
             </div>
           )}
         </div>
-
       </div>
     </div>
   );
