@@ -8,20 +8,13 @@ const MY_PROJECT_ID = '8c49172a-333f-4708-ad0c-f08d70045891';
 
 type SettingsTab = 'VISUAL' | 'AI' | 'CONTACTS' | 'PLANS';
 
-// Функция для автоопределения контрастности (темный или светлый текст нужен)
 function getContrastColor(hexcolor: string) {
-  // Убираем решетку, если есть
   const hex = hexcolor.replace('#', '');
-  if (hex.length !== 6) return '#000000'; // fallback
-  
+  if (hex.length !== 6) return '#000000'; 
   const r = parseInt(hex.substring(0, 2), 16);
   const g = parseInt(hex.substring(2, 4), 16);
   const b = parseInt(hex.substring(4, 6), 16);
-  
-  // Формула YIQ для восприятия яркости глазом
   const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-  
-  // Если цвет светлый - возвращаем черный, если темный - белый
   return (yiq >= 128) ? '#000000' : '#FFFFFF';
 }
 
@@ -30,31 +23,46 @@ export default function SettingsPage() {
   const [isYearly, setIsYearly] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
   
-  // Добавили поле theme_text_color
   const [formData, setFormData] = useState({ 
     company_name: '', theme_color: '#8BFDA8', theme_text_color: '#000000', system_prompt: '', 
-    knowledge_base: '', whatsapp: '', instagram: '', address: '' 
+    knowledge_base: '', whatsapp: '', instagram: '', telegram: '', youtube: '', vk: '', twogis: '', address: '' 
   });
 
   useEffect(() => {
     supabase.from('projects').select('*').eq('id', MY_PROJECT_ID).single()
       .then(({ data }) => { 
         if (data) {
-          // Если цвета текста в БД еще нет, считаем его автоматически
+          // Читаем из JSONB колонки social_links
+          let links = data.social_links || {};
+          if (typeof links === 'string') {
+              try { links = JSON.parse(links); } catch(e) { links = {}; }
+          }
+          
           const textColor = data.theme_text_color || getContrastColor(data.theme_color || '#8BFDA8');
+          
           setFormData({ 
             company_name: data.company_name || '', 
             theme_color: data.theme_color || '#8BFDA8', 
             theme_text_color: textColor,
-            system_prompt: data.system_prompt || '', knowledge_base: data.knowledge_base || '',
-            whatsapp: data.whatsapp || '', instagram: data.instagram || '', address: data.address || ''
+            system_prompt: data.system_prompt || '', 
+            knowledge_base: data.knowledge_base || '',
+            
+            // Читаем адрес из правильной колонки
+            address: data.contacts_address || '', 
+            
+            // Читаем соцсети из объекта links
+            whatsapp: links.whatsapp || '', 
+            instagram: links.instagram || '', 
+            telegram: links.telegram || '',
+            youtube: links.youtube || '',
+            vk: links.vk || '',
+            twogis: links.twogis || ''
           }); 
         }
       });
   }, []);
 
   const handleColorChange = (hex: string) => {
-    // При смене основного цвета, мы АВТОМАТИЧЕСКИ предлагаем лучший цвет текста
     const suggestedTextColor = getContrastColor(hex);
     setFormData({ ...formData, theme_color: hex, theme_text_color: suggestedTextColor });
     setIsDirty(true);
@@ -66,7 +74,25 @@ export default function SettingsPage() {
   };
 
   async function handleSave() {
-    await supabase.from('projects').update(formData).eq('id', MY_PROJECT_ID);
+    await supabase.from('projects').update({
+      company_name: formData.company_name,
+      theme_color: formData.theme_color,
+      theme_text_color: formData.theme_text_color,
+      system_prompt: formData.system_prompt,
+      knowledge_base: formData.knowledge_base,
+      contacts_address: formData.address, // Записываем в правильную колонку
+      
+      // Упаковываем все соцсети обратно в JSONB объект!
+      social_links: {
+          whatsapp: formData.whatsapp,
+          instagram: formData.instagram,
+          telegram: formData.telegram,
+          youtube: formData.youtube,
+          vk: formData.vk,
+          twogis: formData.twogis
+      }
+    }).eq('id', MY_PROJECT_ID);
+    
     setIsDirty(false);
     alert('Настройки успешно сохранены');
   }
@@ -80,22 +106,20 @@ export default function SettingsPage() {
   const menuItems = [
     { id: 'VISUAL' as SettingsTab, label: 'Визуал', sub: 'Цвета и логотип' },
     { id: 'AI' as SettingsTab, label: 'Промпты ИИ', sub: 'Логика и база знаний' },
-    { id: 'CONTACTS' as SettingsTab, label: 'Контакты', sub: 'WA, IG и адрес' },
+    { id: 'CONTACTS' as SettingsTab, label: 'Контакты', sub: 'Карты и соцсети' },
   ];
 
   return (
     <div className="animate-in fade-in duration-300 flex flex-col h-full md:h-[572px] w-full px-1 md:px-0">
-      
       <h1 className={`ios-large-title shrink-0 ${activeTab ? 'hidden md:block' : 'block'}`}>
         Настройки
       </h1>
 
       <div className="flex-1 flex flex-col md:flex-row w-full bg-transparent md:bg-[#FFFFFF] md:rounded-[24px] md:overflow-hidden min-h-0">
         
-        {/* ЛЕВАЯ КОЛОНКА (Список) */}
+        {/* ЛЕВАЯ КОЛОНКА */}
         <div className={`w-full md:w-[300px] md:border-r border-[#E5E5EA] flex flex-col bg-transparent md:bg-[#FFFFFF] shrink-0 
           ${activeTab ? 'hidden md:flex' : 'flex'} h-full overflow-y-auto`}>
-          
           <div className="flex flex-col px-0 md:px-0 space-y-6 md:space-y-0">
             <div className="ios-module md:rounded-none md:!mb-0">
               {menuItems.map((item) => (
@@ -131,14 +155,14 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* ПРАВАЯ КОЛОНКА (Детали) */}
+        {/* ПРАВАЯ КОЛОНКА */}
         <div className={`flex-1 flex flex-col bg-[#FFFFFF] 
           ${!activeTab ? 'hidden md:flex' : 'flex'} 
           ${activeTab ? 'fixed inset-0 z-[60] md:relative' : ''} h-full overflow-hidden`}>
           
           {activeTab ? (
             <>
-              {/* Шапка детальных настроек */}
+              {/* Шапка */}
               <div className="border-b border-[#E5E5EA] bg-[#F9F9F9] md:bg-[#FFFFFF]/90 backdrop-blur-md shrink-0 z-10 pt-[env(safe-area-inset-top)] md:pt-0">
                 <div className="relative flex items-center justify-between px-4 py-3 min-h-[56px] md:min-h-[64px]">
                   <button onClick={() => setActiveTab(null)} className="md:hidden text-[#000000] flex items-center active:opacity-50">
@@ -173,47 +197,26 @@ export default function SettingsPage() {
                       </div>
                     </div>
 
-                    {/* Блок настройки текста внутри элементов бренда */}
                     <div>
                       <label className="ios-section-header ml-0">Текст на кнопках</label>
                       <div className="flex flex-col bg-[#F5F5F7] p-4 rounded-[14px] border border-[#E5E5EA] gap-4">
-                        
-                        {/* Селектор из двух жестких вариантов */}
                         <div className="flex bg-[#E5E5EA] p-1 rounded-[10px]">
-                          <button 
-                            onClick={() => handleChange('theme_text_color', '#000000')} 
-                            className={`flex-1 py-1.5 text-[14px] font-medium rounded-[7px] transition-all ${formData.theme_text_color === '#000000' ? 'bg-[#FFFFFF] text-[#000000] shadow-sm' : 'text-[#8E8E93]'}`}
-                          >
-                            Черный
-                          </button>
-                          <button 
-                            onClick={() => handleChange('theme_text_color', '#FFFFFF')} 
-                            className={`flex-1 py-1.5 text-[14px] font-medium rounded-[7px] transition-all ${formData.theme_text_color === '#FFFFFF' ? 'bg-[#FFFFFF] text-[#000000] shadow-sm' : 'text-[#8E8E93]'}`}
-                          >
-                            Белый
-                          </button>
+                          <button onClick={() => handleChange('theme_text_color', '#000000')} className={`flex-1 py-1.5 text-[14px] font-medium rounded-[7px] transition-all ${formData.theme_text_color === '#000000' ? 'bg-[#FFFFFF] text-[#000000] shadow-sm' : 'text-[#8E8E93]'}`}>Черный</button>
+                          <button onClick={() => handleChange('theme_text_color', '#FFFFFF')} className={`flex-1 py-1.5 text-[14px] font-medium rounded-[7px] transition-all ${formData.theme_text_color === '#FFFFFF' ? 'bg-[#FFFFFF] text-[#000000] shadow-sm' : 'text-[#8E8E93]'}`}>Белый</button>
                         </div>
-
-                        {/* Наглядное превью (Чтобы клиент сразу видел, что он натворил) */}
                         <div className="flex items-center justify-center py-4 border-t border-[#E5E5EA] mt-2">
-                           <div 
-                             className="px-6 py-3 rounded-[14px] font-semibold text-[15px] shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-colors"
-                             style={{ backgroundColor: formData.theme_color, color: formData.theme_text_color }}
-                           >
+                           <div className="px-6 py-3 rounded-[14px] font-semibold text-[15px] shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-colors" style={{ backgroundColor: formData.theme_color, color: formData.theme_text_color }}>
                              Попробовать виджет
                            </div>
                         </div>
-
                       </div>
                       <p className="text-[13px] text-[#8E8E93] mt-2 ml-4">
-                        Этот цвет будет применяться только поверх вашего главного цвета (на кнопках и отправленных сообщениях).
+                        Этот цвет будет применяться только поверх вашего главного цвета.
                       </p>
                     </div>
-
                   </div>
                 )}
 
-                {/* Остальной код вкладок AI, CONTACTS, PLANS остался без изменений */}
                 {activeTab === 'AI' && (
                   <div className="space-y-6">
                     <div>
@@ -231,15 +234,31 @@ export default function SettingsPage() {
                   <div className="space-y-6">
                     <div>
                       <label className="ios-section-header ml-0">WhatsApp</label>
-                      <input className="input-ios" placeholder="+7 (707) ..." value={formData.whatsapp} onChange={e => handleChange('whatsapp', e.target.value)} />
+                      <input className="input-ios" placeholder="https://wa.me/7..." value={formData.whatsapp} onChange={e => handleChange('whatsapp', e.target.value)} />
                     </div>
                     <div>
                       <label className="ios-section-header ml-0">Instagram</label>
-                      <input className="input-ios" placeholder="@username" value={formData.instagram} onChange={e => handleChange('instagram', e.target.value)} />
+                      <input className="input-ios" placeholder="https://instagram.com/..." value={formData.instagram} onChange={e => handleChange('instagram', e.target.value)} />
                     </div>
                     <div>
-                      <label className="ios-section-header ml-0">Адрес</label>
-                      <textarea className="input-ios resize-none" rows={2} placeholder="Город, улица..." value={formData.address} onChange={e => handleChange('address', e.target.value)} />
+                      <label className="ios-section-header ml-0">Telegram</label>
+                      <input className="input-ios" placeholder="https://t.me/..." value={formData.telegram} onChange={e => handleChange('telegram', e.target.value)} />
+                    </div>
+                    <div>
+                      <label className="ios-section-header ml-0">YouTube</label>
+                      <input className="input-ios" placeholder="https://youtube.com/..." value={formData.youtube} onChange={e => handleChange('youtube', e.target.value)} />
+                    </div>
+                    <div>
+                      <label className="ios-section-header ml-0">VKontakte</label>
+                      <input className="input-ios" placeholder="https://vk.com/..." value={formData.vk} onChange={e => handleChange('vk', e.target.value)} />
+                    </div>
+                    <div>
+                      <label className="ios-section-header ml-0">2GIS</label>
+                      <input className="input-ios" placeholder="Ссылка на 2GIS" value={formData.twogis} onChange={e => handleChange('twogis', e.target.value)} />
+                    </div>
+                    <div>
+                      <label className="ios-section-header ml-0">Физический адрес</label>
+                      <textarea className="input-ios resize-none" rows={2} placeholder="Город, улица, дом..." value={formData.address} onChange={e => handleChange('address', e.target.value)} />
                     </div>
                   </div>
                 )}
