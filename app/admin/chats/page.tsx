@@ -65,8 +65,9 @@ export default function ChatsPage() {
           </div>
         </div>
 
-        {/* ПРАВАЯ КОЛОНКА (Сам диалог чата) */}
+        {/* ПРАВАЯ КОЛОНКА (Сам диалог чата) - ИСПРАВЛЕНО: Добавлены классы flex-1 и w-full */}
         <div className={`
+          flex-1 w-full
           ${!activeChatId ? 'hidden md:flex' : 'flex'} 
           md:relative flex-col bg-[#FFFFFF] md:rounded-none h-full overflow-hidden
           ${activeChatId ? 'fixed inset-0 z-[60]' : ''}
@@ -74,12 +75,11 @@ export default function ChatsPage() {
           
           {activeChat ? (
             <>
-              {/* Шапка диалога (Решение проблемы с центрированием заголовка) */}
+              {/* Шапка диалога */}
               <div className="border-b border-[#E5E5EA] bg-[#F9F9F9] md:bg-[#FFFFFF]/90 backdrop-blur-md shrink-0 z-10 pt-[env(safe-area-inset-top)]">
-                {/* Внутренний контейнер с position: relative для абсолютной кнопки */}
                 <div className="relative flex items-center justify-center px-2 py-2 min-h-[56px] md:min-h-[60px]">
                   
-                  {/* Кнопка "Назад" - Абсолютное позиционирование слева, чтобы не двигала центр */}
+                  {/* Кнопка "Назад" - Абсолютное позиционирование слева */}
                   <div className="absolute left-2 flex items-center md:hidden">
                     <button onClick={() => setActiveChatId(null)} 
                       className="text-[#000000] flex items-center font-normal text-[17px] active:opacity-50 px-1 transition-opacity">
@@ -119,7 +119,7 @@ export default function ChatsPage() {
               </div>
 
               {/* Поле ввода */}
-              <div className="p-3 border-t border-[#E5E5EA] bg-[#FFFFFF] shrink-0 pb-[calc(env(safe-area-inset-bottom)+12px)] md:pb-4 z-10">
+              <div className="p-3 border-t border-[#E5E5EA] bg-[#FFFFFF] shrink-0 pb-[calc(env(safe-area-inset-bottom)+12px)] md:pb-4 z-10 w-full">
                 {activeChat.status === 'online' ? (
                   <div className="flex items-center gap-2">
                     <input 
