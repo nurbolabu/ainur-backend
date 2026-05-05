@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
-import { ChevronLeft, ChevronRight, ExternalLink, Check, User } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ExternalLink, Check, User, UploadCloud, Loader2 } from 'lucide-react';
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
 
@@ -24,14 +24,14 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<SettingsTab | null>(null);
   const [isYearly, setIsYearly] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   
-  // Данные аккаунта
   const [userEmail, setUserEmail] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
 
   const [formData, setFormData] = useState({ 
-    company_name: '', theme_color: '#8BFDA8', theme_text_color: '#000000', system_prompt: '', 
+    company_name: '', logo_url: '', theme_color: '#8BFDA8', theme_text_color: '#000000', system_prompt: '', 
     knowledge_base: '', whatsapp: '', instagram: '', telegram: '', youtube: '', vk: '', twogis: '', address: '' 
   });
 
@@ -43,13 +43,9 @@ export default function SettingsPage() {
         loadSettings(storedId);
       }
     }
-    
-    // Получаем почту текущего пользователя
     const fetchUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        setUserEmail(user.email || '');
-      }
+      if (user) setUserEmail(user.email || '');
     };
     fetchUser();
   }, []);
@@ -58,13 +54,12 @@ export default function SettingsPage() {
     const { data } = await supabase.from('projects').select('*').eq('id', id).single();
     if (data) {
       let links = data.social_links || {};
-      if (typeof links === 'string') {
-          try { links = JSON.parse(links); } catch(e) { links = {}; }
-      }
+      if (typeof links === 'string') { try { links = JSON.parse(links); } catch(e) { links = {}; } }
       const textColor = data.theme_text_color || getContrastColor(data.theme_color || '#8BFDA8');
       
       setFormData({ 
         company_name: data.company_name || '', 
+        logo_url: data.logo_url || '',
         theme_color: data.theme_color || '#8BFDA8', 
         theme_text_color: textColor,
         system_prompt: data.system_prompt || '', 
@@ -91,31 +86,52 @@ export default function SettingsPage() {
     setIsDirty(true); 
   };
 
-  // СОХРАНЕНИЕ НАСТРОЕК ВИДЖЕТА
+  // ЗАГРУЗКА ЛОГОТИПА
+  async function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !projectId) return;
+
+    setIsUploadingLogo(true);
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${projectId}_${Date.now()}.${fileExt}`;
+
+    const { error: uploadError } = await supabase.storage.from('logos').upload(fileName, file);
+
+    if (uploadError) {
+      alert('Ошибка при загрузке логотипа: ' + uploadError.message);
+      setIsUploadingLogo(false);
+      return;
+    }
+
+    const { data: { publicUrl } } = supabase.storage.from('logos').getPublicUrl(fileName);
+    setFormData({ ...formData, logo_url: publicUrl });
+    setIsDirty(true);
+    setIsUploadingLogo(false);
+  }
+
   async function handleSave() {
     if (!projectId) return alert('Ошибка: ID проекта не найден');
     await supabase.from('projects').update({
-      company_name: formData.company_name, theme_color: formData.theme_color, theme_text_color: formData.theme_text_color,
-      system_prompt: formData.system_prompt, knowledge_base: formData.knowledge_base, contacts_address: formData.address,
+      company_name: formData.company_name, 
+      logo_url: formData.logo_url,
+      theme_color: formData.theme_color, 
+      theme_text_color: formData.theme_text_color,
+      system_prompt: formData.system_prompt, 
+      knowledge_base: formData.knowledge_base, 
+      contacts_address: formData.address,
       social_links: { whatsapp: formData.whatsapp, instagram: formData.instagram, telegram: formData.telegram, youtube: formData.youtube, vk: formData.vk, twogis: formData.twogis }
     }).eq('id', projectId);
     setIsDirty(false);
     alert('Настройки успешно сохранены');
   }
 
-  // ОБНОВЛЕНИЕ EMAIL
   const handleUpdateEmail = async () => {
     if (!newEmail) return;
     const { error } = await supabase.auth.updateUser({ email: newEmail });
     if (error) alert('Ошибка: ' + error.message);
-    else { 
-      alert('Email успешно обновлен. Если в системе включено подтверждение, проверьте почту.'); 
-      setUserEmail(newEmail); 
-      setNewEmail(''); 
-    }
+    else { alert('Email успешно обновлен.'); setUserEmail(newEmail); setNewEmail(''); }
   };
 
-  // ОБНОВЛЕНИЕ ПАРОЛЯ
   const handleUpdatePassword = async () => {
     if (!newPassword || newPassword.length < 6) return alert('Пароль должен быть минимум 6 символов');
     const { error } = await supabase.auth.updateUser({ password: newPassword });
@@ -123,7 +139,6 @@ export default function SettingsPage() {
     else { alert('Пароль успешно изменен'); setNewPassword(''); }
   };
 
-  // ВЫХОД ИЗ СИСТЕМЫ
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     localStorage.removeItem('ainur_admin_project_id');
@@ -151,23 +166,20 @@ export default function SettingsPage() {
   return (
     <div className="animate-in fade-in duration-300 flex flex-col h-full md:h-[572px] w-full px-1 md:px-0">
       
-      {/* Десктопный заголовок (Скрывается на мобилках, если открыта вкладка) */}
       <h1 className={`ios-large-title shrink-0 ${activeTab ? 'hidden md:block' : 'block'}`}>
         Настройки
       </h1>
 
       <div className="flex-1 flex flex-col md:flex-row w-full bg-transparent md:bg-[#FFFFFF] md:rounded-[24px] md:overflow-hidden min-h-0">
         
-        {/* ЛЕВАЯ КОЛОНКА (Меню настроек) */}
         <div className={`w-full md:w-[320px] md:border-r border-[#E5E5EA] flex flex-col bg-transparent md:bg-[#FFFFFF] shrink-0 
           ${activeTab ? 'hidden md:flex' : 'flex'} h-full overflow-y-auto pb-24 md:pb-0`}>
           
           <div className="flex flex-col space-y-6 md:space-y-0 md:py-0">
             
-            {/* МОБИЛЬНЫЙ ПРОФИЛЬ (Отображается только на телефонах) */}
             <div className="md:hidden flex flex-col items-center justify-center text-center mt-2 mb-2 bg-[#FFFFFF] p-6 rounded-[24px] shadow-sm">
-                <div className="w-16 h-16 rounded-[20px] bg-[#F5F5F7] flex items-center justify-center mb-3 border border-[#E5E5EA]">
-                   <span className="font-bold text-[24px] text-[#8E8E93]">{formData.company_name?.charAt(0) || <User />}</span>
+                <div className="w-16 h-16 rounded-[20px] bg-[#F5F5F7] overflow-hidden flex items-center justify-center mb-3 border border-[#E5E5EA]">
+                   {formData.logo_url ? <img src={formData.logo_url} className="w-full h-full object-cover" /> : <span className="font-bold text-[24px] text-[#8E8E93]">{formData.company_name?.charAt(0) || <User />}</span>}
                 </div>
                 <h2 className="text-[20px] font-bold text-[#000000] tracking-tight">{formData.company_name || 'Настройки'}</h2>
                 <p className="text-[14px] text-[#8E8E93]">{userEmail}</p>
@@ -206,7 +218,6 @@ export default function SettingsPage() {
               </a>
             </div>
 
-            {/* КНОПКА ВЫХОДА */}
             <div className="ios-module md:rounded-none md:!mb-0 bg-transparent md:bg-[#FFFFFF] mt-2 md:mt-6 shadow-none md:border-t border-[#E5E5EA]">
                 <button onClick={handleSignOut} className="ios-list-item w-full bg-[#FFFFFF] rounded-[16px] md:rounded-none text-center flex justify-center border-none">
                     <span className="text-[#FF3B30] font-semibold text-[17px]">Выйти из аккаунта</span>
@@ -216,7 +227,6 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* ПРАВАЯ КОЛОНКА (Содержимое вкладок) */}
         <div className={`flex-1 flex flex-col bg-[#FFFFFF] 
           ${!activeTab ? 'hidden md:flex' : 'flex'} 
           ${activeTab ? 'fixed inset-0 z-[60] md:relative' : ''} h-full overflow-hidden`}>
@@ -232,7 +242,6 @@ export default function SettingsPage() {
                     {[...widgetMenuItems, ...accountMenuItems].find(i => i.id === activeTab)?.label || 'Настройки'}
                   </span>
                   
-                  {/* Кнопка сохранить показывается только для настроек виджета */}
                   {['VISUAL', 'AI', 'CONTACTS'].includes(activeTab) ? (
                     <button onClick={handleSave} className={`btn-primary !bg-[#8BFDA8] !text-[#000000] !min-h-[36px] !h-[36px] !px-4 !text-[14px] !rounded-[10px] ${!isDirty && 'opacity-50 pointer-events-none'}`}>
                       Сохранить
@@ -243,7 +252,6 @@ export default function SettingsPage() {
 
               <div className="flex-1 overflow-y-auto p-4 md:p-8 bg-[#FFFFFF]">
                 
-                {/* --- Вкладки Аккаунта --- */}
                 {activeTab === 'EMAIL' && (
                   <div className="space-y-6">
                     <div>
@@ -297,17 +305,32 @@ export default function SettingsPage() {
                   </div>
                 )}
 
-                {/* --- Вкладки Виджета --- */}
                 {activeTab === 'VISUAL' && (
                   <div className="space-y-8">
                     <div>
                       <label className="ios-section-header ml-0">Название компании</label>
                       <input className="input-ios" value={formData.company_name} onChange={e => handleChange('company_name', e.target.value)} />
                     </div>
+                    
+                    {/* НОВЫЙ БЛОК: ЗАГРУЗКА ЛОГОТИПА */}
+                    <div>
+                      <label className="ios-section-header ml-0">Логотип (Аватарка виджета)</label>
+                      <div className="flex items-center gap-4 bg-[#F5F5F7] p-4 rounded-[14px] border border-[#E5E5EA]">
+                        <div className="w-16 h-16 rounded-[16px] bg-[#FFFFFF] border border-[#E5E5EA] flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
+                           {isUploadingLogo ? <Loader2 className="animate-spin text-[#8E8E93]" size={20} /> :
+                            formData.logo_url ? <img src={formData.logo_url} className="w-full h-full object-cover" /> : <span className="font-bold text-[#8E8E93] text-[20px]">{formData.company_name?.charAt(0) || 'A'}</span>}
+                        </div>
+                        <label className="flex-1 h-[44px] flex items-center justify-center gap-2 bg-[#FFFFFF] rounded-[12px] cursor-pointer text-[15px] font-medium text-[#000000] border border-[#E5E5EA] active:scale-95 transition-transform shadow-sm">
+                           <UploadCloud size={18} /> {formData.logo_url ? 'Заменить логотип' : 'Загрузить логотип'}
+                           <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} disabled={isUploadingLogo} />
+                        </label>
+                      </div>
+                    </div>
+
                     <div>
                       <label className="ios-section-header ml-0">Главный цвет бренда (Фон)</label>
                       <div className="flex items-center gap-4 bg-[#F5F5F7] p-4 rounded-[14px] border border-[#E5E5EA]">
-                        <div className="w-10 h-10 rounded-full border border-[#E5E5EA] overflow-hidden shrink-0">
+                        <div className="w-10 h-10 rounded-full border border-[#E5E5EA] overflow-hidden shrink-0 shadow-sm">
                           <input type="color" className="w-[150%] h-[150%] -translate-x-1/4 -translate-y-1/4 cursor-pointer" value={formData.theme_color} onChange={e => handleColorChange(e.target.value)} />
                         </div>
                         <span className="font-mono font-bold uppercase tracking-wider">{formData.theme_color}</span>
