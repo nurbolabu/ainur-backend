@@ -63,7 +63,7 @@ export default function ChatsPage() {
                 
                 {/* Кнопка Назад (Только мобилка) в строгом стиле iOS */}
                 <button onClick={() => setActiveChatId(null)} 
-                  className="md:hidden text-[#007AFF] flex items-center font-normal text-[17px] active:opacity-50 px-1 transition-opacity">
+                  className="md:hidden text-[#616161] flex items-center font-normal text-[17px] active:opacity-50 px-1 transition-opacity">
                   <ChevronLeft size={28} strokeWidth={2} className="-ml-2" />
                   <span className="-ml-1">Назад</span>
                 </button>
