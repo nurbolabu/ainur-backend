@@ -368,13 +368,37 @@ export default function SettingsPage() {
 
                 {activeTab === 'CONTACTS' && (
                   <div className="space-y-6">
-                    <div><label className="ios-section-header ml-0">WhatsApp</label><input className="input-ios" placeholder="https://wa.me/7..." value={formData.whatsapp} onChange={e => handleChange('whatsapp', e.target.value)} /></div>
-                    <div><label className="ios-section-header ml-0">Instagram</label><input className="input-ios" placeholder="https://instagram.com/..." value={formData.instagram} onChange={e => handleChange('instagram', e.target.value)} /></div>
-                    <div><label className="ios-section-header ml-0">Telegram</label><input className="input-ios" placeholder="https://t.me/..." value={formData.telegram} onChange={e => handleChange('telegram', e.target.value)} /></div>
-                    <div><label className="ios-section-header ml-0">YouTube</label><input className="input-ios" placeholder="https://youtube.com/..." value={formData.youtube} onChange={e => handleChange('youtube', e.target.value)} /></div>
-                    <div><label className="ios-section-header ml-0">VKontakte</label><input className="input-ios" placeholder="https://vk.com/..." value={formData.vk} onChange={e => handleChange('vk', e.target.value)} /></div>
-                    <div><label className="ios-section-header ml-0">2GIS</label><input className="input-ios" placeholder="Ссылка на 2GIS" value={formData.twogis} onChange={e => handleChange('twogis', e.target.value)} /></div>
-                    <div><label className="ios-section-header ml-0">Физический адрес</label><textarea className="input-ios resize-none" rows={2} placeholder="Город, улица, дом..." value={formData.address} onChange={e => handleChange('address', e.target.value)} /></div>
+                    {[
+                      { id: 'whatsapp', label: 'WhatsApp', prefix: 'https://wa.me/', display: 'wa.me/', placeholder: '77001234567' },
+                      { id: 'instagram', label: 'Instagram', prefix: 'https://instagram.com/', display: 'instagram.com/', placeholder: 'username' },
+                      { id: 'telegram', label: 'Telegram', prefix: 'https://t.me/', display: 't.me/', placeholder: 'username' },
+                      { id: 'youtube', label: 'YouTube', prefix: 'https://youtube.com/@', display: 'youtube.com/@', placeholder: 'channel' },
+                      { id: 'vk', label: 'VKontakte', prefix: 'https://vk.com/', display: 'vk.com/', placeholder: 'username' },
+                      { id: 'twogis', label: '2GIS', prefix: 'https://2gis.kz/', display: '2gis.kz/', placeholder: 'link' },
+                    ].map(social => (
+                      <div key={social.id}>
+                        <label className="ios-section-header ml-0">{social.label}</label>
+                        <div className="flex bg-[#F5F5F7] border border-[#E5E5EA] rounded-[14px] overflow-hidden focus-within:border-[#8BFDA8] focus-within:bg-[#FFFFFF] transition-colors">
+                          <span className="flex items-center pl-4 pr-1 text-[#8E8E93] text-[15px] select-none bg-transparent">
+                            {social.display}
+                          </span>
+                          <input 
+                            className="flex-1 bg-transparent py-3 px-2 text-[17px] text-[#000000] outline-none placeholder:text-[#C6C6C8]" 
+                            placeholder={social.placeholder}
+                            value={formData[social.id as keyof typeof formData]?.replace(social.prefix, '') || ''} 
+                            onChange={e => {
+                                // Умная обрезка: если вставили полную ссылку, оставляем только никнейм/номер
+                                let cleanValue = e.target.value.replace(social.prefix, '').replace(social.display, '');
+                                handleChange(social.id, cleanValue ? `${social.prefix}${cleanValue}` : '');
+                            }} 
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    <div>
+                      <label className="ios-section-header ml-0">Физический адрес</label>
+                      <textarea className="input-ios resize-none" rows={2} placeholder="Город, улица, дом..." value={formData.address} onChange={e => handleChange('address', e.target.value)} />
+                    </div>
                   </div>
                 )}
               </div>
