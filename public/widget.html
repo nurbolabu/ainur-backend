@@ -693,25 +693,60 @@
         }
 
         window.renderCatalog = function() {
-            const container = document.getElementById('ainur-catalog-render');
-            if (ainurProducts.length === 0) { container.innerHTML = '<div style="text-align:center; color:#888; padding: 20px;">Каталог пуст</div>'; return; }
-            container.innerHTML = ainurProducts.map(p => {
-                const firstImg = p.image_url ? p.image_url.split(',')[0].trim() : 'https://via.placeholder.com/80';
-                return `
-                <div class="ainur-product-card">
-                    <div class="ainur-product-top" onclick="window.openProductDetail('${p.id}')">
-                        <img class="ainur-product-img" src="${firstImg}" alt=""/>
-                        <div class="ainur-product-info">
-                            <div class="ainur-product-title">${p.name}</div>
-                            <div class="ainur-product-desc">${p.description || ''}</div>
-                            <div class="ainur-product-price">${Number(p.price).toLocaleString('ru-RU')} ₸</div>
+            // 1. Ищем контейнер
+            let container = document.getElementById('ainur-catalog-render');
+            
+            // 2. БРОНЕЖИЛЕТ: Если контейнера нет в HTML, создаем его сами!
+            if (!container) {
+                const profileContent = document.querySelector('.ainur-profile-content');
+                if (profileContent) {
+                    container = document.createElement('div');
+                    container.id = 'ainur-catalog-render';
+                    container.className = 'ainur-catalog-list';
+                    container.style.marginTop = '15px';
+                    profileContent.appendChild(container);
+                } else {
+                    console.error('Критическая ошибка: не найден блок профиля для каталога');
+                    return;
+                }
+            }
+
+            // 3. Если товаров нет
+            if (!ainurProducts || ainurProducts.length === 0) { 
+                container.innerHTML = '<div style="text-align:center; color:#888; padding: 20px;">Каталог пуст</div>'; 
+                return; 
+            }
+
+            // 4. Отрисовка товаров
+            try {
+                container.innerHTML = ainurProducts.map(p => {
+                    // Заменили проблемный placeholder на надежный placehold.co
+                    const firstImg = p.image_url ? p.image_url.split(',')[0].trim() : 'https://placehold.co/80x80/E5E5EA/8E8E93?text=Фото';
+                    
+                    // Защита от пустых цен и названий
+                    const price = p.price || 0;
+                    const name = p.name || 'Товар';
+                    const desc = p.description || '';
+                    
+                    return `
+                    <div class="ainur-product-card">
+                        <div class="ainur-product-top" onclick="window.openProductDetail('${p.id}')">
+                            <img class="ainur-product-img" src="${firstImg}" alt=""/>
+                            <div class="ainur-product-info">
+                                <div class="ainur-product-title">${name}</div>
+                                <div class="ainur-product-desc">${desc}</div>
+                                <div class="ainur-product-price">${Number(price).toLocaleString('ru-RU')} ₸</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="ainur-product-actions">
-                        <button class="ainur-btn-sec" onclick="window.openProductDetail('${p.id}')">Подробнее</button>
-                        <button class="ainur-btn-prim" onclick="window.addToCart('${p.id}')">В корзину</button>
-                    </div>
-                </div>`}).join('');
+                        <div class="ainur-product-actions">
+                            <button class="ainur-btn-sec" onclick="window.openProductDetail('${p.id}')">Подробнее</button>
+                            <button class="ainur-btn-prim" onclick="window.addToCart('${p.id}')">В корзину</button>
+                        </div>
+                    </div>`;
+                }).join('');
+            } catch (err) {
+                console.error('Ошибка при рендере списка товаров:', err);
+            }
         };
 
         window.openProductDetail = function(id) {
@@ -720,7 +755,7 @@
             document.getElementById('ainur-detail-title').innerText = currentDetailProduct.name;
             document.getElementById('ainur-detail-price').innerText = Number(currentDetailProduct.price).toLocaleString('ru-RU') + ' ₸';
             document.getElementById('ainur-detail-desc').innerText = currentDetailProduct.description || '';
-            const images = currentDetailProduct.image_url ? currentDetailProduct.image_url.split(',') : ['https://via.placeholder.com/400'];
+            const images = currentDetailProduct.image_url ? currentDetailProduct.image_url.split(',') : ['https://placehold.co/400x400/E5E5EA/8E8E93?text=Нет+фото'];
             document.getElementById('ainur-detail-gallery').innerHTML = images.map(url => `<img src="${url.trim()}" class="ainur-detail-slide" alt=""/>`).join('');
             window.ainurOpenView('detail');
         };
