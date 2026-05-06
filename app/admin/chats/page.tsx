@@ -77,20 +77,27 @@ export default function ChatsPage() {
   };
 
   return (
-    <div className="animate-in fade-in duration-300 flex flex-col h-full w-full max-w-[1000px] mx-auto">
-      {/* 1. БОЛЬШОЙ ЗАГОЛОВОК (в стиле iOS) */}
-      {!activeChatId && <h1 className="ios-large-title px-1">Чаты</h1>}
+    // На десктопе фиксируем высоту, чтобы не было скролла всей страницы
+    <div className="animate-in fade-in duration-300 flex flex-col h-full md:h-[calc(100vh-80px)] w-full mx-auto">
+      
+      {/* 1. ЗАГОЛОВОК (Показываем только на мобилках) */}
+      {!activeChatId && <h1 className="ios-large-title px-1 md:hidden">Чаты</h1>}
 
-      {/* 2. МОДУЛЬНАЯ СИСТЕМА */}
-      <div className={`ios-module flex-1 flex flex-row mb-0 overflow-hidden min-h-[600px] ${activeChatId ? 'fixed inset-0 z-[100] rounded-none md:relative md:inset-auto md:rounded-[24px]' : ''}`}>
+      {/* 2. ГЛАВНЫЙ КОНТЕЙНЕР */}
+      <div className={`flex-1 flex flex-row bg-[#FFFFFF] overflow-hidden 
+        ${activeChatId 
+          ? 'fixed inset-0 z-[100] rounded-none border-none md:relative md:inset-auto md:rounded-[24px] md:border md:border-[#E5E5EA]' 
+          : 'ios-module mb-0 md:rounded-[24px] md:border md:border-[#E5E5EA]'
+        }`}
+      >
         
-        {/* ЛЕВАЯ КОЛОНКА (Список) */}
+        {/* ЛЕВАЯ КОЛОНКА (Список диалогов) */}
         <div className={`w-full md:w-[320px] border-r border-[#E5E5EA] flex flex-col bg-[#FFFFFF] ${activeChatId ? 'hidden md:flex' : 'flex'}`}>
-          <div className="p-4 border-b border-[#E5E5EA] hidden md:block">
-            <span className="text-[17px] font-bold">Все сообщения</span>
+          <div className="p-4 border-b border-[#E5E5EA] hidden md:block bg-[#F9F9F9]">
+            <span className="text-[17px] font-bold">Все диалоги</span>
           </div>
           
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto pb-[env(safe-area-inset-bottom)]">
             {isLoading ? (
                <div className="p-10 text-center text-[#8E8E93]">Загрузка...</div>
             ) : conversations.length === 0 ? (
@@ -115,15 +122,15 @@ export default function ChatsPage() {
           </div>
         </div>
 
-        {/* ПРАВАЯ КОЛОНКА (История) */}
+        {/* ПРАВАЯ КОЛОНКА (Окно переписки) */}
         <div className={`flex-1 flex flex-col bg-[#FFFFFF] ${!activeChatId ? 'hidden md:flex' : 'flex'}`}>
           {activeChatId ? (
             <>
               {/* ХЕДЕР ЧАТА */}
               <div className="flex items-center justify-between px-4 py-3 border-b border-[#E5E5EA] bg-[#FFFFFF]/80 backdrop-blur-xl sticky top-0 z-10">
-                <button onClick={() => setActiveChatId(null)} className="flex items-center text-[#007AFF] transition-opacity active:opacity-50">
+                <button onClick={() => setActiveChatId(null)} className="flex items-center text-[#000000] transition-opacity active:opacity-50">
                   <ChevronLeft size={30} className="-ml-2" />
-                  <span className="text-[17px]">Чаты</span>
+                  <span className="text-[17px] font-medium md:hidden">Чаты</span>
                 </button>
                 <div className="flex flex-col items-center">
                    <div className="w-8 h-8 rounded-full bg-[#E5E5EA] flex items-center justify-center text-[#8E8E93] mb-0.5">
@@ -131,23 +138,22 @@ export default function ChatsPage() {
                    </div>
                    <span className="text-[11px] font-medium text-[#000000] uppercase tracking-tight">ID: {activeChatId.substring(0, 8)}</span>
                 </div>
-                <div className="w-12"></div> {/* Для центровки */}
+                <div className="w-12"></div>
               </div>
               
               {/* ЛЕНТА СООБЩЕНИЙ */}
-              <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-2 bg-[#FFFFFF]">
+              {/* pb-[calc(16px+env(safe-area-inset-bottom))] гарантирует, что на iPhone полоска не перекроет текст */}
+              <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-2 bg-[#FFFFFF] pb-[calc(16px+env(safe-area-inset-bottom))]">
                 {messages.map((msg, i) => {
                   const isClient = msg.role === 'user';
                   const isAi = msg.role === 'assistant';
                   
-                  // Проверка, является ли сообщение "Тикетом заявки"
                   const isLeadTicket = msg.content.includes('Имя:') && msg.content.includes('Телефон:');
 
                   return (
                     <div key={i} className={`flex w-full flex-col ${isClient ? 'items-end' : 'items-start'} mb-1`}>
                       
                       {isLeadTicket ? (
-                        /* КАРТОЧКА ЗАЯВКИ / КОРЗИНЫ */
                         <div className="w-full max-w-[280px] my-4 bg-[#F2F2F7] rounded-[20px] p-4 border border-[#E5E5EA] self-center shadow-sm">
                            <div className="flex items-center gap-2 mb-3 text-[#34C759]">
                               <ShoppingBag size={18} />
@@ -164,20 +170,20 @@ export default function ChatsPage() {
                            </div>
                         </div>
                       ) : (
-                        /* ОБЫЧНЫЙ БАБЛ */
-                        <div className={`max-w-[80%] px-4 py-2.5 text-[16px] leading-tight rounded-[20px] ${
+                        <div className={`max-w-[80%] px-4 py-2.5 text-[16px] leading-tight shadow-sm ${
                           isClient 
-                            ? 'bg-[#007AFF] text-[#FFFFFF] rounded-tr-[4px]' 
+                            ? 'bg-[#8BFDA8] text-[#000000] rounded-[20px] rounded-tr-[4px]' // Зеленый бабл для клиента
                             : isAi 
-                              ? 'bg-[#E9E9EB] text-[#000000] rounded-tl-[4px]' 
-                              : 'bg-[#34C759] text-[#FFFFFF] rounded-tl-[4px]'
+                              ? 'bg-[#F2F2F7] text-[#000000] rounded-[20px] rounded-tl-[4px]' 
+                              : 'bg-[#34C759] text-[#FFFFFF] rounded-[20px] rounded-tl-[4px]'
                         }`}>
                           {msg.content}
                         </div>
                       )}
                       
+                      {/* Подпись времени и ИИ (Без иконки) */}
                       <span className="text-[10px] text-[#C6C6C8] mt-1 px-2">
-                        {isAi ? '🤖 ИИ • ' : ''} {formatTime(msg.created_at)}
+                        {isAi ? 'ИИ • ' : ''} {formatTime(msg.created_at)}
                       </span>
                     </div>
                   );
@@ -186,7 +192,7 @@ export default function ChatsPage() {
               </div>
             </>
           ) : (
-             <div className="flex-1 flex flex-col items-center justify-center text-[#8E8E93] bg-[#F9F9F9]">
+             <div className="flex-1 flex flex-col items-center justify-center text-[#8E8E93] bg-[#F9F9F9] h-full">
                 <div className="w-20 h-20 rounded-full bg-[#E5E5EA] flex items-center justify-center mb-4">
                   <User size={40} className="text-[#FFFFFF]" />
                 </div>
