@@ -6,7 +6,7 @@ import { createClient } from '@supabase/supabase-js';
 import { 
   Bot, Database, Palette, Link2, Mail, Lock, CreditCard, LogOut, 
   ChevronRight, ChevronLeft, Building2, Loader2, X, Check, UploadCloud, User, Pencil, Code, Copy, ExternalLink,
-  Bell, Send // Добавлены новые иконки
+  Bell, Send
 } from 'lucide-react';
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
@@ -85,7 +85,6 @@ export default function SettingsPage() {
         twogis: links.twogis || '',
         is_paid: data.is_paid || false,
         widget_settings: wSettings,
-        notify_email: wSettings.notify_email || '',
         notify_telegram: wSettings.notify_telegram || ''
       });
     }
@@ -143,7 +142,6 @@ export default function SettingsPage() {
       },
       widget_settings: {
         ...(projectData.widget_settings || {}),
-        notify_email: editForm.notify_email,
         notify_telegram: editForm.notify_telegram
       }
     };
@@ -511,39 +509,26 @@ export default function SettingsPage() {
                 </div>
               )}
 
-              {/* ОКНО УВЕДОМЛЕНИЙ */}
+              {/* ОБНОВЛЕННОЕ ОКНО УВЕДОМЛЕНИЙ */}
               {activeModal === 'notifications' && (
                 <div className="flex flex-col gap-6">
-                  <div className="bg-[#F2F2F7] rounded-[16px] p-4 text-[14px] text-[#8E8E93] leading-relaxed">
-                    Настройте, куда будут приходить новые заявки и заказы, оставленные клиентами в вашем виджете.
+                  <div className="bg-[#F2F2F7] rounded-[16px] p-5 text-[14px] text-[#000000] leading-relaxed border border-[#E5E5EA]">
+                    <b>Как получать заявки в Telegram?</b><br/><br/>
+                    <span className="text-[#8E8E93] font-medium">Шаг 1.</span> Узнайте свой личный ID. Для этого напишите боту <a href="https://t.me/userinfobot" target="_blank" rel="noopener noreferrer" className="text-[#007AFF] font-medium hover:underline">@userinfobot</a> и скопируйте цифры из ответа.<br/><br/>
+                    <span className="text-[#8E8E93] font-medium">Шаг 2.</span> Вставьте эти цифры в поле ниже и сохраните настройки.<br/><br/>
+                    <span className="text-[#8E8E93] font-medium">Шаг 3.</span> <b>Обязательно</b> перейдите в нашего бота <a href="https://t.me/Ai_nur_platformbot" target="_blank" rel="noopener noreferrer" className="text-[#007AFF] font-medium hover:underline">@Ai_nur_platformbot</a> и нажмите кнопку <b>«Запустить» (/start)</b>. Без этого шага бот не сможет присылать вам заявки!
                   </div>
                   
                   <div className="flex flex-col gap-2">
                     <label className="text-[14px] font-semibold text-[#8E8E93] uppercase flex items-center gap-2">
-                      <Send size={16} /> Telegram Chat ID
+                      <Send size={16} /> Ваш Telegram Chat ID
                     </label>
                     <input 
                       type="text" 
-                      className="input-ios border border-[#E5E5EA] text-[16px] h-[50px] px-4 rounded-[14px] w-full outline-none" 
+                      className="input-ios border border-[#E5E5EA] text-[16px] h-[50px] px-4 rounded-[14px] w-full outline-none focus:border-[#8BFDA8] transition-colors" 
                       placeholder="Например: 123456789" 
                       value={editForm.notify_telegram || ''} 
                       onChange={e => setEditForm({...editForm, notify_telegram: e.target.value})} 
-                    />
-                    <p className="text-[13px] text-[#8E8E93] mt-1 ml-1">
-                      Узнайте свой ID, написав боту <a href="https://t.me/userinfobot" target="_blank" className="text-[#007AFF] hover:underline">@userinfobot</a>
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col gap-2 mt-2">
-                    <label className="text-[14px] font-semibold text-[#8E8E93] uppercase flex items-center gap-2">
-                      <Mail size={16} /> Email для дублирования
-                    </label>
-                    <input 
-                      type="email" 
-                      className="input-ios border border-[#E5E5EA] text-[16px] h-[50px] px-4 rounded-[14px] w-full outline-none" 
-                      placeholder="admin@mail.com" 
-                      value={editForm.notify_email || ''} 
-                      onChange={e => setEditForm({...editForm, notify_email: e.target.value})} 
                     />
                   </div>
                 </div>
