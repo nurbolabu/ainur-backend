@@ -2,14 +2,15 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
-import { Settings, Plus, ChevronRight, Trash2, Loader2, PlaySquare } from 'lucide-react';
+import { Settings, Plus, Trash2, Loader2, PlaySquare, Phone, ShoppingCart, User, Package, ChevronDown, ChevronUp, Check } from 'lucide-react';
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
 
 export default function AdminDashboard() {
   const [projectId, setProjectId] = useState<string | null>(null);
   const [stories, setStories] = useState<any[]>([]);
-  const [recentChats, setRecentChats] = useState<any[]>([]);
+  const [recentLeads, setRecentLeads] = useState<any[]>([]);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [stats, setStats] = useState({ visitors: 0, widgets: 0, leads: 0, social: 0 });
   const [isUploading, setIsUploading] = useState(false);
 
@@ -22,6 +23,7 @@ export default function AdminDashboard() {
   }, []);
 
   async function fetchDashboardData(id: string) {
+    // 1. Загружаем Сторис
     const { data: storiesData } = await supabase
       .from('stories')
       .select('*')
@@ -29,40 +31,41 @@ export default function AdminDashboard() {
       .order('created_at', { ascending: false });
     if (storiesData) setStories(storiesData);
 
+    // 2. Считаем статистику чатов (для блоков статистики)
     const { data: messagesData } = await supabase
       .from('messages')
-      .select('conversation_id, created_at')
+      .select('conversation_id')
+      .eq('project_id', id);
+    
+    let totalChats = 0;
+    if (messagesData) {
+      const seen = new Set();
+      for (const msg of messagesData) seen.add(msg.conversation_id);
+      totalChats = seen.size;
+    }
+
+    // 3. Загружаем Заявки
+    const { data: leadsData } = await supabase
+      .from('leads')
+      .select('*')
       .eq('project_id', id)
       .order('created_at', { ascending: false });
-    
-    if (messagesData) {
-      const uniqueChats: any[] = [];
-      const seen = new Set();
-      for (const msg of messagesData) {
-        if (!seen.has(msg.conversation_id)) {
-          seen.add(msg.conversation_id);
-          uniqueChats.push({ id: msg.conversation_id, date: msg.created_at });
-          if (uniqueChats.length === 2) break; 
-        }
-      }
-      setRecentChats(uniqueChats);
 
-      const totalChats = seen.size;
-      
-      const { count: leadsCount } = await supabase
-        .from('leads')
-        .select('*', { count: 'exact', head: true })
-        .eq('project_id', id);
+    if (leadsData) {
+      // Отбираем только новые заявки для вывода на главную
+      const newLeads = leadsData.filter(l => !l.status || l.status === 'new');
+      setRecentLeads(newLeads);
 
       setStats({
         widgets: totalChats,
-        leads: leadsCount || 0,
+        leads: leadsData.length,
         visitors: totalChats * 5 + 124, 
         social: Math.floor(totalChats * 0.3) 
       });
     }
   }
 
+  // --- ЛОГИКА СТОРИС ---
   async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files || e.target.files.length === 0 || !projectId) return;
     setIsUploading(true);
@@ -88,21 +91,30 @@ export default function AdminDashboard() {
     }
   }
 
+  // --- ЛОГИКА ЗАЯВОК ---
+  const toggleExpand = (id: string) => {
+    setExpandedId(expandedId === id ? null : id);
+  };
+
+  async function toggleStatus(leadId: string, currentStatus: string) {
+    const newStatus = (!currentStatus || currentStatus === 'new') ? 'processed' : 'new';
+    
+    // Сразу убираем заявку из списка на главной (так как она стала обработанной)
+    setRecentLeads(recentLeads.filter(l => l.id !== leadId));
+    
+    await supabase.from('leads').update({ status: newStatus }).eq('id', leadId);
+  }
+
   const formatDate = (iso: string) => {
     const d = new Date(iso);
     return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
-  };
-  const formatTime = (iso: string) => {
-    const d = new Date(iso);
-    return d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
   };
 
   return (
     <div className="w-full max-w-[690px] mx-auto px-[17px] md:px-0 pt-[100px] animate-in fade-in duration-300 flex flex-col gap-8 pb-[100px]">
       
-      {/* 1. ФИКСИРОВАННЫЙ HEADER (Без теней) */}
+      {/* 1. ФИКСИРОВАННЫЙ HEADER */}
       <div className="fixed top-[10px] left-1/2 -translate-x-1/2 w-[calc(100%-34px)] md:w-full max-w-[690px] z-40 bg-[#FFFFFF] rounded-[22px] flex items-center justify-between pl-[20px] pr-[10px] py-[10px] border border-[#E5E5EA]">
-        {/* Логотип SVG */}
         <div className="flex items-center">
           <svg width="99" height="14" viewBox="0 0 99 14" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M98.0879 13.7771H92.4758L89.457 10.1911H83.0142V13.7771H78.8203V6.84812H90.6118C91.2602 6.84812 91.8072 6.71305 92.2529 6.44291C92.6987 6.17278 92.9215 5.80134 92.9215 5.3286C92.9215 4.80183 92.7189 4.41013 92.3137 4.1535C91.9085 3.88336 91.3412 3.7483 90.6118 3.7483H78.8203V0.223007H90.2674C91.0373 0.223007 91.8342 0.297295 92.6581 0.44587C93.4821 0.580939 94.2317 0.830816 94.9071 1.1955C95.5824 1.56019 96.1362 2.05319 96.5684 2.6745C97.0141 3.29582 97.237 4.09272 97.237 5.06522C97.237 5.59198 97.156 6.09174 96.9939 6.56448C96.8318 7.03722 96.5954 7.46268 96.2848 7.84087C95.9876 8.21906 95.6162 8.54323 95.1704 8.81337C94.7382 9.07 94.2452 9.25234 93.6914 9.36039C93.921 9.53598 94.1777 9.75885 94.4613 10.029C94.745 10.2991 95.1232 10.6706 95.5959 11.1433L98.0879 13.7771Z" fill="black"/>
@@ -111,8 +123,6 @@ export default function AdminDashboard() {
             <path d="M11.4062 0C12.0411 0 12.5686 0.148162 12.9873 0.445312C13.4195 0.72895 13.7839 1.08733 14.0811 1.51953L22.5498 13.7773H6.78711L9.31934 10.292H13.9795C14.4252 10.292 14.8106 10.306 15.1348 10.333C14.9457 10.0899 14.7225 9.78558 14.4658 9.4209C14.2227 9.04277 13.9864 8.6913 13.7568 8.36719L11.3252 4.78125L4.96387 13.7773H0L8.69141 1.51953C8.97505 1.12783 9.3334 0.776478 9.76562 0.46582C10.1977 0.155307 10.7447 5.27822e-05 11.4062 0ZM28.2998 13.7773H24.1055V0.222656H28.2998V13.7773Z" fill="#8BFDA8"/>
           </svg>
         </div>
-        
-        {/* Кнопка настроек */}
         <Link href="/admin/settings" className="w-[50px] h-[50px] shrink-0 bg-[#8BFDA8] rounded-[11px] flex items-center justify-center active:scale-95 transition-transform">
           <Settings size={24} strokeWidth={1.5} className="text-[#000000]" />
         </Link>
@@ -121,7 +131,6 @@ export default function AdminDashboard() {
       {/* 2. БЛОК STORIES */}
       <div className="flex flex-col gap-2.5 mt-2">
         <h2 className="text-[#949494] text-[14px] font-medium uppercase tracking-wide">Stories</h2>
-        
         <div className="flex items-center gap-2.5 overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
           
           <label className="w-[140px] h-[165px] md:w-[165px] bg-[#000000] rounded-[22px] p-4 flex flex-col justify-between shrink-0 active:scale-95 transition-transform cursor-pointer relative">
@@ -185,28 +194,93 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* 4. БЛОК ПОСЛЕДНИХ ЧАТОВ */}
+      {/* 4. БЛОК НОВЫХ ЗАЯВОК (Вместо чатов) */}
       <div className="flex flex-col gap-2.5">
-        <h2 className="text-[#949494] text-[14px] font-medium uppercase tracking-wide">Последние чаты</h2>
+        <h2 className="text-[#949494] text-[14px] font-medium uppercase tracking-wide">Новые заявки</h2>
         
         <div className="flex flex-col gap-2.5">
-          {recentChats.length > 0 ? (
-            recentChats.map((chat) => (
-              <Link key={chat.id} href="/admin/chats" className="bg-[#FFFFFF] rounded-[22px] p-5 flex items-center justify-between border border-[#E5E5EA] active:scale-[0.98] transition-transform">
-                <div className="flex flex-col gap-1">
-                  <span className="text-[#000000] text-[14px]">{formatTime(chat.date)}, {formatDate(chat.date)}</span>
-                  <span className="text-[#000000] text-[20px] font-bold uppercase truncate max-w-[200px] md:max-w-[400px]">
-                    chat #{chat.id.substring(0, 4)}
-                  </span>
+          {recentLeads.length > 0 ? (
+            recentLeads.map((lead) => {
+              const isOrder = lead.cart_items && lead.cart_items.length > 0;
+              const isExpanded = expandedId === lead.id;
+              const status = lead.status || 'new';
+
+              return (
+                <div key={lead.id} className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] overflow-hidden flex flex-col transition-colors hover:border-[#8BFDA8]/50">
+                  <div className="p-4 md:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    
+                    <div className="flex items-center gap-4">
+                      <div className={`w-14 h-14 rounded-[16px] flex items-center justify-center shrink-0 ${isOrder ? 'bg-[#8BFDA8]/20 text-[#000000]' : 'bg-[#F2F2F7] text-[#8E8E93]'}`}>
+                        {isOrder ? <ShoppingCart size={24} strokeWidth={1.5} /> : <User size={24} strokeWidth={1.5} />}
+                      </div>
+                      
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-bold text-[18px] text-[#000000]">{lead.name}</h3>
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${isOrder ? 'bg-[#8BFDA8]/50 text-[#000000]' : 'bg-[#E5E5EA] text-[#8E8E93]'}`}>
+                            {isOrder ? 'Заказ' : 'Звонок'}
+                          </span>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] text-[#8E8E93]">
+                          <span className="flex items-center gap-1.5 font-medium text-[#000000]"><Phone size={14} strokeWidth={1.5}/> {lead.phone}</span>
+                          <span className="flex items-center gap-1.5">
+                            {new Date(lead.created_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between md:justify-end gap-3 w-full md:w-auto pt-4 md:pt-0 border-t border-[#F2F2F7] md:border-t-0">
+                      
+                      <button 
+                        onClick={() => toggleStatus(lead.id, status)}
+                        className={`h-[40px] px-4 rounded-[12px] flex items-center gap-1.5 text-[14px] font-semibold active:scale-95 transition-transform ${status === 'new' ? 'bg-[#000000] text-[#FFFFFF]' : 'bg-[#F2F2F7] text-[#8E8E93]'}`}
+                      >
+                        <>Обработать <Check size={16} strokeWidth={2} /></>
+                      </button>
+
+                      {isOrder && (
+                        <button 
+                          onClick={() => toggleExpand(lead.id)}
+                          className="w-[40px] h-[40px] bg-[#F2F2F7] rounded-[12px] flex items-center justify-center text-[#000000] active:scale-95 transition-transform"
+                        >
+                          {isExpanded ? <ChevronUp size={20} strokeWidth={1.5} /> : <ChevronDown size={20} strokeWidth={1.5} />}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {isOrder && isExpanded && (
+                    <div className="bg-[#F9F9F9] border-t border-[#E5E5EA] p-4 md:p-5">
+                      <div className="text-[12px] font-bold text-[#8E8E93] uppercase mb-3 tracking-wider">Состав заказа</div>
+                      <div className="flex flex-col gap-2">
+                        {lead.cart_items.map((item: any, idx: number) => (
+                          <div key={idx} className="flex justify-between items-center bg-[#FFFFFF] p-3 rounded-[16px] border border-[#E5E5EA]">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-[10px] bg-[#F2F2F7] flex items-center justify-center text-[12px] font-bold text-[#8E8E93]">{idx + 1}</div>
+                              <div>
+                                  <div className="text-[15px] font-semibold text-[#000000] leading-tight">{item.name}</div>
+                                  <div className="text-[13px] text-[#8E8E93]">{item.qty} шт. × {item.price?.toLocaleString()} ₸</div>
+                              </div>
+                            </div>
+                            <div className="font-bold text-[16px]">{(item.price * item.qty).toLocaleString()} ₸</div>
+                          </div>
+                        ))}
+                        
+                        <div className="flex justify-between items-center mt-3 px-2">
+                          <span className="text-[14px] font-semibold text-[#8E8E93] uppercase tracking-wide">Итого:</span>
+                          <span className="text-[18px] font-bold text-[#000000]">{lead.total?.toLocaleString()} ₸</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div className="text-[#949494]">
-                  <ChevronRight size={24} strokeWidth={1.5} />
-                </div>
-              </Link>
-            ))
+              );
+            })
           ) : (
-            <div className="bg-[#FFFFFF] rounded-[22px] p-5 flex items-center justify-center border border-[#E5E5EA] text-[#949494] text-[15px] min-h-[96px]">
-              Диалогов пока нет
+            <div className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] p-10 flex flex-col items-center justify-center text-center">
+              <Package size={40} strokeWidth={1} className="text-[#C6C6C8] mb-3" />
+              <p className="text-[15px] font-medium text-[#8E8E93]">Новых заявок пока нет</p>
             </div>
           )}
         </div>
