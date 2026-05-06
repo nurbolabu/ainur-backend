@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 import { 
   Bot, Database, Palette, Link2, Mail, Lock, CreditCard, LogOut, 
-  ChevronRight, ChevronLeft, Building2, Loader2, X, Check, UploadCloud, User, Pencil, Code, Copy, ExternalLink
+  ChevronRight, ChevronLeft, Building2, Loader2, X, Check, UploadCloud, User, Pencil, Code, Copy, ExternalLink,
+  Bell, Send // Добавлены новые иконки
 } from 'lucide-react';
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
@@ -62,6 +63,10 @@ export default function SettingsPage() {
     if (data) {
       let links = data.social_links || {};
       if (typeof links === 'string') { try { links = JSON.parse(links); } catch(e) { links = {}; } }
+      
+      let wSettings = data.widget_settings || {};
+      if (typeof wSettings === 'string') { try { wSettings = JSON.parse(wSettings); } catch(e) { wSettings = {}; } }
+
       const textColor = data.theme_text_color || getContrastColor(data.theme_color || '#8BFDA8');
       
       setProjectData({ 
@@ -78,7 +83,10 @@ export default function SettingsPage() {
         youtube: links.youtube || '',
         vk: links.vk || '',
         twogis: links.twogis || '',
-        is_paid: data.is_paid || false // Флаг оплаты
+        is_paid: data.is_paid || false,
+        widget_settings: wSettings,
+        notify_email: wSettings.notify_email || '',
+        notify_telegram: wSettings.notify_telegram || ''
       });
     }
     setIsLoading(false);
@@ -132,6 +140,11 @@ export default function SettingsPage() {
       social_links: { 
         whatsapp: editForm.whatsapp, instagram: editForm.instagram, telegram: editForm.telegram, 
         youtube: editForm.youtube, vk: editForm.vk, twogis: editForm.twogis 
+      },
+      widget_settings: {
+        ...(projectData.widget_settings || {}),
+        notify_email: editForm.notify_email,
+        notify_telegram: editForm.notify_telegram
       }
     };
 
@@ -325,7 +338,15 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          {/* 5. НАСТРОЙКИ: Аккаунт и безопасность */}
+          {/* 5. НАСТРОЙКИ: Уведомления */}
+          <div className="flex flex-col gap-2">
+            <span className="px-4 text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider">Уведомления</span>
+            <div className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] overflow-hidden flex flex-col">
+              <SettingsRow icon={Bell} color="#FF2D55" title="Куда получать заявки" isLast={true} onClick={() => openModal('notifications')} />
+            </div>
+          </div>
+
+          {/* 6. НАСТРОЙКИ: Аккаунт и безопасность */}
           <div className="flex flex-col gap-2">
             <span className="px-4 text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider">Аккаунт и безопасность</span>
             <div className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] overflow-hidden flex flex-col">
@@ -335,7 +356,7 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          {/* 6. КНОПКА ВЫХОДА */}
+          {/* 7. КНОПКА ВЫХОДА */}
           <div className="mt-4">
             <div 
               onClick={handleSignOut}
@@ -367,6 +388,7 @@ export default function SettingsPage() {
                 {activeModal === 'knowledge' && 'База знаний'}
                 {activeModal === 'appearance' && 'Внешний вид'}
                 {activeModal === 'contacts' && 'Контакты и соцсети'}
+                {activeModal === 'notifications' && 'Уведомления о заявках'}
                 {activeModal === 'integration' && 'Код для сайта'}
                 {activeModal === 'email' && 'Сменить Email'}
                 {activeModal === 'password' && 'Сменить пароль'}
@@ -430,7 +452,7 @@ export default function SettingsPage() {
                 <div className="flex flex-col gap-6">
                   <div className="flex flex-col gap-2">
                     <label className="text-[14px] font-semibold text-[#8E8E93] uppercase">Название компании</label>
-                    <input className="input-ios border border-[#E5E5EA]" value={editForm.company_name} onChange={e => setEditForm({...editForm, company_name: e.target.value})} placeholder="AI NUR" />
+                    <input className="input-ios border border-[#E5E5EA] text-[16px] h-[50px] px-4 rounded-[14px] w-full outline-none" value={editForm.company_name} onChange={e => setEditForm({...editForm, company_name: e.target.value})} placeholder="AI NUR" />
                   </div>
                   <div className="flex flex-col gap-2">
                     <label className="text-[14px] font-semibold text-[#8E8E93] uppercase">Логотип (Аватарка виджета)</label>
@@ -489,6 +511,44 @@ export default function SettingsPage() {
                 </div>
               )}
 
+              {/* ОКНО УВЕДОМЛЕНИЙ */}
+              {activeModal === 'notifications' && (
+                <div className="flex flex-col gap-6">
+                  <div className="bg-[#F2F2F7] rounded-[16px] p-4 text-[14px] text-[#8E8E93] leading-relaxed">
+                    Настройте, куда будут приходить новые заявки и заказы, оставленные клиентами в вашем виджете.
+                  </div>
+                  
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[14px] font-semibold text-[#8E8E93] uppercase flex items-center gap-2">
+                      <Send size={16} /> Telegram Chat ID
+                    </label>
+                    <input 
+                      type="text" 
+                      className="input-ios border border-[#E5E5EA] text-[16px] h-[50px] px-4 rounded-[14px] w-full outline-none" 
+                      placeholder="Например: 123456789" 
+                      value={editForm.notify_telegram || ''} 
+                      onChange={e => setEditForm({...editForm, notify_telegram: e.target.value})} 
+                    />
+                    <p className="text-[13px] text-[#8E8E93] mt-1 ml-1">
+                      Узнайте свой ID, написав боту <a href="https://t.me/userinfobot" target="_blank" className="text-[#007AFF] hover:underline">@userinfobot</a>
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col gap-2 mt-2">
+                    <label className="text-[14px] font-semibold text-[#8E8E93] uppercase flex items-center gap-2">
+                      <Mail size={16} /> Email для дублирования
+                    </label>
+                    <input 
+                      type="email" 
+                      className="input-ios border border-[#E5E5EA] text-[16px] h-[50px] px-4 rounded-[14px] w-full outline-none" 
+                      placeholder="admin@mail.com" 
+                      value={editForm.notify_email || ''} 
+                      onChange={e => setEditForm({...editForm, notify_email: e.target.value})} 
+                    />
+                  </div>
+                </div>
+              )}
+
               {activeModal === 'contacts' && (
                 <div className="flex flex-col gap-4">
                   {[
@@ -512,7 +572,7 @@ export default function SettingsPage() {
                   ))}
                   <div className="flex flex-col gap-1 mt-2">
                     <label className="text-[12px] font-semibold text-[#8E8E93] uppercase ml-1">Физический адрес</label>
-                    <textarea className="input-ios border border-[#E5E5EA] resize-none text-[16px]" rows={2} placeholder="Город, улица, дом..." value={editForm.address} onChange={e => setEditForm({...editForm, address: e.target.value})} />
+                    <textarea className="input-ios border border-[#E5E5EA] resize-none text-[16px] p-3 rounded-[14px]" rows={2} placeholder="Город, улица, дом..." value={editForm.address} onChange={e => setEditForm({...editForm, address: e.target.value})} />
                   </div>
                 </div>
               )}
@@ -521,11 +581,11 @@ export default function SettingsPage() {
                 <div className="flex flex-col gap-6">
                   <div className="flex flex-col gap-2">
                     <label className="text-[14px] font-semibold text-[#8E8E93] uppercase">Текущий Email</label>
-                    <input className="input-ios bg-[#F2F2F7] text-[#8E8E93] text-[16px]" value={userEmail} disabled />
+                    <input className="input-ios border border-[#E5E5EA] bg-[#F2F2F7] text-[#8E8E93] text-[16px] h-[50px] px-4 rounded-[14px] w-full outline-none" value={userEmail} disabled />
                   </div>
                   <div className="flex flex-col gap-2">
                     <label className="text-[14px] font-semibold text-[#8E8E93] uppercase">Новый Email</label>
-                    <input type="email" className="input-ios border border-[#E5E5EA] text-[16px]" placeholder="Введите новый адрес" value={newEmail} onChange={e => setNewEmail(e.target.value)} />
+                    <input type="email" className="input-ios border border-[#E5E5EA] text-[16px] h-[50px] px-4 rounded-[14px] w-full outline-none" placeholder="Введите новый адрес" value={newEmail} onChange={e => setNewEmail(e.target.value)} />
                   </div>
                   <button onClick={handleUpdateEmail} disabled={isSaving || !newEmail} className="h-[50px] w-full bg-[#000000] text-[#FFFFFF] rounded-[12px] font-semibold text-[16px] disabled:opacity-50 mt-4 active:scale-95 transition-transform">
                     {isSaving ? 'Сохранение...' : 'Обновить Email'}
@@ -537,7 +597,7 @@ export default function SettingsPage() {
                 <div className="flex flex-col gap-6">
                   <div className="flex flex-col gap-2">
                     <label className="text-[14px] font-semibold text-[#8E8E93] uppercase">Новый пароль</label>
-                    <input type="password" className="input-ios border border-[#E5E5EA] text-[16px]" placeholder="Минимум 6 символов" value={newPassword} onChange={e => setNewPassword(e.target.value)} />
+                    <input type="password" className="input-ios border border-[#E5E5EA] text-[16px] h-[50px] px-4 rounded-[14px] w-full outline-none" placeholder="Минимум 6 символов" value={newPassword} onChange={e => setNewPassword(e.target.value)} />
                   </div>
                   <button onClick={handleUpdatePassword} disabled={isSaving || !newPassword} className="h-[50px] w-full bg-[#000000] text-[#FFFFFF] rounded-[12px] font-semibold text-[16px] disabled:opacity-50 mt-4 active:scale-95 transition-transform">
                     {isSaving ? 'Сохранение...' : 'Изменить пароль'}
