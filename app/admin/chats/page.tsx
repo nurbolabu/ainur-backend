@@ -78,16 +78,17 @@ export default function ChatsPage() {
   };
 
   return (
-    <div className="animate-in fade-in duration-300 flex flex-col h-[calc(100vh-120px)] md:h-[calc(100vh-80px)] w-full mx-auto overflow-hidden px-1 md:px-0">
+    <div className="animate-in fade-in duration-300 flex flex-col h-[calc(100vh-120px)] md:h-[calc(100vh-80px)] w-full mx-auto overflow-hidden">
       
-      {/* Заголовок только на мобилках и только когда список чатов */}
-      {!activeChatId && <h1 className="ios-large-title md:hidden">Чаты</h1>}
+      {/* Заголовок только в списке на мобилках */}
+      {!activeChatId && <h1 className="ios-large-title px-4 md:hidden">Чаты</h1>}
 
-      {/* Главный контейнер (без fixed!) */}
-      <div className="ios-module flex-1 flex flex-row bg-[#FFFFFF] overflow-hidden mb-0 md:rounded-[24px] md:border md:border-[#E5E5EA]">
+      <div className={`flex-1 flex flex-row bg-[#FFFFFF] overflow-hidden mb-0 
+        ${activeChatId ? 'md:rounded-[24px] md:border md:border-[#E5E5EA]' : 'ios-module md:rounded-[24px] md:border md:border-[#E5E5EA] mx-0 md:mx-auto'}
+      `}>
         
-        {/* ЛЕВАЯ КОЛОНКА (Список диалогов) */}
-        <div className={`w-full md:w-[320px] border-r border-[#E5E5EA] flex-col bg-[#FFFFFF] shrink-0 ${activeChatId ? 'hidden md:flex' : 'flex h-full'}`}>
+        {/* ЛЕВАЯ КОЛОНКА */}
+        <div className={`w-full md:w-[320px] border-r border-[#E5E5EA] flex flex-col bg-[#FFFFFF] shrink-0 ${activeChatId ? 'hidden md:flex' : 'flex h-full'}`}>
           <div className="p-4 border-b border-[#E5E5EA] hidden md:block bg-[#F9F9F9]">
             <span className="text-[17px] font-bold">Все диалоги</span>
           </div>
@@ -118,11 +119,11 @@ export default function ChatsPage() {
         </div>
 
         {/* ПРАВАЯ КОЛОНКА (Окно переписки) */}
-        <div className={`flex-1 flex-col bg-[#FFFFFF] min-h-0 ${!activeChatId ? 'hidden md:flex' : 'flex'}`}>
+        <div className={`flex-1 flex flex-col bg-[#FFFFFF] min-h-0 ${!activeChatId ? 'hidden md:flex' : 'flex'}`}>
           {activeChatId ? (
             <>
-              {/* ХЕДЕР ЧАТА */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-[#E5E5EA] bg-[#FFFFFF]/80 backdrop-blur-xl shrink-0 z-10">
+              {/* ФИКСИРОВАННЫЙ ХЕДЕР ЧАТА */}
+              <div className="flex items-center justify-between px-4 py-3 border-b border-[#E5E5EA] bg-[#FFFFFF]/90 backdrop-blur-xl shrink-0 z-20 sticky top-0">
                 <button onClick={() => setActiveChatId(null)} className="flex items-center text-[#000000] transition-opacity active:opacity-50">
                   <ChevronLeft size={30} className="-ml-2" />
                   <span className="text-[17px] font-medium md:hidden">Чаты</span>
@@ -163,7 +164,7 @@ export default function ChatsPage() {
                            </div>
                         </div>
                       ) : (
-                        <div className={`max-w-[80%] px-4 py-2.5 text-[16px] leading-tight shadow-sm ${
+                        <div className={`max-w-[85%] px-4 py-2.5 text-[16px] leading-tight shadow-sm ${
                           isClient 
                             ? 'bg-[#8BFDA8] text-[#000000] rounded-[20px] rounded-tr-[4px]' 
                             : isAi 
@@ -180,7 +181,7 @@ export default function ChatsPage() {
                     </div>
                   );
                 })}
-                <div ref={messagesEndRef} className="h-2 shrink-0" />
+                <div ref={messagesEndRef} className="h-4 shrink-0" />
               </div>
             </>
           ) : (
