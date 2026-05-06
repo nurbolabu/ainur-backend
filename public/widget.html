@@ -844,14 +844,33 @@
         };
 
         window.addClientMessage = async function(text) {
-            const chatBody = document.getElementById('ainur-chat-messages'); const wrapper = document.createElement('div'); wrapper.className = 'ainur-message-wrapper client';
+            const chatBody = document.getElementById('ainur-chat-messages'); 
+            const wrapper = document.createElement('div'); wrapper.className = 'ainur-message-wrapper client';
             const msg = document.createElement('div'); msg.className = 'ainur-message client'; msg.innerText = text; wrapper.appendChild(msg); chatBody.appendChild(wrapper); chatBody.scrollTop = chatBody.scrollHeight;
-            trackWidgetEvent('send_message', { text: text }); const typingIndicatorEl = window.showTypingIndicator();
+            trackWidgetEvent('send_message', { text: text }); 
+            const typingIndicatorEl = window.showTypingIndicator();
+            
             try {
-                const response = await fetch(`${API_BASE}/chat`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ projectId: MY_PROJECT_ID, message: text, conversationId: CONVERSATION_ID, aiDisabled: hasManagerJoined }) });
+                // ДОБАВИЛИ products: ainurProducts
+                const response = await fetch(`${API_BASE}/chat`, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ 
+                        projectId: MY_PROJECT_ID, 
+                        message: text, 
+                        conversationId: CONVERSATION_ID, 
+                        aiDisabled: hasManagerJoined,
+                        products: ainurProducts // <--- ВОТ ЭТО ВАЖНОЕ ДОБАВЛЕНИЕ
+                    }) 
+                });
+                
                 const data = await response.json(); chatBody.removeChild(typingIndicatorEl);
-                if (data.reply) { window.addAiMessageWithButtons(data.reply, []); } else if (!hasManagerJoined) { window.addAiMessageWithButtons('Ой, что-то пошло не так.', []); }
-            } catch(e) { chatBody.removeChild(typingIndicatorEl); if(!hasManagerJoined) window.addAiMessageWithButtons('Сервер сейчас недоступен.', []); }
+                if (data.reply) { window.addAiMessageWithButtons(data.reply, []); } 
+                else if (!hasManagerJoined) { window.addAiMessageWithButtons('Ой, что-то пошло не так.', []); }
+            } catch(e) { 
+                chatBody.removeChild(typingIndicatorEl); 
+                if(!hasManagerJoined) window.addAiMessageWithButtons('Сервер сейчас недоступен.', []); 
+            }
         };
 
         window.openChatOnly = function() {
