@@ -4,8 +4,8 @@
 
 @layer base {
   body {
-    /* Фирменный серый фон Apple */
-    @apply bg-[#F2F2F7] text-[#000000] font-sans antialiased;
+    /* Оставили только цвет фона и текста */
+    @apply bg-[#F2F2F7] text-[#000000];
     -webkit-tap-highlight-color: transparent; 
   }
 }
@@ -16,7 +16,7 @@
     @apply bg-[#FFFFFF] rounded-[16px] border border-[#E5E5EA] overflow-hidden shadow-sm;
   }
 
-  /* Большой заголовок (немного уменьшили, чтобы было аккуратнее) */
+  /* Большой заголовок */
   .ios-large-title {
     @apply text-[28px] font-bold text-[#000000] mb-4 tracking-tight;
   }
