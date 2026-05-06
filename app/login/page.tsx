@@ -22,22 +22,45 @@ export default function LoginPage() {
 
     try {
       if (isLogin) {
-        // ВХОД
-        const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+        // --- ВХОД ---
+        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password });
         if (authError) throw new Error('Неверный email или пароль');
+        
+        // ВАЖНО: Ищем проект пользователя и сохраняем его ID в localStorage
+        if (authData.user) {
+          const { data: projectData } = await supabase
+            .from('projects')
+            .select('id')
+            .eq('user_id', authData.user.id)
+            .single();
+            
+          if (projectData) {
+            localStorage.setItem('ainur_admin_project_id', projectData.id);
+          }
+        }
+        
         router.push('/admin');
+
       } else {
-        // РЕГИСТРАЦИЯ
+        // --- РЕГИСТРАЦИЯ ---
         if (!companyName) throw new Error('Укажите название компании');
-        const { data, error: authError } = await supabase.auth.signUp({ email, password });
+        const { data: authData, error: authError } = await supabase.auth.signUp({ email, password });
         if (authError) throw new Error(authError.message);
         
-        // Сразу создаем проект для нового пользователя
-        if (data.user) {
-          const { error: dbError } = await supabase.from('projects').insert([
-            { user_id: data.user.id, company_name: companyName }
-          ]);
+        // Создаем проект и СРАЗУ сохраняем его ID в localStorage
+        if (authData.user) {
+          const { data: newProject, error: dbError } = await supabase
+            .from('projects')
+            .insert([{ user_id: authData.user.id, company_name: companyName }])
+            .select('id') // Просим БД вернуть ID созданного проекта
+            .single();
+            
           if (dbError) throw new Error('Ошибка при создании проекта');
+          
+          if (newProject) {
+            localStorage.setItem('ainur_admin_project_id', newProject.id);
+          }
+          
           router.push('/admin');
         }
       }
@@ -66,7 +89,6 @@ export default function LoginPage() {
         {/* Форма */}
         <div className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[24px] overflow-hidden">
           
-          {/* iOS Segmented Control */}
           <div className="p-4 pb-0">
             <div className="flex bg-[#F2F2F7] p-[3px] rounded-[10px]">
               <button 
