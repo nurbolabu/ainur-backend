@@ -232,10 +232,30 @@ export default function SettingsPage() {
   );
 
   const plans = [
-    { name: 'Basic', price: isYearly ? '8 000' : '10 000', features: ['AI Ассистент', 'Каталог (50 тов.)', 'Stories'] },
-    { name: 'Pro', price: isYearly ? '15 000' : '20 000', features: ['AI Ассистент', 'Безлимит товаров', 'Stories', 'Свой цвет'], recommended: true },
-    { name: 'Business', price: isYearly ? '35 000' : '45 000', features: ['AI Ассистент', 'Priority Support', 'Custom Integration'] },
-  ];
+  { 
+    name: 'Базовый', 
+    price: isYearly ? '45 000' : '5 000', 
+    features: [
+      'Публикация Stories',
+      'Каталог до 100 товаров',
+      'Умная корзина',
+      'Формы сбора заявок',
+      'Кнопки соцсетей',
+      'Уникальный дизайн цвета'
+    ] 
+  },
+  { 
+    name: 'Индивидуальный', 
+    price: 'Договорная', 
+    features: [
+      'Всё безлимитно',
+      'Персональный промпт',
+      'Интеграция с CRM',
+      'Приоритетная поддержка'
+    ], 
+    recommended: true 
+  },
+];
 
   return (
     <div className="w-full max-w-[690px] mx-auto px-[17px] md:px-0 pt-[100px] animate-in fade-in duration-300 flex flex-col gap-6 pb-[100px] min-h-[100dvh]">
