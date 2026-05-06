@@ -172,12 +172,38 @@ export default function SettingsPage() {
   };
 
   // Генерация кода для вставки
+  // Генерация УМНОГО кода для вставки (со скриптом управления размерами)
   const getEmbedCode = () => {
-    return `<iframe 
-    src="https://ainur-backend-eta.vercel.app/widget.html?id=${projectId}" 
-    style="position: fixed; bottom: 0; right: 0; width: 400px; height: 750px; border: none; z-index: 999999; background: transparent; pointer-events: none;"
-    allowtransparency="true">
-</iframe>`;
+    return `<script>
+(function(){
+    var iframe = document.createElement('iframe');
+    iframe.src = "https://ainur-backend-eta.vercel.app/widget.html?id=${projectId}";
+    iframe.style.position = "fixed";
+    iframe.style.bottom = "0";
+    iframe.style.right = "0";
+    iframe.style.width = "100%";
+    iframe.style.maxWidth = "400px";
+    iframe.style.height = "120px";
+    iframe.style.border = "none";
+    iframe.style.zIndex = "999999";
+    iframe.style.background = "transparent";
+    iframe.style.transition = "height 0.3s ease, max-width 0.3s ease";
+    document.body.appendChild(iframe);
+
+    window.addEventListener('message', function(e) {
+        if(e.data === 'ainur_opened') {
+            iframe.style.height = "750px";
+            iframe.style.maxWidth = "400px";
+        } else if(e.data === 'ainur_closed') {
+            iframe.style.height = "120px";
+            iframe.style.maxWidth = "400px";
+        } else if(e.data === 'ainur_fullscreen') {
+            iframe.style.height = "100vh";
+            iframe.style.maxWidth = "100vw";
+        }
+    });
+})();
+</script>`;
   };
 
   const copyToClipboard = () => {
