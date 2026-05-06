@@ -19,14 +19,22 @@
             --ainur-radius-bar: 26px;
         }
 
-        body { margin: 0; padding: 0; background-color: #f5f5f7; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; -webkit-font-smoothing: antialiased; }
-        * { box-sizing: border-box; }
+        body { 
+    margin: 0; 
+    padding: 0; 
+    background: transparent; /* УБРАЛИ СЕРЫЙ ФОН */
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; 
+    -webkit-font-smoothing: antialiased; 
+    pointer-events: none; /* ПРОПУСКАЕМ КЛИКИ СКВОЗЬ ПУСТОЕ ПРОСТРАНСТВО IFRAME */
+}
+* { box-sizing: border-box; }
 
-        #ainur-widget {
-            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%);
-            z-index: 99999; display: flex; flex-direction: column; align-items: center; 
-            opacity: 0; transition: opacity 0.4s ease;
-        }
+#ainur-widget {
+    position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%);
+    z-index: 99999; display: flex; flex-direction: column; align-items: center; 
+    opacity: 0; transition: opacity 0.4s ease;
+    pointer-events: auto; /* ВОЗВРАЩАЕМ КЛИКАБЕЛЬНОСТЬ САМОМУ ВИДЖЕТУ */
+}
 
         #ainur-popup-area { margin-bottom: 10px; position: relative; width: 340px; z-index: 10; }
 
