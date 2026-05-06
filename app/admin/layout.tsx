@@ -1,11 +1,40 @@
 'use client';
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-// Используем более квадратные и минималистичные иконки, чтобы соответствовать фигме
-import { MessageSquare, Box, LayoutList, LayoutGrid, PlaySquare } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { createClient } from '@supabase/supabase-js';
+import { MessageSquare, Box, LayoutList, LayoutGrid, PlaySquare, Loader2 } from 'lucide-react';
+
+// Инициализация Supabase
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  // Состояния для защиты маршрута
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Проверка авторизации при загрузке
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        router.push('/login');
+      } else {
+        setIsAuthenticated(true);
+      }
+      setIsLoading(false);
+    };
+
+    checkAuth();
+  }, [router]);
 
   const navItems = [
     { href: '/admin', icon: LayoutGrid, label: 'Главная' },
@@ -15,6 +44,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: '/admin/chats', icon: MessageSquare, label: 'Чаты' },
   ];
 
+  // Пока проверяем сессию, показываем лоадер
+  if (isLoading) {
+    return (
+      <div className="w-full h-[100dvh] bg-[#F2F2F7] flex flex-col items-center justify-center">
+        <Loader2 className="animate-spin text-[#8E8E93] mb-4" size={40} />
+      </div>
+    );
+  }
+
+  // Если сессии нет (редирект в процессе), прячем контент
+  if (!isAuthenticated) return null;
+
+  // Если всё ок — показываем твой дизайн админки
   return (
     <div className="min-h-[100dvh] bg-[#F2F2F7] flex flex-col relative font-sans">
       
