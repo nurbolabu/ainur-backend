@@ -1,16 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-// Возвращаем стандартный относительный путь!
-import "./globals.css"; 
+// Подключаем Montserrat из Google Fonts
+import { Montserrat } from "next/font/google";
+import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+// Настраиваем шрифт
+const montserrat = Montserrat({
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-montserrat",
+  weight: ["400", "500", "600", "700"], // Загружаем нужные толщины
 });
 
 export const metadata: Metadata = {
@@ -20,7 +17,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    // Применяем переменную шрифта ко всему HTML
+    <html lang="ru" className={`${montserrat.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-[#F2F2F7]">
         {children}
       </body>
