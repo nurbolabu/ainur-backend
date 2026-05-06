@@ -173,6 +173,7 @@ export default function SettingsPage() {
 
   // Генерация кода для вставки
   // Генерация УМНОГО кода для вставки (со скриптом управления размерами)
+  // Генерация УМНОГО кода для вставки (Центрирование по экрану)
   const getEmbedCode = () => {
     return `<script>
 (function(){
@@ -180,7 +181,10 @@ export default function SettingsPage() {
     iframe.src = "https://ainur-backend-eta.vercel.app/widget.html?id=${projectId}";
     iframe.style.position = "fixed";
     iframe.style.bottom = "0";
-    iframe.style.right = "0";
+    // Центрируем iframe по горизонтали:
+    iframe.style.left = "50%";
+    iframe.style.transform = "translateX(-50%)";
+    
     iframe.style.width = "100%";
     iframe.style.maxWidth = "400px";
     iframe.style.height = "120px";
