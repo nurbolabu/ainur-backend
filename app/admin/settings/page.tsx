@@ -193,13 +193,13 @@ export default function SettingsPage() {
   return (
     <div className="w-full max-w-[690px] mx-auto px-[17px] md:px-0 pt-[100px] animate-in fade-in duration-300 flex flex-col gap-6 pb-[100px] min-h-[100dvh]">
       
-      {/* 1. ФИКСИРОВАННЫЙ HEADER (С кнопкой НАЗАД) */}
+      {/* 1. ФИКСИРОВАННЫЙ HEADER */}
       <div className="fixed top-[10px] left-1/2 -translate-x-1/2 w-[calc(100%-34px)] md:w-full max-w-[690px] z-40 bg-[#FFFFFF] rounded-[22px] flex items-center justify-between pl-[10px] pr-[10px] py-[10px] border border-[#E5E5EA]">
         <Link href="/admin" className="w-[50px] h-[50px] shrink-0 bg-[#8BFDA8] rounded-[11px] flex items-center justify-center active:scale-95 transition-transform">
           <ChevronLeft size={24} strokeWidth={1.5} className="text-[#000000]" />
         </Link>
         <span className="font-bold text-[18px] text-[#000000]">Настройки</span>
-        <div className="w-[50px] h-[50px]"></div> {/* Пустой блок для баланса */}
+        <div className="w-[50px] h-[50px]"></div>
       </div>
 
       {isLoading ? (
@@ -208,23 +208,23 @@ export default function SettingsPage() {
         </div>
       ) : (
         <>
-          {/* 2. КАРТОЧКА КОМПАНИИ ПРОФИЛЯ */}
+          {/* 2. КАРТОЧКА КОМПАНИИ ПРОФИЛЯ (с фиксом длинной почты) */}
           <div 
             onClick={() => openModal('company')}
-            className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] p-5 flex items-center justify-between cursor-pointer active:scale-[0.98] transition-transform relative"
+            className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] p-5 flex items-center justify-between cursor-pointer active:scale-[0.98] transition-transform relative overflow-hidden"
           >
             {/* Иконка редактирования */}
-            <div className="absolute top-4 right-4 w-8 h-8 rounded-[10px] bg-[#F2F2F7] flex items-center justify-center text-[#000000]">
+            <div className="absolute top-4 right-4 w-8 h-8 rounded-[10px] bg-[#F2F2F7] flex items-center justify-center text-[#000000] z-10 shrink-0">
               <Pencil size={14} strokeWidth={1.5} />
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 min-w-0 flex-1 pr-10">
               <div className="w-[70px] h-[70px] bg-[#F2F2F7] rounded-[18px] flex items-center justify-center shrink-0 border border-[#E5E5EA] overflow-hidden">
                 {projectData?.logo_url ? <img src={projectData.logo_url} className="w-full h-full object-cover" /> : <Building2 size={32} strokeWidth={1} className="text-[#8E8E93]" />}
               </div>
-              <div className="flex flex-col pr-8">
-                <h2 className="text-[20px] font-bold text-[#000000] leading-tight">{projectData?.company_name || 'Название компании'}</h2>
-                <p className="text-[14px] text-[#8E8E93] mt-1">{userEmail}</p>
+              <div className="flex flex-col min-w-0 flex-1">
+                <h2 className="text-[20px] font-bold text-[#000000] leading-tight truncate">{projectData?.company_name || 'Название компании'}</h2>
+                <p className="text-[14px] text-[#8E8E93] mt-1 truncate">{userEmail}</p>
               </div>
             </div>
           </div>
@@ -271,15 +271,14 @@ export default function SettingsPage() {
       )}
 
       {/* ======================================================== */}
-      {/* СИСТЕМА МОДАЛЬНЫХ ОКОН                                   */}
+      {/* СИСТЕМА МОДАЛЬНЫХ ОКОН (С ОТСТУПОМ 10px СВЕРХУ)          */}
       {/* ======================================================== */}
       {activeModal && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] flex items-end md:items-center justify-center">
-          <div className="bg-[#FFFFFF] w-full max-w-[690px] h-[90vh] md:h-auto md:max-h-[85vh] rounded-t-[22px] md:rounded-[22px] flex flex-col overflow-hidden animate-in slide-in-from-bottom-full md:zoom-in-95 duration-300">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] flex items-end md:items-center justify-center pt-[10px] px-0 md:px-[10px]">
+          <div className="bg-[#FFFFFF] w-full max-w-[690px] h-[calc(100dvh-10px)] md:h-auto md:max-h-[calc(100dvh-20px)] rounded-t-[22px] md:rounded-[22px] flex flex-col overflow-hidden animate-in slide-in-from-bottom-full md:zoom-in-95 duration-300">
             
             {/* Хедер модалки */}
             <div className="h-[70px] flex items-center justify-between px-2.5 border-b border-[#E5E5EA] shrink-0">
-              {/* Кнопка ЗАКРЫТЬ (Серая) */}
               <button onClick={() => setActiveModal(null)} className="w-[50px] h-[50px] flex items-center justify-center bg-[#F2F2F7] rounded-[11px] text-[#000000] active:scale-95 transition-transform">
                 <X size={24} strokeWidth={1.5} />
               </button>
@@ -295,7 +294,6 @@ export default function SettingsPage() {
                 {activeModal === 'plans' && 'Моя подписка'}
               </span>
               
-              {/* Кнопка СОХРАНИТЬ (Зеленая) */}
               {['email', 'password', 'plans'].includes(activeModal) ? (
                  <div className="w-[50px] h-[50px]"></div>
               ) : (
@@ -332,7 +330,6 @@ export default function SettingsPage() {
               {activeModal === 'prompt' && (
                 <div className="flex flex-col gap-2 h-full">
                   <label className="text-[14px] font-semibold text-[#8E8E93] uppercase">Роль ассистента</label>
-                  {/* text-[16px] обязательно для предотвращения зума */}
                   <textarea className="w-full h-[300px] bg-[#FFFFFF] border border-[#E5E5EA] rounded-[16px] p-4 text-[16px] outline-none resize-none focus:border-[#8BFDA8]" value={editForm.system_prompt} onChange={e => setEditForm({...editForm, system_prompt: e.target.value})} placeholder="Опишите, как ИИ должен общаться..." />
                 </div>
               )}
@@ -340,7 +337,6 @@ export default function SettingsPage() {
               {activeModal === 'knowledge' && (
                 <div className="flex flex-col gap-2 h-full">
                   <label className="text-[14px] font-semibold text-[#8E8E93] uppercase">База знаний</label>
-                  {/* text-[16px] обязательно для предотвращения зума */}
                   <textarea className="w-full h-[300px] bg-[#FFFFFF] border border-[#E5E5EA] rounded-[16px] p-4 text-[16px] outline-none resize-none focus:border-[#8BFDA8]" value={editForm.knowledge_base} onChange={e => setEditForm({...editForm, knowledge_base: e.target.value})} placeholder="Вставьте сюда текст о вашей компании, услугах, частые вопросы..." />
                 </div>
               )}
@@ -396,7 +392,7 @@ export default function SettingsPage() {
                   ))}
                   <div className="flex flex-col gap-1 mt-2">
                     <label className="text-[12px] font-semibold text-[#8E8E93] uppercase ml-1">Физический адрес</label>
-                    <textarea className="input-ios border border-[#E5E5EA] resize-none" rows={2} placeholder="Город, улица, дом..." value={editForm.address} onChange={e => setEditForm({...editForm, address: e.target.value})} />
+                    <textarea className="input-ios border border-[#E5E5EA] resize-none text-[16px]" rows={2} placeholder="Город, улица, дом..." value={editForm.address} onChange={e => setEditForm({...editForm, address: e.target.value})} />
                   </div>
                 </div>
               )}
@@ -405,11 +401,11 @@ export default function SettingsPage() {
                 <div className="flex flex-col gap-6">
                   <div className="flex flex-col gap-2">
                     <label className="text-[14px] font-semibold text-[#8E8E93] uppercase">Текущий Email</label>
-                    <input className="input-ios bg-[#F2F2F7] text-[#8E8E93]" value={userEmail} disabled />
+                    <input className="input-ios bg-[#F2F2F7] text-[#8E8E93] text-[16px]" value={userEmail} disabled />
                   </div>
                   <div className="flex flex-col gap-2">
                     <label className="text-[14px] font-semibold text-[#8E8E93] uppercase">Новый Email</label>
-                    <input type="email" className="input-ios border border-[#E5E5EA]" placeholder="Введите новый адрес" value={newEmail} onChange={e => setNewEmail(e.target.value)} />
+                    <input type="email" className="input-ios border border-[#E5E5EA] text-[16px]" placeholder="Введите новый адрес" value={newEmail} onChange={e => setNewEmail(e.target.value)} />
                   </div>
                   <button onClick={handleUpdateEmail} disabled={isSaving || !newEmail} className="h-[50px] w-full bg-[#000000] text-[#FFFFFF] rounded-[12px] font-semibold text-[16px] disabled:opacity-50 mt-4 active:scale-95 transition-transform">
                     {isSaving ? 'Сохранение...' : 'Обновить Email'}
@@ -421,7 +417,7 @@ export default function SettingsPage() {
                 <div className="flex flex-col gap-6">
                   <div className="flex flex-col gap-2">
                     <label className="text-[14px] font-semibold text-[#8E8E93] uppercase">Новый пароль</label>
-                    <input type="password" className="input-ios border border-[#E5E5EA]" placeholder="Минимум 6 символов" value={newPassword} onChange={e => setNewPassword(e.target.value)} />
+                    <input type="password" className="input-ios border border-[#E5E5EA] text-[16px]" placeholder="Минимум 6 символов" value={newPassword} onChange={e => setNewPassword(e.target.value)} />
                   </div>
                   <button onClick={handleUpdatePassword} disabled={isSaving || !newPassword} className="h-[50px] w-full bg-[#000000] text-[#FFFFFF] rounded-[12px] font-semibold text-[16px] disabled:opacity-50 mt-4 active:scale-95 transition-transform">
                     {isSaving ? 'Сохранение...' : 'Изменить пароль'}
