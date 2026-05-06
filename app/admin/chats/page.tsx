@@ -78,24 +78,21 @@ export default function ChatsPage() {
   };
 
   return (
-    <div className="animate-in fade-in duration-300 flex flex-col h-full md:h-[calc(100vh-80px)] w-full mx-auto overflow-hidden">
+    <div className="animate-in fade-in duration-300 flex flex-col h-[calc(100vh-120px)] md:h-[calc(100vh-80px)] w-full mx-auto overflow-hidden px-1 md:px-0">
       
-      {!activeChatId && <h1 className="ios-large-title px-1 md:hidden">Чаты</h1>}
+      {/* Заголовок только на мобилках и только когда список чатов */}
+      {!activeChatId && <h1 className="ios-large-title md:hidden">Чаты</h1>}
 
-      <div className={`flex-1 flex flex-row bg-[#FFFFFF] overflow-hidden 
-        ${activeChatId 
-          ? 'fixed inset-0 z-[100] h-[100dvh] w-full flex-col md:relative md:inset-auto md:h-full md:flex-row md:rounded-[24px] md:border md:border-[#E5E5EA]' 
-          : 'ios-module mb-0 md:rounded-[24px] md:border md:border-[#E5E5EA]'
-        }`}
-      >
+      {/* Главный контейнер (без fixed!) */}
+      <div className="ios-module flex-1 flex flex-row bg-[#FFFFFF] overflow-hidden mb-0 md:rounded-[24px] md:border md:border-[#E5E5EA]">
         
-        {/* ЛЕВАЯ КОЛОНКА */}
-        <div className={`w-full md:w-[320px] border-r border-[#E5E5EA] flex flex-col bg-[#FFFFFF] shrink-0 ${activeChatId ? 'hidden md:flex' : 'flex h-full'}`}>
+        {/* ЛЕВАЯ КОЛОНКА (Список диалогов) */}
+        <div className={`w-full md:w-[320px] border-r border-[#E5E5EA] flex-col bg-[#FFFFFF] shrink-0 ${activeChatId ? 'hidden md:flex' : 'flex h-full'}`}>
           <div className="p-4 border-b border-[#E5E5EA] hidden md:block bg-[#F9F9F9]">
             <span className="text-[17px] font-bold">Все диалоги</span>
           </div>
           
-          <div className="flex-1 overflow-y-auto pb-[env(safe-area-inset-bottom)]">
+          <div className="flex-1 overflow-y-auto">
             {isLoading ? (
                <div className="p-10 text-center text-[#8E8E93]">Загрузка...</div>
             ) : conversations.length === 0 ? (
@@ -121,7 +118,7 @@ export default function ChatsPage() {
         </div>
 
         {/* ПРАВАЯ КОЛОНКА (Окно переписки) */}
-        <div className={`flex-1 flex flex-col bg-[#FFFFFF] min-h-0 ${!activeChatId ? 'hidden md:flex' : 'flex'}`}>
+        <div className={`flex-1 flex-col bg-[#FFFFFF] min-h-0 ${!activeChatId ? 'hidden md:flex' : 'flex'}`}>
           {activeChatId ? (
             <>
               {/* ХЕДЕР ЧАТА */}
@@ -139,8 +136,8 @@ export default function ChatsPage() {
                 <div className="w-12"></div>
               </div>
               
-              {/* ЛЕНТА СООБЩЕНИЙ С ИСПРАВЛЕННЫМ СКРОЛЛОМ */}
-              <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2 bg-[#FFFFFF] scroll-smooth" style={{ WebkitOverflowScrolling: 'touch' }}>
+              {/* ЛЕНТА СООБЩЕНИЙ */}
+              <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2 bg-[#FFFFFF]">
                 {messages.map((msg, i) => {
                   const isClient = msg.role === 'user';
                   const isAi = msg.role === 'assistant';
@@ -183,11 +180,8 @@ export default function ChatsPage() {
                     </div>
                   );
                 })}
-                <div ref={messagesEndRef} className="h-4 shrink-0" />
+                <div ref={messagesEndRef} className="h-2 shrink-0" />
               </div>
-              
-              {/* Отступ для нижней части экрана на мобилках */}
-              <div className="h-[env(safe-area-inset-bottom)] bg-white shrink-0" />
             </>
           ) : (
              <div className="flex-1 flex flex-col items-center justify-center text-[#8E8E93] bg-[#F9F9F9] h-full">
