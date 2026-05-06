@@ -1,26 +1,58 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    @apply bg-[#F2F2F7] text-[#000000] font-sans antialiased;
+    /* Убираем синее выделение при тапе на мобилках */
+    -webkit-tap-highlight-color: transparent; 
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Главный контейнер (1200px на ПК, 100% на мобилках) */
+  .app-container {
+    @apply w-full max-w-[1200px] mx-auto h-[100dvh] flex flex-col md:flex-row bg-[#F2F2F7] overflow-hidden relative;
+  }
+
+  /* Левая колонка (Меню/Список) - 350px на ПК */
+  .app-sidebar {
+    @apply w-full md:w-[350px] h-full flex flex-col bg-[#F2F2F7] md:border-r border-[#E5E5EA] shrink-0;
+  }
+
+  /* Правая колонка (Контент) */
+  .app-content {
+    @apply flex-1 h-full flex flex-col bg-[#F2F2F7] relative overflow-hidden;
+  }
+
+  /* Модуль (Белая карточка со скруглением 16px) */
+  .ios-module {
+    @apply bg-[#FFFFFF] rounded-[16px] overflow-hidden border border-[#E5E5EA];
+  }
+
+  /* Группа внутри модуля с разделителями 1px */
+  .ios-module-group {
+    @apply flex flex-col divide-y divide-[#E5E5EA] bg-[#FFFFFF] rounded-[16px] border border-[#E5E5EA] overflow-hidden;
+  }
+
+  /* Элемент списка внутри группы */
+  .ios-list-item {
+    @apply flex items-center justify-between p-4 bg-[#FFFFFF] transition-colors active:bg-[#F2F2F7] cursor-pointer;
+  }
+
+  /* Главная зеленая кнопка (Скругление 8px, отступы внутри) */
+  .btn-primary {
+    @apply bg-[#8BFDA8] text-[#000000] font-semibold text-[15px] flex items-center justify-center rounded-[8px] transition-transform active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100;
+  }
+
+  /* Второстепенная кнопка (Серая) */
+  .btn-secondary {
+    @apply bg-[#E5E5EA] text-[#000000] font-medium text-[15px] flex items-center justify-center rounded-[8px] transition-transform active:scale-[0.98];
+  }
+
+  /* Текстовые инпуты */
+  .input-ios {
+    @apply w-full bg-[#F2F2F7] text-[15px] text-[#000000] px-4 py-3 rounded-[8px] outline-none focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#8BFDA8] transition-all placeholder:text-[#8E8E93];
+  }
 }
