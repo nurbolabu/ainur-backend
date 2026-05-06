@@ -20,21 +20,21 @@
         }
 
         body { 
-    margin: 0; 
-    padding: 0; 
-    background: transparent; /* УБРАЛИ СЕРЫЙ ФОН */
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; 
-    -webkit-font-smoothing: antialiased; 
-    pointer-events: none; /* ПРОПУСКАЕМ КЛИКИ СКВОЗЬ ПУСТОЕ ПРОСТРАНСТВО IFRAME */
-}
-* { box-sizing: border-box; }
+            margin: 0; 
+            padding: 0; 
+            background: transparent; /* Оставляем фон прозрачным */
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; 
+            -webkit-font-smoothing: antialiased; 
+            /* pointer-events: none; - УДАЛЕНО: больше не нужно, так как iframe сам меняет размер */
+        }
+        * { box-sizing: border-box; }
 
-#ainur-widget {
-    position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%);
-    z-index: 99999; display: flex; flex-direction: column; align-items: center; 
-    opacity: 0; transition: opacity 0.4s ease;
-    pointer-events: auto; /* ВОЗВРАЩАЕМ КЛИКАБЕЛЬНОСТЬ САМОМУ ВИДЖЕТУ */
-}
+        #ainur-widget {
+            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%);
+            z-index: 99999; display: flex; flex-direction: column; align-items: center; 
+            opacity: 0; transition: opacity 0.4s ease;
+            /* pointer-events: auto; - УДАЛЕНО: больше не нужно */
+        }
 
         #ainur-popup-area { margin-bottom: 10px; position: relative; width: 340px; z-index: 10; }
 
@@ -583,18 +583,18 @@
     </div>
 
     <script>
-    const API_BASE = 'https://ainur-backend-eta.vercel.app/api'; 
-    
-    // УМНЫЙ ПОИСК ID ПРОЕКТА
-    // Теперь виджет ищет ID в ссылке (например: widget.html?id=123)
-    const urlParams = new URLSearchParams(window.location.search);
-    const MY_PROJECT_ID = urlParams.get('id');
+        const API_BASE = 'https://ainur-backend-eta.vercel.app/api'; 
+        const urlParams = new URLSearchParams(window.location.search);
+        const MY_PROJECT_ID = urlParams.get('id');
 
-    if (!MY_PROJECT_ID) {
-        console.error("ID проекта не найден! Укажите его в ссылке ?id=...");
-    }
+        if (!MY_PROJECT_ID) {
+            console.error("ID проекта не найден! Укажите его в ссылке ?id=...");
+        }
 
-    // ... дальше идет весь остальной код (trackWidgetEvent и т.д.) ...
+        function notifyParent(state) {
+            window.parent.postMessage(state, '*');
+        }
+
         function trackWidgetEvent(eventName, eventData = {}) {
             fetch(`${API_BASE}/analytics`, {
                 method: 'POST',
@@ -613,7 +613,6 @@
         let ainurCart = [], currentDetailProduct = null, isCartStep2 = false;
         let i = 0, typeTimeout;
         const phrase = "Напиши мне и я отвечу на все вопросы";
-        
         let hasManagerJoined = false;
 
         function getOrCreateConversationId() {
@@ -666,7 +665,6 @@
                         if (typeof links === 'string') {
                             try { links = JSON.parse(links); } catch(e) { links = {}; }
                         }
-                        
                         const networks = ['whatsapp', 'instagram', 'telegram', 'youtube', 'vk', 'twogis'];
                         networks.forEach(network => {
                             const row = document.getElementById(`ainur-contact-${network}`);
@@ -690,8 +688,6 @@
                     TOTAL_STORIES = ainurStories.length;
                     setupRingSVG();
                     window.renderCatalog();
-                    
-                    // Загружаем историю чата после инициализации
                     loadChatHistory();
                 }
             } catch (e) {
@@ -716,7 +712,6 @@
                     body: JSON.stringify({ projectId: MY_PROJECT_ID, conversationId: CONVERSATION_ID })
                 });
                 const data = await res.json();
-
                 if (data.history && data.history.length > 0) {
                     chatBody.innerHTML = ''; 
                     data.history.forEach(msg => {
@@ -731,9 +726,7 @@
                         }
                     });
                 }
-            } catch (e) {
-                console.error('Ошибка загрузки истории:', e);
-            }
+            } catch (e) { console.error('Ошибка загрузки истории:', e); }
         }
 
         function renderClientMessage(text) {
@@ -751,6 +744,7 @@
         }
 
         window.ainurOpenView = function(viewId) {
+            notifyParent('ainur_opened');
             document.getElementById('ainur-menu-window').style.display = 'none'; ainurIsMenuOpen = false;
             document.getElementById('ainur-menu-toggle').classList.remove('menu-open');
             document.getElementById('ainur-trigger').style.display = 'none';
@@ -758,7 +752,7 @@
             if (!ainurIsChatOpen) { 
                 document.getElementById('ainur-chat-window').style.display = 'flex'; 
                 ainurIsChatOpen = true; 
-                trackWidgetEvent('widget_open'); // ИЗМЕНЕНО ДЛЯ АНАЛИТИКИ
+                trackWidgetEvent('widget_open');
             }
             if (viewId) { document.getElementById('ainur-' + viewId + '-view').classList.add('active'); }
             if (viewId === 'profile') { window.renderCatalog(); window.playRingLoadingAnimation(); }
@@ -768,6 +762,7 @@
         window.ainurCloseView = function(viewId) { document.getElementById('ainur-' + viewId + '-view').classList.remove('active'); };
 
         window.ainurCloseAll = function() {
+            notifyParent('ainur_closed');
             if (ainurIsChatOpen) { trackWidgetEvent('chat_ended'); }
             document.querySelectorAll('.ainur-sub-window').forEach(el => el.classList.remove('active'));
             document.getElementById('ainur-chat-window').style.display = 'none';
@@ -910,10 +905,15 @@
         let currentStory = 0, storyProgress = 0, storyInterval, ainurIsPaused = false, isHoldingStory = false, holdTimer;
         
         window.ainurOpenFullscreenStory = function(e) {
-            if (TOTAL_STORIES === 0) return; setupStoryBars(); const rect = e.currentTarget.getBoundingClientRect(); const screenX = ((rect.left + rect.width / 2) / window.innerWidth) - 0.5; const screenY = ((rect.top + rect.height / 2) / window.innerHeight) - 0.5;
+            if (TOTAL_STORIES === 0) return; 
+            notifyParent('ainur_fullscreen'); 
+            setupStoryBars(); const rect = e.currentTarget.getBoundingClientRect(); const screenX = ((rect.left + rect.width / 2) / window.innerWidth) - 0.5; const screenY = ((rect.top + rect.height / 2) / window.innerHeight) - 0.5;
             const fs = document.getElementById('ainur-fullscreen-story'); fs.style.setProperty('--origin-x', screenX); fs.style.setProperty('--origin-y', screenY); fs.classList.remove('closing'); fs.classList.add('active'); currentStory = 0; startStoryProgress();
         };
-        window.ainurCloseFullscreenStory = function() { const fs = document.getElementById('ainur-fullscreen-story'); fs.classList.add('closing'); clearInterval(storyInterval); setTimeout(() => { fs.classList.remove('active'); fs.classList.remove('closing'); }, 300); };
+        window.ainurCloseFullscreenStory = function() { 
+            notifyParent('ainur_opened'); 
+            const fs = document.getElementById('ainur-fullscreen-story'); fs.classList.add('closing'); clearInterval(storyInterval); setTimeout(() => { fs.classList.remove('active'); fs.classList.remove('closing'); }, 300); 
+        };
         
         function setupStoryBars() { const container = document.getElementById('fs-progress-bars'); container.innerHTML = ''; for(let i=0; i<TOTAL_STORIES; i++) { container.innerHTML += `<div class="fs-story-bar"><div class="fs-story-fill" id="fs-fill-${i}"></div></div>`; } }
         
@@ -963,11 +963,12 @@
         };
 
         window.openChatOnly = function() {
+            notifyParent('ainur_opened');
             document.querySelectorAll('.ainur-sub-window').forEach(el => el.classList.remove('active')); document.getElementById('ainur-menu-window').style.display = 'none'; ainurIsMenuOpen = false; document.getElementById('ainur-menu-toggle').classList.remove('menu-open');
             if (!ainurIsChatOpen) { 
                 document.getElementById('ainur-chat-window').style.display = 'flex'; 
                 ainurIsChatOpen = true; 
-                trackWidgetEvent('widget_open'); // ИЗМЕНЕНО ДЛЯ АНАЛИТИКИ
+                trackWidgetEvent('widget_open');
                 window.playRingLoadingAnimation(); 
                 const chatBody = document.getElementById('ainur-chat-messages'); 
                 if(chatBody.children.length === 0) { 
@@ -984,8 +985,6 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             initWidget();
-            
-            // ИЗМЕНЕНО ДЛЯ АНАЛИТИКИ: Отправляем просмотр страницы сразу при загрузке
             trackWidgetEvent('page_view', { source: window.location.href });
 
             const widgetBase = document.getElementById('ainur-widget'), bottomBar = document.getElementById('ainur-bottom-bar'), iconBurger = document.getElementById('ainur-icon-burger'), sendBtn = document.getElementById('ainur-real-send'), fakeInput = document.getElementById('ainur-trigger'), realInput = document.getElementById('ainur-real-input'), menuBtn = document.getElementById('ainur-menu-toggle'), menuWindow = document.getElementById('ainur-menu-window'), swipeZone = document.getElementById('fs-swipe-zone');
@@ -1016,13 +1015,22 @@
 
             menuBtn.addEventListener('click', (e) => {
                 e.stopPropagation(); if (bottomBar.classList.contains('intro-state')) return; 
-                if (ainurIsMenuOpen) { menuWindow.style.display = 'none'; ainurIsMenuOpen = false; menuBtn.classList.remove('menu-open'); } 
-                else { if (ainurIsChatOpen) { window.ainurCloseAll(); } menuWindow.style.display = 'flex'; ainurIsMenuOpen = true; if (fakeInput.style.display !== 'none') { clearTimeout(typeTimeout); fakeInput.style.display = 'none'; realInput.style.display = 'block'; realInput.blur(); } menuBtn.classList.add('menu-open'); }
+                if (ainurIsMenuOpen) { 
+                    menuWindow.style.display = 'none'; ainurIsMenuOpen = false; menuBtn.classList.remove('menu-open'); 
+                    notifyParent('ainur_closed'); 
+                } 
+                else { 
+                    if (ainurIsChatOpen) { window.ainurCloseAll(); } 
+                    menuWindow.style.display = 'flex'; ainurIsMenuOpen = true; 
+                    if (fakeInput.style.display !== 'none') { clearTimeout(typeTimeout); fakeInput.style.display = 'none'; realInput.style.display = 'block'; realInput.blur(); } 
+                    menuBtn.classList.add('menu-open'); 
+                    notifyParent('ainur_opened'); 
+                }
             });
 
             document.getElementById('ainur-real-send').addEventListener('click', () => { const text = realInput.value.trim(); if (text) { window.openChatOnly(); window.addClientMessage(text); realInput.value = ''; } });
             realInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { const text = realInput.value.trim(); if (text) { window.openChatOnly(); window.addClientMessage(text); realInput.value = ''; } } });
         });
     </script>
-</div>
+</body>
 </html>
