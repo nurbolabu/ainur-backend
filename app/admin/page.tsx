@@ -99,10 +99,16 @@ export default function AdminDashboard() {
   async function toggleStatus(leadId: string, currentStatus: string) {
     const newStatus = (!currentStatus || currentStatus === 'new') ? 'processed' : 'new';
     
-    // Сразу убираем заявку из списка на главной (так как она стала обработанной)
+    // Скрываем с экрана
     setRecentLeads(recentLeads.filter(l => l.id !== leadId));
     
-    await supabase.from('leads').update({ status: newStatus }).eq('id', leadId);
+    // Отправляем в базу и ловим ошибку
+    const { error } = await supabase.from('leads').update({ status: newStatus }).eq('id', leadId);
+    if (error) {
+      alert("Ошибка при сохранении в базу: " + error.message);
+      // Если ошибка, возвращаем заявку обратно на экран (перезагружаем данные)
+      if (projectId) fetchDashboardData(projectId);
+    }
   }
 
   const formatDate = (iso: string) => {

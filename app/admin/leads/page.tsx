@@ -43,11 +43,15 @@ export default function LeadsPage() {
   async function toggleStatus(leadId: string, currentStatus: string) {
     const newStatus = (!currentStatus || currentStatus === 'new') ? 'processed' : 'new';
     
-    // Оптимистичное обновление UI для скорости
+    // Оптимистичное обновление UI
     setLeads(leads.map(l => l.id === leadId ? { ...l, status: newStatus } : l));
     
     // Отправка в базу
-    await supabase.from('leads').update({ status: newStatus }).eq('id', leadId);
+    const { error } = await supabase.from('leads').update({ status: newStatus }).eq('id', leadId);
+    if (error) {
+       alert("Ошибка при сохранении в базу: " + error.message);
+       if (projectId) fetchLeads(projectId);
+    }
   }
 
   const filteredLeads = leads.filter(lead => {
