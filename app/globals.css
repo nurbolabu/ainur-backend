@@ -4,54 +4,38 @@
 
 @layer base {
   body {
+    /* Фирменный серый фон Apple */
     @apply bg-[#F2F2F7] text-[#000000] font-sans antialiased;
-    /* Убираем синее выделение при тапе на мобилках */
     -webkit-tap-highlight-color: transparent; 
   }
 }
 
 @layer components {
-  /* Главный контейнер (1200px на ПК, 100% на мобилках) */
-  .app-container {
-    @apply w-full max-w-[1200px] mx-auto h-[100dvh] flex flex-col md:flex-row bg-[#F2F2F7] overflow-hidden relative;
-  }
-
-  /* Левая колонка (Меню/Список) - 350px на ПК */
-  .app-sidebar {
-    @apply w-full md:w-[350px] h-full flex flex-col bg-[#F2F2F7] md:border-r border-[#E5E5EA] shrink-0;
-  }
-
-  /* Правая колонка (Контент) */
-  .app-content {
-    @apply flex-1 h-full flex flex-col bg-[#F2F2F7] relative overflow-hidden;
-  }
-
-  /* Модуль (Белая карточка со скруглением 16px) */
+  /* Базовый модуль: белый фон, скругление 16px, рамка */
   .ios-module {
-    @apply bg-[#FFFFFF] rounded-[16px] overflow-hidden border border-[#E5E5EA];
+    @apply bg-[#FFFFFF] rounded-[16px] border border-[#E5E5EA] overflow-hidden shadow-sm;
   }
 
-  /* Группа внутри модуля с разделителями 1px */
-  .ios-module-group {
-    @apply flex flex-col divide-y divide-[#E5E5EA] bg-[#FFFFFF] rounded-[16px] border border-[#E5E5EA] overflow-hidden;
+  /* Большой заголовок (немного уменьшили, чтобы было аккуратнее) */
+  .ios-large-title {
+    @apply text-[28px] font-bold text-[#000000] mb-4 tracking-tight;
+  }
+  
+  .ios-title-2 {
+    @apply text-[20px] font-semibold text-[#000000];
   }
 
-  /* Элемент списка внутри группы */
-  .ios-list-item {
-    @apply flex items-center justify-between p-4 bg-[#FFFFFF] transition-colors active:bg-[#F2F2F7] cursor-pointer;
-  }
-
-  /* Главная зеленая кнопка (Скругление 8px, отступы внутри) */
+  /* Фирменная зеленая кнопка (скругление 8px, отступы внутри) */
   .btn-primary {
-    @apply bg-[#8BFDA8] text-[#000000] font-semibold text-[15px] flex items-center justify-center rounded-[8px] transition-transform active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100;
+    @apply bg-[#8BFDA8] text-[#000000] font-semibold text-[15px] px-5 py-3 flex items-center justify-center rounded-[8px] transition-transform active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100;
   }
 
-  /* Второстепенная кнопка (Серая) */
+  /* Второстепенная серая кнопка */
   .btn-secondary {
-    @apply bg-[#E5E5EA] text-[#000000] font-medium text-[15px] flex items-center justify-center rounded-[8px] transition-transform active:scale-[0.98];
+    @apply bg-[#E5E5EA] text-[#000000] font-medium text-[15px] px-5 py-3 flex items-center justify-center rounded-[8px] transition-transform active:scale-[0.98];
   }
 
-  /* Текстовые инпуты */
+  /* Поля ввода */
   .input-ios {
     @apply w-full bg-[#F2F2F7] text-[15px] text-[#000000] px-4 py-3 rounded-[8px] outline-none focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#8BFDA8] transition-all placeholder:text-[#8E8E93];
   }
