@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
-import { Settings, Plus, Trash2, Loader2, PlaySquare, Phone, ShoppingCart, User, Package, ChevronDown, ChevronUp, Check } from 'lucide-react';
+import { Settings, Plus, Trash2, Loader2, Phone, ShoppingCart, User, Package, ChevronDown, ChevronUp, Check, Calendar } from 'lucide-react';
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
 
@@ -11,58 +11,71 @@ export default function AdminDashboard() {
   const [stories, setStories] = useState<any[]>([]);
   const [recentLeads, setRecentLeads] = useState<any[]>([]);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  
+  // Состояния для аналитики
   const [stats, setStats] = useState({ visitors: 0, widgets: 0, leads: 0, social: 0 });
+  const [period, setPeriod] = useState<'today' | 'week' | 'month' | 'all'>('all');
+  const [isPeriodMenuOpen, setIsPeriodMenuOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     const id = localStorage.getItem('ainur_admin_project_id');
     if (id) {
       setProjectId(id);
-      fetchDashboardData(id);
+      fetchDashboardData(id, period);
     }
-  }, []);
+  }, [period]); // Перезагружаем данные при смене периода
 
-  async function fetchDashboardData(id: string) {
-    // 1. Загружаем Сторис
-    const { data: storiesData } = await supabase
-      .from('stories')
-      .select('*')
-      .eq('project_id', id)
-      .order('created_at', { ascending: false });
+  async function fetchDashboardData(id: string, currentPeriod: string) {
+    // 1. Загружаем Сторис и Новые заявки (они не зависят от фильтра дат)
+    const { data: storiesData } = await supabase.from('stories').select('*').eq('project_id', id).order('created_at', { ascending: false });
     if (storiesData) setStories(storiesData);
 
-    // 2. Считаем статистику чатов (для блоков статистики)
-    const { data: messagesData } = await supabase
-      .from('messages')
-      .select('conversation_id')
-      .eq('project_id', id);
-    
-    let totalChats = 0;
-    if (messagesData) {
-      const seen = new Set();
-      for (const msg of messagesData) seen.add(msg.conversation_id);
-      totalChats = seen.size;
+    const { data: leadsData } = await supabase.from('leads').select('*').eq('project_id', id).order('created_at', { ascending: false });
+    if (leadsData) {
+      setRecentLeads(leadsData.filter(l => !l.status || l.status === 'new'));
     }
 
-    // 3. Загружаем Заявки
-    const { data: leadsData } = await supabase
-      .from('leads')
-      .select('*')
-      .eq('project_id', id)
-      .order('created_at', { ascending: false });
+    // 2. Рассчитываем дату отсечения для статистики
+    let startDate = null;
+    const now = new Date();
+    if (currentPeriod === 'today') {
+      startDate = new Date(now.setHours(0,0,0,0)).toISOString();
+    } else if (currentPeriod === 'week') {
+      startDate = new Date(now.setDate(now.getDate() - 7)).toISOString();
+    } else if (currentPeriod === 'month') {
+      startDate = new Date(now.setMonth(now.getMonth() - 1)).toISOString();
+    }
 
-    if (leadsData) {
-      // Отбираем только новые заявки для вывода на главную
-      const newLeads = leadsData.filter(l => !l.status || l.status === 'new');
-      setRecentLeads(newLeads);
+    // 3. Собираем статистику из базы (С РЕАЛЬНЫМИ ДАННЫМИ)
+    let leadsQuery = supabase.from('leads').select('*', { count: 'exact', head: true }).eq('project_id', id);
+    let analyticsQuery = supabase.from('analytics_events').select('event_type').eq('project_id', id);
 
-      setStats({
-        widgets: totalChats,
-        leads: leadsData.length,
-        visitors: totalChats * 5 + 124, 
-        social: Math.floor(totalChats * 0.3) 
+    if (startDate) {
+      leadsQuery = leadsQuery.gte('created_at', startDate);
+      analyticsQuery = analyticsQuery.gte('created_at', startDate);
+    }
+
+    const [leadsRes, analyticsRes] = await Promise.all([leadsQuery, analyticsQuery]);
+
+    let visitorsCount = 0;
+    let widgetOpensCount = 0;
+    let socialClicksCount = 0;
+
+    if (analyticsRes.data) {
+      analyticsRes.data.forEach(event => {
+        if (event.event_type === 'page_view') visitorsCount++;
+        if (event.event_type === 'widget_open') widgetOpensCount++;
+        if (event.event_type === 'social_click') socialClicksCount++;
       });
     }
+
+    setStats({
+      visitors: visitorsCount,
+      widgets: widgetOpensCount,
+      leads: leadsRes.count || 0,
+      social: socialClicksCount
+    });
   }
 
   // --- ЛОГИКА СТОРИС ---
@@ -77,7 +90,7 @@ export default function AdminDashboard() {
     if (!error) {
       const { data: { publicUrl } } = supabase.storage.from('media').getPublicUrl(fileName);
       await supabase.from('stories').insert([{ project_id: projectId, media_url: publicUrl, order_index: stories.length }]);
-      fetchDashboardData(projectId);
+      fetchDashboardData(projectId, period);
     } else {
       alert("Ошибка загрузки.");
     }
@@ -87,33 +100,24 @@ export default function AdminDashboard() {
   async function handleDeleteStory(id: string) {
     if (confirm('Удалить сторис?')) {
       await supabase.from('stories').delete().eq('id', id);
-      if (projectId) fetchDashboardData(projectId);
+      if (projectId) fetchDashboardData(projectId, period);
     }
   }
 
   // --- ЛОГИКА ЗАЯВОК ---
-  const toggleExpand = (id: string) => {
-    setExpandedId(expandedId === id ? null : id);
-  };
+  const toggleExpand = (id: string) => setExpandedId(expandedId === id ? null : id);
 
   async function toggleStatus(leadId: string, currentStatus: string) {
     const newStatus = (!currentStatus || currentStatus === 'new') ? 'processed' : 'new';
-    
-    // Скрываем с экрана
     setRecentLeads(recentLeads.filter(l => l.id !== leadId));
-    
-    // Отправляем в базу и ловим ошибку
-    const { error } = await supabase.from('leads').update({ status: newStatus }).eq('id', leadId);
-    if (error) {
-      alert("Ошибка при сохранении в базу: " + error.message);
-      // Если ошибка, возвращаем заявку обратно на экран (перезагружаем данные)
-      if (projectId) fetchDashboardData(projectId);
-    }
+    await supabase.from('leads').update({ status: newStatus }).eq('id', leadId);
   }
 
-  const formatDate = (iso: string) => {
-    const d = new Date(iso);
-    return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  const getPeriodLabel = () => {
+    if (period === 'today') return 'Сегодня';
+    if (period === 'week') return 'Неделя';
+    if (period === 'month') return 'Месяц';
+    return 'Всё время';
   };
 
   return (
@@ -168,7 +172,7 @@ export default function AdminDashboard() {
                 </button>
                 
                 <div className="text-[#FFFFFF] text-[14px] md:text-[16px] font-medium relative z-10">
-                  {formatDate(s.created_at)}
+                  {new Date(s.created_at).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                 </div>
               </div>
             );
@@ -176,9 +180,41 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* 3. БЛОК СТАТИСТИКИ */}
+      {/* 3. БЛОК СТАТИСТИКИ (С ФИЛЬТРОМ ПЕРИОДА) */}
       <div className="flex flex-col gap-2.5">
-        <h2 className="text-[#949494] text-[14px] font-medium uppercase tracking-wide">Статистика</h2>
+        <div className="flex justify-between items-center px-1 relative">
+          <h2 className="text-[#949494] text-[14px] font-medium uppercase tracking-wide">Статистика</h2>
+          
+          {/* Кнопка выбора периода */}
+          <button 
+            onClick={() => setIsPeriodMenuOpen(!isPeriodMenuOpen)} 
+            className="flex items-center gap-1.5 text-[13px] font-medium text-[#8E8E93] bg-[#E5E5EA]/40 px-3 py-1.5 rounded-[8px] active:scale-95 transition-transform"
+          >
+            <Calendar size={14} strokeWidth={2} />
+            {getPeriodLabel()}
+            <ChevronDown size={14} strokeWidth={2} className={`transition-transform ${isPeriodMenuOpen ? 'rotate-180' : ''}`} />
+          </button>
+
+          {/* Выпадающее меню */}
+          {isPeriodMenuOpen && (
+            <>
+              {/* Невидимый фон для закрытия по клику вне меню */}
+              <div className="fixed inset-0 z-40" onClick={() => setIsPeriodMenuOpen(false)}></div>
+              
+              <div className="absolute right-1 top-[30px] w-[140px] bg-[#FFFFFF] border border-[#E5E5EA] shadow-sm rounded-[14px] overflow-hidden z-50 flex flex-col py-1 animate-in zoom-in-95 duration-150">
+                {(['today', 'week', 'month', 'all'] as const).map((p) => (
+                  <button 
+                    key={p}
+                    onClick={() => { setPeriod(p); setIsPeriodMenuOpen(false); }}
+                    className={`text-left px-4 py-2 text-[14px] font-medium ${period === p ? 'text-[#8BFDA8] bg-[#F9F9F9]' : 'text-[#000000] hover:bg-[#F2F2F7]'}`}
+                  >
+                    {p === 'today' ? 'Сегодня' : p === 'week' ? 'Неделя' : p === 'month' ? 'Месяц' : 'Всё время'}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
           <div className="bg-[#FFFFFF] rounded-[22px] p-5 flex flex-col justify-between h-[150px] border border-[#E5E5EA]">
@@ -200,7 +236,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* 4. БЛОК НОВЫХ ЗАЯВОК (Вместо чатов) */}
+      {/* 4. БЛОК НОВЫХ ЗАЯВОК */}
       <div className="flex flex-col gap-2.5">
         <h2 className="text-[#949494] text-[14px] font-medium uppercase tracking-wide">Новые заявки</h2>
         
@@ -237,10 +273,9 @@ export default function AdminDashboard() {
                     </div>
 
                     <div className="flex items-center justify-between md:justify-end gap-3 w-full md:w-auto pt-4 md:pt-0 border-t border-[#F2F2F7] md:border-t-0">
-                      
                       <button 
                         onClick={() => toggleStatus(lead.id, status)}
-                        className={`h-[40px] px-4 rounded-[12px] flex items-center gap-1.5 text-[14px] font-semibold active:scale-95 transition-transform ${status === 'new' ? 'bg-[#000000] text-[#FFFFFF]' : 'bg-[#F2F2F7] text-[#8E8E93]'}`}
+                        className={`h-[40px] px-4 rounded-[12px] flex items-center gap-1.5 text-[14px] font-semibold active:scale-95 transition-transform bg-[#000000] text-[#FFFFFF]`}
                       >
                         <>Обработать <Check size={16} strokeWidth={2} /></>
                       </button>
@@ -272,7 +307,6 @@ export default function AdminDashboard() {
                             <div className="font-bold text-[16px]">{(item.price * item.qty).toLocaleString()} ₸</div>
                           </div>
                         ))}
-                        
                         <div className="flex justify-between items-center mt-3 px-2">
                           <span className="text-[14px] font-semibold text-[#8E8E93] uppercase tracking-wide">Итого:</span>
                           <span className="text-[18px] font-bold text-[#000000]">{lead.total?.toLocaleString()} ₸</span>
