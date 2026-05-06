@@ -22,7 +22,7 @@
         body { 
             margin: 0; 
             padding: 0; 
-            background: transparent; 
+            background: transparent; /* Оставляем фон прозрачным */
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; 
             -webkit-font-smoothing: antialiased; 
         }
@@ -246,6 +246,8 @@
         .ainur-lead-desc { font-size: 14px; color: #8E8E93; text-align: center; margin-bottom: 25px; padding: 0 10px; line-height: 1.3;}
         
         .ainur-form-container { display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: 0; }
+        
+        /* ИЗМЕНЕН ШРИФТ НА 16px ДЛЯ ПРЕДОТВРАЩЕНИЯ ЗУМА В IOS */
         .ainur-lead-input { width: 100%; background: #F2F2F7; border: 1px solid transparent; padding: 14px 16px; border-radius: 14px; margin-bottom: 12px; font-size: 16px; outline: none; transition: border 0.2s; box-sizing: border-box; font-family: inherit;}
         .ainur-lead-input:focus { border-color: var(--ainur-primary); }
         .ainur-main-btn { width: 100%; background: var(--ainur-primary); color: var(--ainur-text-on-primary); font-weight: 600; font-size: 16px; border: none; padding: 15px; border-radius: 14px; cursor: pointer; transition: transform 0.2s; font-family: inherit; box-sizing: border-box;}
@@ -274,10 +276,12 @@
 
         .ainur-input-wrapper { flex-grow: 1; height: 100%; margin: 0 10px; display: flex; align-items: center; overflow: hidden; opacity: 1; transition: opacity 0.3s; }
         .intro-state .ainur-input-wrapper, .intro-state .ainur-send-btn { display: none; opacity: 0; }
-        .ainur-fake-input { width: 100%; color: #888; font-size: 14px; cursor: pointer; white-space: nowrap; font-family: inherit;}
+        
+        /* ИЗМЕНЕН ШРИФТ НА 16px ДЛЯ ПРЕДОТВРАЩЕНИЯ ЗУМА В IOS */
+        .ainur-fake-input { width: 100%; color: #888; font-size: 16px; cursor: pointer; white-space: nowrap; font-family: inherit;}
         .ainur-typing-cursor { display: inline-block; width: 2px; height: 14px; background-color: #333; margin-left: 2px; animation: ainurBlink 1s step-end infinite; }
         @keyframes ainurBlink { 50% { opacity: 0; } }
-        .ainur-real-input { display: none; width: 100%; height: 100%; border: none; background: transparent; font-size: 14px; outline: none; color: #333; font-family: inherit;}
+        .ainur-real-input { display: none; width: 100%; height: 100%; border: none; background: transparent; font-size: 16px; outline: none; color: #333; font-family: inherit;}
 
         #ainur-fullscreen-story {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
@@ -826,12 +830,7 @@
                     btn.onclick = () => { 
                         btnContainer.style.opacity = '0.5'; btnContainer.style.pointerEvents = 'none'; 
                         const matchedProduct = ainurProducts.find(p => p.name.toLowerCase() === btnText.toLowerCase());
-                        if (btnText === 'Оформить заказ') { window.ainurOpenView('cart'); } 
-                        else if (btnText === 'Оставить заявку') { window.ainurOpenLeadForm(); }
-                        else if (btnText === 'Контакты') { window.ainurOpenView('contacts'); }
-                        else if (btnText === 'Перейти в каталог' || btnText === 'Расскажите про услуги') { window.ainurOpenView('profile'); } 
-                        else if (matchedProduct) { window.openProductDetail(matchedProduct.id); } 
-                        else { window.sendClientMessageAuto(btnText); }
+                        if (btnText === 'Оформить заказ') { window.ainurOpenView('cart'); } else if (btnText === 'Перейти в каталог' || btnText === 'Расскажите про услуги') { window.ainurOpenView('profile'); } else if (matchedProduct) { window.openProductDetail(matchedProduct.id); } else { window.sendClientMessageAuto(btnText); }
                     }; btnContainer.appendChild(btn);
                 }); wrapper.appendChild(btnContainer);
             } chatBody.appendChild(wrapper); chatBody.scrollTop = chatBody.scrollHeight;
@@ -844,14 +843,11 @@
         };
 
         window.addClientMessage = async function(text) {
-            const chatBody = document.getElementById('ainur-chat-messages'); 
-            const wrapper = document.createElement('div'); wrapper.className = 'ainur-message-wrapper client';
+            const chatBody = document.getElementById('ainur-chat-messages'); const wrapper = document.createElement('div'); wrapper.className = 'ainur-message-wrapper client';
             const msg = document.createElement('div'); msg.className = 'ainur-message client'; msg.innerText = text; wrapper.appendChild(msg); chatBody.appendChild(wrapper); chatBody.scrollTop = chatBody.scrollHeight;
-            trackWidgetEvent('send_message', { text: text }); 
-            const typingIndicatorEl = window.showTypingIndicator();
-            
+            trackWidgetEvent('send_message', { text: text }); const typingIndicatorEl = window.showTypingIndicator();
             try {
-                // ДОБАВИЛИ products: ainurProducts
+                // ДОБАВЛЕНО: передаем products: ainurProducts для работы с бэкендом
                 const response = await fetch(`${API_BASE}/chat`, { 
                     method: 'POST', 
                     headers: { 'Content-Type': 'application/json' }, 
@@ -860,17 +856,12 @@
                         message: text, 
                         conversationId: CONVERSATION_ID, 
                         aiDisabled: hasManagerJoined,
-                        products: ainurProducts // <--- ВОТ ЭТО ВАЖНОЕ ДОБАВЛЕНИЕ
+                        products: ainurProducts // <--- Список каталога летит в ИИ!
                     }) 
                 });
-                
                 const data = await response.json(); chatBody.removeChild(typingIndicatorEl);
-                if (data.reply) { window.addAiMessageWithButtons(data.reply, []); } 
-                else if (!hasManagerJoined) { window.addAiMessageWithButtons('Ой, что-то пошло не так.', []); }
-            } catch(e) { 
-                chatBody.removeChild(typingIndicatorEl); 
-                if(!hasManagerJoined) window.addAiMessageWithButtons('Сервер сейчас недоступен.', []); 
-            }
+                if (data.reply) { window.addAiMessageWithButtons(data.reply, []); } else if (!hasManagerJoined) { window.addAiMessageWithButtons('Ой, что-то пошло не так.', []); }
+            } catch(e) { chatBody.removeChild(typingIndicatorEl); if(!hasManagerJoined) window.addAiMessageWithButtons('Сервер сейчас недоступен.', []); }
         };
 
         window.openChatOnly = function() {
@@ -885,6 +876,7 @@
                 if(chatBody.children.length === 0) { 
                     setTimeout(() => { 
                         if(chatBody.children.length === 0) {
+                           // ИЗМЕНЕНО: пустые скобки [], чтобы убрать кнопки в начале чата
                            window.addAiMessageWithButtons('Здравствуйте, я ИИ ассистент! Напишите, чем могу вам помочь?', []); 
                         }
                     }, 500); 
