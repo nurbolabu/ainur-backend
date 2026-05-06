@@ -1,415 +1,142 @@
 'use client';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@supabase/supabase-js';
-import { ChevronLeft, ChevronRight, ExternalLink, Check, User, UploadCloud, Loader2 } from 'lucide-react';
-
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
-
-type SettingsTab = 'VISUAL' | 'AI' | 'CONTACTS' | 'PLANS' | 'EMAIL' | 'PASSWORD';
-
-function getContrastColor(hexcolor: string) {
-  const hex = hexcolor.replace('#', '');
-  if (hex.length !== 6) return '#000000'; 
-  const r = parseInt(hex.substring(0, 2), 16);
-  const g = parseInt(hex.substring(2, 4), 16);
-  const b = parseInt(hex.substring(4, 6), 16);
-  const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-  return (yiq >= 128) ? '#000000' : '#FFFFFF';
-}
+import { 
+  Bot, 
+  Database, 
+  Palette, 
+  MessageSquare, 
+  Bell, 
+  CreditCard, 
+  LogOut, 
+  ChevronRight,
+  Building2
+} from 'lucide-react';
 
 export default function SettingsPage() {
   const router = useRouter();
   const [projectId, setProjectId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<SettingsTab | null>(null);
-  const [isYearly, setIsYearly] = useState(false);
-  const [isDirty, setIsDirty] = useState(false);
-  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
-  
-  const [userEmail, setUserEmail] = useState('');
-  const [newEmail, setNewEmail] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-
-  const [formData, setFormData] = useState({ 
-    company_name: '', logo_url: '', theme_color: '#8BFDA8', theme_text_color: '#000000', system_prompt: '', 
-    knowledge_base: '', whatsapp: '', instagram: '', telegram: '', youtube: '', vk: '', twogis: '', address: '' 
-  });
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedId = localStorage.getItem('ainur_admin_project_id');
-      if (storedId) {
-        setProjectId(storedId);
-        loadSettings(storedId);
-      }
+    const id = localStorage.getItem('ainur_admin_project_id');
+    if (id) {
+      setProjectId(id);
     }
-    const fetchUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) setUserEmail(user.email || '');
-    };
-    fetchUser();
   }, []);
 
-  const loadSettings = async (id: string) => {
-    const { data } = await supabase.from('projects').select('*').eq('id', id).single();
-    if (data) {
-      let links = data.social_links || {};
-      if (typeof links === 'string') { try { links = JSON.parse(links); } catch(e) { links = {}; } }
-      const textColor = data.theme_text_color || getContrastColor(data.theme_color || '#8BFDA8');
-      
-      setFormData({ 
-        company_name: data.company_name || '', 
-        logo_url: data.logo_url || '',
-        theme_color: data.theme_color || '#8BFDA8', 
-        theme_text_color: textColor,
-        system_prompt: data.system_prompt || '', 
-        knowledge_base: data.knowledge_base || '',
-        address: data.contacts_address || '', 
-        whatsapp: links.whatsapp || '', 
-        instagram: links.instagram || '', 
-        telegram: links.telegram || '',
-        youtube: links.youtube || '',
-        vk: links.vk || '',
-        twogis: links.twogis || ''
-      }); 
+  function handleLogout() {
+    if (confirm('Выйти из текущего проекта?')) {
+      localStorage.removeItem('ainur_admin_project_id');
+      router.push('/login'); // Перенаправляем на страницу входа
     }
-  };
-
-  const handleColorChange = (hex: string) => {
-    const suggestedTextColor = getContrastColor(hex);
-    setFormData({ ...formData, theme_color: hex, theme_text_color: suggestedTextColor });
-    setIsDirty(true);
-  };
-
-  const handleChange = (field: string, value: string) => { 
-    setFormData({...formData, [field]: value}); 
-    setIsDirty(true); 
-  };
-
-  // ЗАГРУЗКА ЛОГОТИПА
-  async function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file || !projectId) return;
-
-    setIsUploadingLogo(true);
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${projectId}_${Date.now()}.${fileExt}`;
-
-    const { error: uploadError } = await supabase.storage.from('logos').upload(fileName, file);
-
-    if (uploadError) {
-      alert('Ошибка при загрузке логотипа: ' + uploadError.message);
-      setIsUploadingLogo(false);
-      return;
-    }
-
-    const { data: { publicUrl } } = supabase.storage.from('logos').getPublicUrl(fileName);
-    setFormData({ ...formData, logo_url: publicUrl });
-    setIsDirty(true);
-    setIsUploadingLogo(false);
   }
 
-  async function handleSave() {
-    if (!projectId) return alert('Ошибка: ID проекта не найден');
-    await supabase.from('projects').update({
-      company_name: formData.company_name, 
-      logo_url: formData.logo_url,
-      theme_color: formData.theme_color, 
-      theme_text_color: formData.theme_text_color,
-      system_prompt: formData.system_prompt, 
-      knowledge_base: formData.knowledge_base, 
-      contacts_address: formData.address,
-      social_links: { whatsapp: formData.whatsapp, instagram: formData.instagram, telegram: formData.telegram, youtube: formData.youtube, vk: formData.vk, twogis: formData.twogis }
-    }).eq('id', projectId);
-    setIsDirty(false);
-    alert('Настройки успешно сохранены');
-  }
-
-  const handleUpdateEmail = async () => {
-    if (!newEmail) return;
-    const { error } = await supabase.auth.updateUser({ email: newEmail });
-    if (error) alert('Ошибка: ' + error.message);
-    else { alert('Email успешно обновлен.'); setUserEmail(newEmail); setNewEmail(''); }
-  };
-
-  const handleUpdatePassword = async () => {
-    if (!newPassword || newPassword.length < 6) return alert('Пароль должен быть минимум 6 символов');
-    const { error } = await supabase.auth.updateUser({ password: newPassword });
-    if (error) alert('Ошибка: ' + error.message);
-    else { alert('Пароль успешно изменен'); setNewPassword(''); }
-  };
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    localStorage.removeItem('ainur_admin_project_id');
-    router.push('/login');
-  };
-
-  const accountMenuItems = [
-    { id: 'EMAIL' as SettingsTab, label: 'Поменять email', sub: 'Смена адреса входа' },
-    { id: 'PASSWORD' as SettingsTab, label: 'Поменять пароль', sub: 'Обновление пароля' },
-    { id: 'PLANS' as SettingsTab, label: 'Моя подписка', sub: 'Управление тарифом' },
-  ];
-
-  const widgetMenuItems = [
-    { id: 'VISUAL' as SettingsTab, label: 'Визуал', sub: 'Цвета и логотип' },
-    { id: 'AI' as SettingsTab, label: 'Промпты ИИ', sub: 'Логика и база знаний' },
-    { id: 'CONTACTS' as SettingsTab, label: 'Контакты', sub: 'Карты и соцсети' },
-  ];
-
-  const plans = [
-    { name: 'Basic', price: isYearly ? '8 000' : '10 000', features: ['AI Ассистент', 'Каталог (50 тов.)', 'Stories'] },
-    { name: 'Pro', price: isYearly ? '15 000' : '20 000', features: ['AI Ассистент', 'Безлимит товаров', 'Stories', 'Свой цвет'], recommended: true },
-    { name: 'Business', price: isYearly ? '35 000' : '45 000', features: ['AI Ассистент', 'Priority Support', 'Custom Integration'] },
-  ];
+  // Вспомогательный компонент для строки настроек (как в iOS)
+  const SettingsRow = ({ icon: Icon, color, title, isLast = false, onClick }: any) => (
+    <div 
+      onClick={onClick}
+      className={`flex items-center justify-between p-4 cursor-pointer active:bg-[#F2F2F7] transition-colors ${!isLast ? 'border-b border-[#E5E5EA]' : ''}`}
+    >
+      <div className="flex items-center gap-3">
+        {/* Иконка в цветном квадрате со скруглением, как в iPhone */}
+        <div className={`w-[32px] h-[32px] rounded-[8px] flex items-center justify-center text-[#FFFFFF]`} style={{ backgroundColor: color }}>
+          <Icon size={18} strokeWidth={1.5} />
+        </div>
+        <span className="text-[16px] font-medium text-[#000000]">{title}</span>
+      </div>
+      <ChevronRight size={20} strokeWidth={1.5} className="text-[#C6C6C8]" />
+    </div>
+  );
 
   return (
-    <div className="animate-in fade-in duration-300 flex flex-col h-full md:h-[572px] w-full px-1 md:px-0">
+    <div className="w-full max-w-[690px] mx-auto px-[17px] md:px-0 pt-[100px] animate-in fade-in duration-300 flex flex-col gap-6 pb-[100px]">
       
-      <h1 className={`ios-large-title shrink-0 ${activeTab ? 'hidden md:block' : 'block'}`}>
-        Настройки
-      </h1>
+      {/* 1. ФИКСИРОВАННЫЙ HEADER */}
+      <div className="fixed top-[10px] left-1/2 -translate-x-1/2 w-[calc(100%-34px)] md:w-full max-w-[690px] z-40 bg-[#FFFFFF] rounded-[22px] flex items-center justify-between pl-[20px] pr-[10px] py-[10px] border border-[#E5E5EA]">
+        <Link href="/admin">
+          <svg width="99" height="14" viewBox="0 0 99 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M98.0879 13.7771H92.4758L89.457 10.1911H83.0142V13.7771H78.8203V6.84812H90.6118C91.2602 6.84812 91.8072 6.71305 92.2529 6.44291C92.6987 6.17278 92.9215 5.80134 92.9215 5.3286C92.9215 4.80183 92.7189 4.41013 92.3137 4.1535C91.9085 3.88336 91.3412 3.7483 90.6118 3.7483H78.8203V0.223007H90.2674C91.0373 0.223007 91.8342 0.297295 92.6581 0.44587C93.4821 0.580939 94.2317 0.830816 94.9071 1.1955C95.5824 1.56019 96.1362 2.05319 96.5684 2.6745C97.0141 3.29582 97.237 4.09272 97.237 5.06522C97.237 5.59198 97.156 6.09174 96.9939 6.56448C96.8318 7.03722 96.5954 7.46268 96.2848 7.84087C95.9876 8.21906 95.6162 8.54323 95.1704 8.81337C94.7382 9.07 94.2452 9.25234 93.6914 9.36039C93.921 9.53598 94.1777 9.75885 94.4613 10.029C94.745 10.2991 95.1232 10.6706 95.5959 11.1433L98.0879 13.7771Z" fill="black"/>
+            <path d="M76.4839 7.86113C76.4839 11.9537 73.6677 14 68.0353 14C66.401 14 64.9963 13.8717 63.8212 13.6151C62.6461 13.3584 61.6736 12.9735 60.9037 12.4602C60.1473 11.947 59.5868 11.3121 59.2221 10.5558C58.8709 9.78586 58.6953 8.88765 58.6953 7.86113V0.223007H62.8689V7.86113C62.8689 8.36089 62.9365 8.7796 63.0716 9.11727C63.2066 9.45494 63.4565 9.73183 63.8212 9.94794C64.1994 10.1505 64.7261 10.2991 65.4015 10.3937C66.0768 10.4747 66.9548 10.5152 68.0353 10.5152C68.8458 10.5152 69.5211 10.468 70.0614 10.3734C70.6017 10.2789 71.0339 10.1235 71.358 9.90742C71.6822 9.69131 71.9118 9.41442 72.0469 9.07675C72.1955 8.73908 72.2698 8.33387 72.2698 7.86113V0.223007H76.4839V7.86113Z" fill="black"/>
+            <path d="M54.0961 13.9999C53.826 13.9999 53.5559 13.9526 53.2857 13.858C53.0291 13.777 52.7387 13.5811 52.4145 13.2705L44.1078 5.8147V13.777H40.2988V2.53254C40.2988 2.08681 40.3596 1.70186 40.4812 1.3777C40.6162 1.05353 40.7851 0.790151 40.9877 0.587548C41.2038 0.384945 41.4469 0.23637 41.7171 0.141821C42.0007 0.0472738 42.2911 0 42.5883 0C42.8449 0 43.1015 0.0472738 43.3581 0.141821C43.6283 0.222862 43.9322 0.418712 44.2699 0.729369L52.5766 8.18515V0.222863H56.4058V11.4471C56.4058 11.8928 56.3383 12.2777 56.2032 12.6019C56.0817 12.9261 55.9128 13.1962 55.6967 13.4123C55.4941 13.6149 55.251 13.7635 54.9673 13.858C54.6837 13.9526 54.3933 13.9999 54.0961 13.9999Z" fill="black"/>
+            <path d="M11.4062 0C12.0411 0 12.5686 0.148162 12.9873 0.445312C13.4195 0.72895 13.7839 1.08733 14.0811 1.51953L22.5498 13.7773H6.78711L9.31934 10.292H13.9795C14.4252 10.292 14.8106 10.306 15.1348 10.333C14.9457 10.0899 14.7225 9.78558 14.4658 9.4209C14.2227 9.04277 13.9864 8.6913 13.7568 8.36719L11.3252 4.78125L4.96387 13.7773H0L8.69141 1.51953C8.97505 1.12783 9.3334 0.776478 9.76562 0.46582C10.1977 0.155307 10.7447 5.27822e-05 11.4062 0ZM28.2998 13.7773H24.1055V0.222656H28.2998V13.7773Z" fill="#8BFDA8"/>
+          </svg>
+        </Link>
+        {/* Вместо кнопки настроек ставим заглушку, так как мы уже в настройках */}
+        <div className="w-[50px] h-[50px]"></div>
+      </div>
 
-      <div className="flex-1 flex flex-col md:flex-row w-full bg-transparent md:bg-[#FFFFFF] md:rounded-[24px] md:overflow-hidden min-h-0">
-        
-        <div className={`w-full md:w-[320px] md:border-r border-[#E5E5EA] flex flex-col bg-transparent md:bg-[#FFFFFF] shrink-0 
-          ${activeTab ? 'hidden md:flex' : 'flex'} h-full overflow-y-auto pb-24 md:pb-0`}>
-          
-          <div className="flex flex-col space-y-6 md:space-y-0 md:py-0">
-            
-            <div className="md:hidden flex flex-col items-center justify-center text-center mt-2 mb-2 bg-[#FFFFFF] p-6 rounded-[24px] shadow-sm">
-                <div className="w-16 h-16 rounded-[20px] bg-[#F5F5F7] overflow-hidden flex items-center justify-center mb-3 border border-[#E5E5EA]">
-                   {formData.logo_url ? <img src={formData.logo_url} className="w-full h-full object-cover" /> : <span className="font-bold text-[24px] text-[#8E8E93]">{formData.company_name?.charAt(0) || <User />}</span>}
-                </div>
-                <h2 className="text-[20px] font-bold text-[#000000] tracking-tight">{formData.company_name || 'Настройки'}</h2>
-                <p className="text-[14px] text-[#8E8E93]">{userEmail}</p>
-            </div>
+      <div className="px-1 mt-2">
+        <h1 className="text-[28px] font-bold text-[#000000]">Настройки</h1>
+      </div>
 
-            <h2 className="ios-section-header md:mt-6 hidden md:block">Аккаунт</h2>
-            <div className="ios-module md:rounded-none md:!mb-0">
-              {accountMenuItems.map((item) => (
-                <button key={item.id} onClick={() => setActiveTab(item.id)}
-                  className={`ios-list-item w-full text-left border-none ${activeTab === item.id ? 'bg-[#F2F2F7] md:bg-[#F2F2F7]' : ''}`}>
-                  <div className="flex flex-col">
-                    <span className="text-[17px] font-semibold text-[#000000]">{item.label}</span>
-                  </div>
-                  <ChevronRight size={18} className="text-[#C6C6C8]" />
-                </button>
-              ))}
-            </div>
-
-            <h2 className="ios-section-header mt-6 md:mt-6">Настройка виджета</h2>
-            <div className="ios-module md:rounded-none md:!mb-0">
-              {widgetMenuItems.map((item) => (
-                <button key={item.id} onClick={() => setActiveTab(item.id)}
-                  className={`ios-list-item w-full text-left border-none ${activeTab === item.id ? 'bg-[#F2F2F7] md:bg-[#F2F2F7]' : ''}`}>
-                  <div className="flex flex-col">
-                    <span className="text-[17px] font-semibold text-[#000000]">{item.label}</span>
-                    <span className="text-[13px] text-[#8E8E93] hidden md:block">{item.sub}</span>
-                  </div>
-                  <ChevronRight size={18} className="text-[#C6C6C8]" />
-                </button>
-              ))}
-              <a href={`https://ainur.kz/preview/${projectId}`} target="_blank" className="ios-list-item w-full border-none flex items-center justify-between">
-                <div className="flex flex-col">
-                  <span className="text-[17px] font-semibold text-[#000000]">Прототип виджета</span>
-                </div>
-                <ExternalLink size={18} className="text-[#C6C6C8]" />
-              </a>
-            </div>
-
-            <div className="ios-module md:rounded-none md:!mb-0 bg-transparent md:bg-[#FFFFFF] mt-2 md:mt-6 shadow-none md:border-t border-[#E5E5EA]">
-                <button onClick={handleSignOut} className="ios-list-item w-full bg-[#FFFFFF] rounded-[16px] md:rounded-none text-center flex justify-center border-none">
-                    <span className="text-[#FF3B30] font-semibold text-[17px]">Выйти из аккаунта</span>
-                </button>
-            </div>
-
-          </div>
+      {/* 2. КАРТОЧКА КОМПАНИИ ПРОФИЛЯ */}
+      <div className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] p-5 flex items-center gap-4">
+        <div className="w-[70px] h-[70px] bg-[#F2F2F7] rounded-full flex items-center justify-center shrink-0 border border-[#E5E5EA]">
+          <Building2 size={32} strokeWidth={1} className="text-[#8E8E93]" />
         </div>
-
-        <div className={`flex-1 flex flex-col bg-[#FFFFFF] 
-          ${!activeTab ? 'hidden md:flex' : 'flex'} 
-          ${activeTab ? 'fixed inset-0 z-[60] md:relative' : ''} h-full overflow-hidden`}>
-          
-          {activeTab ? (
-            <>
-              <div className="border-b border-[#E5E5EA] bg-[#F9F9F9] md:bg-[#FFFFFF]/90 backdrop-blur-md shrink-0 z-10 pt-[env(safe-area-inset-top)] md:pt-0">
-                <div className="relative flex items-center justify-between px-4 py-3 min-h-[56px] md:min-h-[64px]">
-                  <button onClick={() => setActiveTab(null)} className="md:hidden text-[#000000] flex items-center active:opacity-50">
-                    <ChevronLeft size={28} className="-ml-2" /> <span className="font-medium">Назад</span>
-                  </button>
-                  <span className="font-semibold text-[17px] absolute left-1/2 -translate-x-1/2 md:relative md:left-0 md:translate-x-0">
-                    {[...widgetMenuItems, ...accountMenuItems].find(i => i.id === activeTab)?.label || 'Настройки'}
-                  </span>
-                  
-                  {['VISUAL', 'AI', 'CONTACTS'].includes(activeTab) ? (
-                    <button onClick={handleSave} className={`btn-primary !bg-[#8BFDA8] !text-[#000000] !min-h-[36px] !h-[36px] !px-4 !text-[14px] !rounded-[10px] ${!isDirty && 'opacity-50 pointer-events-none'}`}>
-                      Сохранить
-                    </button>
-                  ) : <div className="w-[85px] md:hidden"></div>}
-                </div>
-              </div>
-
-              <div className="flex-1 overflow-y-auto p-4 md:p-8 bg-[#FFFFFF]">
-                
-                {activeTab === 'EMAIL' && (
-                  <div className="space-y-6">
-                    <div>
-                      <label className="ios-section-header ml-0">Текущий Email</label>
-                      <input className="input-ios bg-[#F2F2F7] text-[#8E8E93]" value={userEmail} disabled />
-                    </div>
-                    <div>
-                      <label className="ios-section-header ml-0">Новый Email</label>
-                      <input type="email" className="input-ios" placeholder="Введите новый адрес" value={newEmail} onChange={e => setNewEmail(e.target.value)} />
-                    </div>
-                    <button onClick={handleUpdateEmail} className="btn-primary w-full">Обновить Email</button>
-                  </div>
-                )}
-
-                {activeTab === 'PASSWORD' && (
-                  <div className="space-y-6">
-                    <div>
-                      <label className="ios-section-header ml-0">Новый пароль</label>
-                      <input type="password" className="input-ios" placeholder="Минимум 6 символов" value={newPassword} onChange={e => setNewPassword(e.target.value)} />
-                    </div>
-                    <button onClick={handleUpdatePassword} className="btn-primary w-full">Изменить пароль</button>
-                  </div>
-                )}
-
-                {activeTab === 'PLANS' && (
-                  <div className="space-y-6">
-                    <div className="flex justify-between items-center mb-2">
-                      <h2 className="ios-title-2 mb-0">Тарифы</h2>
-                      <div className="flex bg-[#F2F2F7] p-1 rounded-[10px]">
-                        <button onClick={() => setIsYearly(false)} className={`px-3 py-1.5 text-[12px] font-bold rounded-[7px] transition-all ${!isYearly ? 'bg-white shadow-sm' : 'text-[#8E8E93]'}`}>Месяц</button>
-                        <button onClick={() => setIsYearly(true)} className={`px-3 py-1.5 text-[12px] font-bold rounded-[7px] transition-all ${isYearly ? 'bg-white shadow-sm' : 'text-[#8E8E93]'}`}>Год -20%</button>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 gap-4">
-                      {plans.map((plan) => (
-                        <div key={plan.name} className={`p-5 rounded-[20px] border-2 transition-all ${plan.recommended ? 'border-[#8BFDA8] bg-[#8BFDA8]/5' : 'border-[#F2F2F7]'}`}>
-                          <div className="flex justify-between items-start mb-4">
-                            <div>
-                              <h3 className="text-[18px] font-bold">{plan.name}</h3>
-                              <div className="text-[24px] font-black mt-1">{plan.price} ₸ <span className="text-[14px] font-normal text-[#8E8E93]">/{isYearly ? 'год' : 'мес'}</span></div>
-                            </div>
-                            {plan.recommended && <span className="bg-[#8BFDA8] text-[10px] font-black px-2 py-1 rounded-full uppercase">Популярный</span>}
-                          </div>
-                          <ul className="space-y-2 mb-6">
-                            {plan.features.map(f => <li key={f} className="flex items-center gap-2 text-[14px] text-[#3C3C43]"><Check size={14} className="text-[#34C759]" /> {f}</li>)}
-                          </ul>
-                          <button className="btn-secondary w-full !min-h-[44px] !h-[44px] !text-[15px]">Выбрать тариф</button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === 'VISUAL' && (
-                  <div className="space-y-8">
-                    <div>
-                      <label className="ios-section-header ml-0">Название компании</label>
-                      <input className="input-ios" value={formData.company_name} onChange={e => handleChange('company_name', e.target.value)} />
-                    </div>
-                    
-                    {/* НОВЫЙ БЛОК: ЗАГРУЗКА ЛОГОТИПА */}
-                    <div>
-                      <label className="ios-section-header ml-0">Логотип (Аватарка виджета)</label>
-                      <div className="flex items-center gap-4 bg-[#F5F5F7] p-4 rounded-[14px] border border-[#E5E5EA]">
-                        <div className="w-16 h-16 rounded-[16px] bg-[#FFFFFF] border border-[#E5E5EA] flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
-                           {isUploadingLogo ? <Loader2 className="animate-spin text-[#8E8E93]" size={20} /> :
-                            formData.logo_url ? <img src={formData.logo_url} className="w-full h-full object-cover" /> : <span className="font-bold text-[#8E8E93] text-[20px]">{formData.company_name?.charAt(0) || 'A'}</span>}
-                        </div>
-                        <label className="flex-1 h-[44px] flex items-center justify-center gap-2 bg-[#FFFFFF] rounded-[12px] cursor-pointer text-[15px] font-medium text-[#000000] border border-[#E5E5EA] active:scale-95 transition-transform shadow-sm">
-                           <UploadCloud size={18} /> {formData.logo_url ? 'Заменить логотип' : 'Загрузить логотип'}
-                           <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} disabled={isUploadingLogo} />
-                        </label>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="ios-section-header ml-0">Главный цвет бренда (Фон)</label>
-                      <div className="flex items-center gap-4 bg-[#F5F5F7] p-4 rounded-[14px] border border-[#E5E5EA]">
-                        <div className="w-10 h-10 rounded-full border border-[#E5E5EA] overflow-hidden shrink-0 shadow-sm">
-                          <input type="color" className="w-[150%] h-[150%] -translate-x-1/4 -translate-y-1/4 cursor-pointer" value={formData.theme_color} onChange={e => handleColorChange(e.target.value)} />
-                        </div>
-                        <span className="font-mono font-bold uppercase tracking-wider">{formData.theme_color}</span>
-                      </div>
-                    </div>
-                    <div>
-                      <label className="ios-section-header ml-0">Текст на кнопках</label>
-                      <div className="flex flex-col bg-[#F5F5F7] p-4 rounded-[14px] border border-[#E5E5EA] gap-4">
-                        <div className="flex bg-[#E5E5EA] p-1 rounded-[10px]">
-                          <button onClick={() => handleChange('theme_text_color', '#000000')} className={`flex-1 py-1.5 text-[14px] font-medium rounded-[7px] transition-all ${formData.theme_text_color === '#000000' ? 'bg-[#FFFFFF] text-[#000000] shadow-sm' : 'text-[#8E8E93]'}`}>Черный</button>
-                          <button onClick={() => handleChange('theme_text_color', '#FFFFFF')} className={`flex-1 py-1.5 text-[14px] font-medium rounded-[7px] transition-all ${formData.theme_text_color === '#FFFFFF' ? 'bg-[#FFFFFF] text-[#000000] shadow-sm' : 'text-[#8E8E93]'}`}>Белый</button>
-                        </div>
-                        <div className="flex items-center justify-center py-4 border-t border-[#E5E5EA] mt-2">
-                           <div className="px-6 py-3 rounded-[14px] font-semibold text-[15px] shadow-[0_4px_12px_rgba(0,0,0,0.1)] transition-colors" style={{ backgroundColor: formData.theme_color, color: formData.theme_text_color }}>
-                             Попробовать виджет
-                           </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === 'AI' && (
-                  <div className="space-y-6">
-                    <div>
-                      <label className="ios-section-header ml-0">Роль ассистента</label>
-                      <textarea className="input-ios resize-none" rows={4} value={formData.system_prompt} onChange={e => handleChange('system_prompt', e.target.value)} />
-                    </div>
-                    <div>
-                      <label className="ios-section-header ml-0">База знаний</label>
-                      <textarea className="input-ios resize-none font-sans" rows={10} value={formData.knowledge_base} onChange={e => handleChange('knowledge_base', e.target.value)} />
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === 'CONTACTS' && (
-                  <div className="space-y-6">
-                    {[
-                      { id: 'whatsapp', label: 'WhatsApp', prefix: 'https://wa.me/', display: 'wa.me/', placeholder: '77001234567' },
-                      { id: 'instagram', label: 'Instagram', prefix: 'https://instagram.com/', display: 'instagram.com/', placeholder: 'username' },
-                      { id: 'telegram', label: 'Telegram', prefix: 'https://t.me/', display: 't.me/', placeholder: 'username' },
-                      { id: 'youtube', label: 'YouTube', prefix: 'https://youtube.com/@', display: 'youtube.com/@', placeholder: 'channel' },
-                      { id: 'vk', label: 'VKontakte', prefix: 'https://vk.com/', display: 'vk.com/', placeholder: 'username' },
-                      { id: 'twogis', label: '2GIS', prefix: 'https://2gis.kz/', display: '2gis.kz/', placeholder: 'link' },
-                    ].map(social => (
-                      <div key={social.id}>
-                        <label className="ios-section-header ml-0">{social.label}</label>
-                        <div className="flex bg-[#F5F5F7] border border-[#E5E5EA] rounded-[14px] overflow-hidden focus-within:border-[#8BFDA8] focus-within:bg-[#FFFFFF] transition-colors">
-                          <span className="flex items-center pl-4 pr-1 text-[#8E8E93] text-[15px] select-none bg-transparent">
-                            {social.display}
-                          </span>
-                          <input 
-                            className="flex-1 bg-transparent py-3 px-2 text-[17px] text-[#000000] outline-none placeholder:text-[#C6C6C8]" 
-                            placeholder={social.placeholder}
-                            value={formData[social.id as keyof typeof formData]?.replace(social.prefix, '') || ''} 
-                            onChange={e => {
-                                // Умная обрезка: если вставили полную ссылку, оставляем только никнейм/номер
-                                let cleanValue = e.target.value.replace(social.prefix, '').replace(social.display, '');
-                                handleChange(social.id, cleanValue ? `${social.prefix}${cleanValue}` : '');
-                            }} 
-                          />
-                        </div>
-                      </div>
-                    ))}
-                    <div>
-                      <label className="ios-section-header ml-0">Физический адрес</label>
-                      <textarea className="input-ios resize-none" rows={2} placeholder="Город, улица, дом..." value={formData.address} onChange={e => handleChange('address', e.target.value)} />
-                    </div>
-                  </div>
-                )}
-              </div>
-            </>
-          ) : (
-            <div className="flex-1 flex items-center justify-center text-[#8E8E93] text-[17px] bg-[#FFFFFF]">
-              Выберите раздел для настройки
-            </div>
-          )}
+        <div className="flex flex-col">
+          <h2 className="text-[20px] font-bold text-[#000000] leading-tight">Моя Компания</h2>
+          <p className="text-[14px] text-[#8E8E93] mt-1 font-mono">{projectId ? `ID: ${projectId.substring(0, 8)}...` : 'Загрузка...'}</p>
         </div>
       </div>
+
+      {/* 3. НАСТРОЙКИ: ИИ и База знаний */}
+      <div className="flex flex-col gap-2">
+        <span className="px-4 text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider">Интеллект</span>
+        <div className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] overflow-hidden flex flex-col">
+          <SettingsRow 
+            icon={Bot} color="#007AFF" title="Промпт и поведение" 
+            onClick={() => alert('Здесь будет настройка промпта')} 
+          />
+          <SettingsRow 
+            icon={Database} color="#5856D6" title="База знаний (Файлы)" isLast={true} 
+            onClick={() => alert('Здесь будет загрузка PDF/TXT файлов')} 
+          />
+        </div>
+      </div>
+
+      {/* 4. НАСТРОЙКИ: Виджет */}
+      <div className="flex flex-col gap-2">
+        <span className="px-4 text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider">Виджет</span>
+        <div className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] overflow-hidden flex flex-col">
+          <SettingsRow 
+            icon={Palette} color="#FF9500" title="Внешний вид и цвета" 
+            onClick={() => alert('Здесь будут настройки дизайна')} 
+          />
+          <SettingsRow 
+            icon={MessageSquare} color="#34C759" title="Приветственное сообщение" isLast={true} 
+            onClick={() => alert('Здесь будет настройка стартового текста')} 
+          />
+        </div>
+      </div>
+
+      {/* 5. НАСТРОЙКИ: Дополнительно */}
+      <div className="flex flex-col gap-2">
+        <span className="px-4 text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider">Дополнительно</span>
+        <div className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] overflow-hidden flex flex-col">
+          <SettingsRow 
+            icon={Bell} color="#FF3B30" title="Уведомления в Telegram" 
+            onClick={() => alert('Здесь будет привязка Telegram-бота')} 
+          />
+          <SettingsRow 
+            icon={CreditCard} color="#8E8E93" title="Тариф и подписка" isLast={true} 
+            onClick={() => alert('Здесь будет инфа по тарифу')} 
+          />
+        </div>
+      </div>
+
+      {/* 6. КНОПКА ВЫХОДА */}
+      <div className="mt-4">
+        <div 
+          onClick={handleLogout}
+          className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] p-4 flex items-center justify-center gap-2 cursor-pointer active:scale-95 transition-transform"
+        >
+          <LogOut size={20} strokeWidth={1.5} className="text-[#FF3B30]" />
+          <span className="text-[16px] font-semibold text-[#FF3B30]">Выйти из проекта</span>
+        </div>
+      </div>
+
     </div>
   );
 }
