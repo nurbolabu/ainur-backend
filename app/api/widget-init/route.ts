@@ -35,12 +35,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Проект не найден' }, { status: 404, headers: corsHeaders });
     }
 
-    // 2. Получаем активные товары (Каталог)
+    // 2. Получаем ВСЕ товары (Каталог) БЕЗ ФИЛЬТРА is_active
     const { data: products, error: productsError } = await supabase
       .from('products')
       .select('id, name, description, price, image_url')
-      .eq('project_id', projectId)
-      .eq('is_active', true);
+      .eq('project_id', projectId);
 
     // 3. Получаем контент для сторис (сортируем по порядку)
     const { data: stories, error: storiesError } = await supabase
@@ -62,4 +61,4 @@ export async function POST(req: Request) {
     console.error('Ошибка инициализации виджета:', error);
     return NextResponse.json({ error: 'Ошибка сервера' }, { status: 500, headers: corsHeaders });
   }
-} 
+}
