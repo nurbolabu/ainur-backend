@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
-import { Settings, Plus, ChevronRight, Trash2, Loader2 } from 'lucide-react';
+import { Settings, Plus, ChevronRight, Trash2, Loader2, PlaySquare } from 'lucide-react';
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
 
@@ -13,7 +13,6 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState({ visitors: 0, widgets: 0, leads: 0, social: 0 });
   const [isUploading, setIsUploading] = useState(false);
 
-  // Загрузка всех данных при открытии страницы
   useEffect(() => {
     const id = localStorage.getItem('ainur_admin_project_id');
     if (id) {
@@ -23,7 +22,6 @@ export default function AdminDashboard() {
   }, []);
 
   async function fetchDashboardData(id: string) {
-    // 1. Загружаем Сторис
     const { data: storiesData } = await supabase
       .from('stories')
       .select('*')
@@ -31,7 +29,6 @@ export default function AdminDashboard() {
       .order('created_at', { ascending: false });
     if (storiesData) setStories(storiesData);
 
-    // 2. Загружаем Последние Чаты (уникальные)
     const { data: messagesData } = await supabase
       .from('messages')
       .select('conversation_id, created_at')
@@ -45,15 +42,13 @@ export default function AdminDashboard() {
         if (!seen.has(msg.conversation_id)) {
           seen.add(msg.conversation_id);
           uniqueChats.push({ id: msg.conversation_id, date: msg.created_at });
-          if (uniqueChats.length === 2) break; // Берем только 2 последних
+          if (uniqueChats.length === 2) break; 
         }
       }
       setRecentChats(uniqueChats);
 
-      // Считаем стату по чатам
       const totalChats = seen.size;
       
-      // 3. Загружаем Заявки
       const { count: leadsCount } = await supabase
         .from('leads')
         .select('*', { count: 'exact', head: true })
@@ -62,13 +57,12 @@ export default function AdminDashboard() {
       setStats({
         widgets: totalChats,
         leads: leadsCount || 0,
-        visitors: totalChats * 5 + 124, // Имитация посетителей
-        social: Math.floor(totalChats * 0.3) // Имитация кликов
+        visitors: totalChats * 5 + 124, 
+        social: Math.floor(totalChats * 0.3) 
       });
     }
   }
 
-  // --- ЛОГИКА STORIES ---
   async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files || e.target.files.length === 0 || !projectId) return;
     setIsUploading(true);
@@ -94,7 +88,6 @@ export default function AdminDashboard() {
     }
   }
 
-  // --- ФОРМАТИРОВАНИЕ ДАТЫ ---
   const formatDate = (iso: string) => {
     const d = new Date(iso);
     return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -105,11 +98,10 @@ export default function AdminDashboard() {
   };
 
   return (
-    // Добавили pt-[100px], чтобы контент не уезжал под фиксированный хедер
     <div className="w-full max-w-[690px] mx-auto px-[17px] md:px-0 pt-[100px] animate-in fade-in duration-300 flex flex-col gap-8 pb-[100px]">
       
-      {/* 1. ФИКСИРОВАННЫЙ HEADER */}
-      <div className="fixed top-[10px] left-1/2 -translate-x-1/2 w-[calc(100%-34px)] md:w-full max-w-[690px] z-40 h-[70px] bg-[#FFFFFF] rounded-[22px] flex items-center justify-between px-5 shadow-sm border border-[#E5E5EA]">
+      {/* 1. ФИКСИРОВАННЫЙ HEADER (Идеальные отступы: 20px слева, 10px сверху/снизу/справа) */}
+      <div className="fixed top-[10px] left-1/2 -translate-x-1/2 w-[calc(100%-34px)] md:w-full max-w-[690px] z-40 bg-[#FFFFFF] rounded-[22px] flex items-center justify-between pl-[20px] pr-[10px] py-[10px] shadow-sm border border-[#E5E5EA]">
         {/* Логотип SVG */}
         <div className="flex items-center">
           <svg width="99" height="14" viewBox="0 0 99 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -120,8 +112,8 @@ export default function AdminDashboard() {
           </svg>
         </div>
         
-        {/* Кнопка настроек */}
-        <Link href="/admin/settings" className="w-[50px] h-[50px] bg-[#8BFDA8] rounded-[11px] flex items-center justify-center active:scale-95 transition-transform">
+        {/* Кнопка настроек - Линейная иконка strokeWidth 1.5 */}
+        <Link href="/admin/settings" className="w-[50px] h-[50px] shrink-0 bg-[#8BFDA8] rounded-[11px] flex items-center justify-center active:scale-95 transition-transform">
           <Settings size={24} strokeWidth={1.5} className="text-[#000000]" />
         </Link>
       </div>
@@ -132,7 +124,6 @@ export default function AdminDashboard() {
         
         <div className="flex items-center gap-2.5 overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
           
-          {/* Рабочая кнопка Добавить */}
           <label className="w-[140px] h-[165px] md:w-[165px] bg-[#000000] rounded-[22px] p-4 flex flex-col justify-between shrink-0 active:scale-95 transition-transform cursor-pointer relative">
              <div className="w-10 h-10 rounded-full border-[1.5px] border-[#8BFDA8] flex items-center justify-center text-[#8BFDA8] bg-transparent">
                {isUploading ? <Loader2 size={20} strokeWidth={1.5} className="animate-spin" /> : <Plus size={20} strokeWidth={1.5} />}
@@ -141,13 +132,10 @@ export default function AdminDashboard() {
              <input type="file" accept="image/*,video/*" className="hidden" onChange={handleFileUpload} disabled={isUploading} />
           </label>
 
-          {/* Реальные сторис из базы */}
           {stories.map((s) => {
             const isVideo = s.media_url.toLowerCase().includes('.mp4');
             return (
               <div key={s.id} className="w-[140px] h-[165px] md:w-[165px] bg-[#FFFFFF] rounded-[22px] p-4 flex flex-col justify-between shrink-0 shadow-sm border border-[#E5E5EA] relative overflow-hidden group">
-                
-                {/* Фоновое изображение/видео */}
                 <div className="absolute inset-0 z-0">
                    {isVideo ? (
                      <video src={s.media_url} className="w-full h-full object-cover opacity-80" muted playsInline />
@@ -157,7 +145,6 @@ export default function AdminDashboard() {
                    <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-black/60"></div>
                 </div>
 
-                {/* Кнопка удаления */}
                 <button 
                   onClick={() => handleDeleteStory(s.id)}
                   className="w-10 h-10 rounded-[20px] bg-[#FFFFFF]/90 backdrop-blur-md flex items-center justify-center text-[#FF3B30] relative z-10 active:scale-95"
@@ -165,7 +152,6 @@ export default function AdminDashboard() {
                   <Trash2 size={18} strokeWidth={1.5} />
                 </button>
                 
-                {/* Дата */}
                 <div className="text-[#FFFFFF] text-[14px] md:text-[16px] font-medium relative z-10">
                   {formatDate(s.created_at)}
                 </div>
