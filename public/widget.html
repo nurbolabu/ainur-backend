@@ -575,9 +575,18 @@
     </div>
 
     <script>
-        const API_BASE = 'https://ainur-backend-eta.vercel.app/api'; 
-        const MY_PROJECT_ID = '80f5479f-10dd-4859-aa56-234f4879396c';
+    const API_BASE = 'https://ainur-backend-eta.vercel.app/api'; 
+    
+    // УМНЫЙ ПОИСК ID ПРОЕКТА
+    // Теперь виджет ищет ID в ссылке (например: widget.html?id=123)
+    const urlParams = new URLSearchParams(window.location.search);
+    const MY_PROJECT_ID = urlParams.get('id');
 
+    if (!MY_PROJECT_ID) {
+        console.error("ID проекта не найден! Укажите его в ссылке ?id=...");
+    }
+
+    // ... дальше идет весь остальной код (trackWidgetEvent и т.д.) ...
         function trackWidgetEvent(eventName, eventData = {}) {
             fetch(`${API_BASE}/analytics`, {
                 method: 'POST',

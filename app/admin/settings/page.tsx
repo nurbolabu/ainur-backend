@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 import { 
   Bot, Database, Palette, Link2, Mail, Lock, CreditCard, LogOut, 
-  ChevronRight, ChevronLeft, Building2, Loader2, X, Check, UploadCloud, User, Pencil
+  ChevronRight, ChevronLeft, Building2, Loader2, X, Check, UploadCloud, User, Pencil, Code, Copy
 } from 'lucide-react';
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
@@ -29,6 +29,7 @@ export default function SettingsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
   
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<any>({});
@@ -83,6 +84,7 @@ export default function SettingsPage() {
     setEditForm({ ...projectData });
     setNewEmail('');
     setNewPassword('');
+    setIsCopied(false);
     setActiveModal(modalName);
   }
 
@@ -169,6 +171,21 @@ export default function SettingsPage() {
     }
   };
 
+  // Генерация кода для вставки
+  const getEmbedCode = () => {
+    return `<iframe 
+    src="https://ainur-backend-eta.vercel.app/widget.html?id=${projectId}" 
+    style="position: fixed; bottom: 0; right: 0; width: 400px; height: 750px; border: none; z-index: 999999; background: transparent; pointer-events: none;"
+    allowtransparency="true">
+</iframe>`;
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(getEmbedCode());
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+
   const SettingsRow = ({ icon: Icon, color, title, isLast = false, onClick }: any) => (
     <div 
       onClick={onClick}
@@ -208,12 +225,11 @@ export default function SettingsPage() {
         </div>
       ) : (
         <>
-          {/* 2. КАРТОЧКА КОМПАНИИ ПРОФИЛЯ (с фиксом длинной почты) */}
+          {/* 2. КАРТОЧКА КОМПАНИИ ПРОФИЛЯ */}
           <div 
             onClick={() => openModal('company')}
             className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] p-5 flex items-center justify-between cursor-pointer active:scale-[0.98] transition-transform relative overflow-hidden"
           >
-            {/* Иконка редактирования */}
             <div className="absolute top-4 right-4 w-8 h-8 rounded-[10px] bg-[#F2F2F7] flex items-center justify-center text-[#000000] z-10 shrink-0">
               <Pencil size={14} strokeWidth={1.5} />
             </div>
@@ -243,7 +259,8 @@ export default function SettingsPage() {
             <span className="px-4 text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider">Виджет</span>
             <div className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] overflow-hidden flex flex-col">
               <SettingsRow icon={Palette} color="#FF9500" title="Внешний вид и цвета" onClick={() => openModal('appearance')} />
-              <SettingsRow icon={Link2} color="#34C759" title="Контакты и соцсети" isLast={true} onClick={() => openModal('contacts')} />
+              <SettingsRow icon={Link2} color="#34C759" title="Контакты и соцсети" onClick={() => openModal('contacts')} />
+              <SettingsRow icon={Code} color="#000000" title="Код для вставки на сайт" isLast={true} onClick={() => openModal('integration')} />
             </div>
           </div>
 
@@ -271,7 +288,7 @@ export default function SettingsPage() {
       )}
 
       {/* ======================================================== */}
-      {/* СИСТЕМА МОДАЛЬНЫХ ОКОН (С ОТСТУПОМ 10px СВЕРХУ)          */}
+      {/* СИСТЕМА МОДАЛЬНЫХ ОКОН                                   */}
       {/* ======================================================== */}
       {activeModal && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] flex items-end md:items-center justify-center pt-[10px] px-0 md:px-[10px]">
@@ -289,12 +306,13 @@ export default function SettingsPage() {
                 {activeModal === 'knowledge' && 'База знаний'}
                 {activeModal === 'appearance' && 'Внешний вид'}
                 {activeModal === 'contacts' && 'Контакты и соцсети'}
+                {activeModal === 'integration' && 'Код для сайта'}
                 {activeModal === 'email' && 'Сменить Email'}
                 {activeModal === 'password' && 'Сменить пароль'}
                 {activeModal === 'plans' && 'Моя подписка'}
               </span>
               
-              {['email', 'password', 'plans'].includes(activeModal) ? (
+              {['email', 'password', 'plans', 'integration'].includes(activeModal) ? (
                  <div className="w-[50px] h-[50px]"></div>
               ) : (
                 <button onClick={handleSaveProject} disabled={isSaving} className="w-[50px] h-[50px] shrink-0 bg-[#8BFDA8] rounded-[11px] flex items-center justify-center text-[#000000] active:scale-95 disabled:opacity-50 transition-transform">
@@ -306,6 +324,27 @@ export default function SettingsPage() {
             {/* Контент модалки */}
             <div className="flex-1 overflow-y-auto p-5 pb-10">
               
+              {/* Интеграция / Код для вставки */}
+              {activeModal === 'integration' && (
+                <div className="flex flex-col gap-4">
+                  <p className="text-[15px] text-[#8E8E93] leading-relaxed">
+                    Скопируйте этот код и вставьте его перед закрывающим тегом <code className="bg-[#F2F2F7] px-1 rounded">&lt;/body&gt;</code> на вашем сайте. Он содержит ваш уникальный ID, поэтому виджет сразу начнет работать!
+                  </p>
+                  <div className="relative">
+                    <pre className="w-full bg-[#F2F2F7] p-4 rounded-[16px] text-[13px] text-[#000000] overflow-x-auto border border-[#E5E5EA] whitespace-pre-wrap word-break">
+                      {getEmbedCode()}
+                    </pre>
+                  </div>
+                  <button 
+                    onClick={copyToClipboard}
+                    className={`h-[50px] w-full rounded-[12px] font-semibold text-[16px] flex items-center justify-center gap-2 active:scale-95 transition-all ${isCopied ? 'bg-[#8BFDA8] text-[#000000]' : 'bg-[#000000] text-[#FFFFFF]'}`}
+                  >
+                    {isCopied ? <Check size={20} /> : <Copy size={20} />}
+                    {isCopied ? 'Скопировано!' : 'Скопировать код'}
+                  </button>
+                </div>
+              )}
+
               {activeModal === 'company' && (
                 <div className="flex flex-col gap-6">
                   <div className="flex flex-col gap-2">
