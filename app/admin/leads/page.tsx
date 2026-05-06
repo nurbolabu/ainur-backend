@@ -41,7 +41,6 @@ export default function LeadsPage() {
 
   // Функция для смены статуса
   async function toggleStatus(leadId: string, currentStatus: string) {
-    // Если статуса нет, считаем его 'new'
     const newStatus = (!currentStatus || currentStatus === 'new') ? 'processed' : 'new';
     
     // Оптимистичное обновление UI для скорости
@@ -51,7 +50,6 @@ export default function LeadsPage() {
     await supabase.from('leads').update({ status: newStatus }).eq('id', leadId);
   }
 
-  // Фильтруем заявки по активной вкладке
   const filteredLeads = leads.filter(lead => {
     const status = lead.status || 'new';
     return status === activeTab;
@@ -79,7 +77,7 @@ export default function LeadsPage() {
       <div className="flex flex-col gap-4 px-1 mt-2">
         <h1 className="text-[28px] font-bold text-[#000000]">Заявки</h1>
         
-        {/* Переключатель вкладок Segmented Control */}
+        {/* Переключатель вкладок */}
         <div className="bg-[#E5E5EA] p-1 rounded-[16px] flex w-full">
           <button 
             onClick={() => setActiveTab('new')}
@@ -96,7 +94,7 @@ export default function LeadsPage() {
         </div>
       </div>
 
-      {/* 3. СПИСОК ЗАЯВОК (1 в ряд, как карточки каталога) */}
+      {/* 3. СПИСОК ЗАЯВОК */}
       {isLoading ? (
         <div className="flex justify-center py-20">
           <Loader2 className="animate-spin text-[#8E8E93]" size={32} strokeWidth={1.5} />
@@ -141,10 +139,9 @@ export default function LeadsPage() {
                     </div>
                   </div>
 
-                  {/* Кнопки и Сумма */}
+                  {/* Кнопки */}
                   <div className="flex items-center justify-between md:justify-end gap-3 w-full md:w-auto pt-4 md:pt-0 border-t border-[#F2F2F7] md:border-t-0">
                     
-                    {/* Кнопка смены статуса (Обработать / Вернуть) */}
                     <button 
                       onClick={() => toggleStatus(lead.id, status)}
                       className={`h-[40px] px-4 rounded-[12px] flex items-center gap-1.5 text-[14px] font-semibold active:scale-95 transition-transform ${status === 'new' ? 'bg-[#000000] text-[#FFFFFF]' : 'bg-[#F2F2F7] text-[#8E8E93]'}`}
@@ -158,11 +155,6 @@ export default function LeadsPage() {
 
                     {isOrder && (
                       <div className="flex items-center gap-3">
-                        <div className="text-right hidden sm:block">
-                          <div className="text-[12px] text-[#8E8E93] font-medium">Сумма</div>
-                          <div className="text-[16px] font-bold text-[#000000]">{lead.total?.toLocaleString()} ₸</div>
-                        </div>
-                        
                         <button 
                           onClick={() => toggleExpand(lead.id)}
                           className="w-[40px] h-[40px] bg-[#F2F2F7] rounded-[12px] flex items-center justify-center text-[#000000] active:scale-95 transition-transform"
@@ -193,9 +185,9 @@ export default function LeadsPage() {
                         </div>
                       ))}
                       
-                      {/* Итоговая сумма на мобилках */}
-                      <div className="sm:hidden flex justify-between items-center mt-2 px-1">
-                        <span className="text-[14px] font-semibold text-[#8E8E93]">Итого:</span>
+                      {/* Итоговая сумма видна только при раскрытии для всех устройств */}
+                      <div className="flex justify-between items-center mt-3 px-2">
+                        <span className="text-[14px] font-semibold text-[#8E8E93] uppercase tracking-wide">Итого:</span>
                         <span className="text-[18px] font-bold text-[#000000]">{lead.total?.toLocaleString()} ₸</span>
                       </div>
                     </div>
