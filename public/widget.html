@@ -79,7 +79,7 @@
             flex-direction: column; overflow: hidden; transform-origin: bottom center;
             animation: ainurPopUpMenu 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; position: relative;
             
-            /* --- ИСПРАВЛЕНИЕ БАГА IOS SAFARI --- */
+            /* --- ИСПРАВЛЕНИЕ БАГА IOS SAFARI (БЕЛЫЙ ФОН СНИЗУ) --- */
             -webkit-mask-image: -webkit-radial-gradient(white, black);
             -webkit-transform: translateZ(0);
             transform: translateZ(0);
@@ -107,6 +107,7 @@
 
         .ainur-chat-body { flex-grow: 1; padding: 100px 15px 20px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: #ffffff; }
         
+        /* СИСТЕМНЫЙ РАЗДЕЛИТЕЛЬ ЧАТА (WhatsApp style) */
         .ainur-chat-divider { display: flex; align-items: center; text-align: center; margin: 5px 0; width: 100%; }
         .ainur-chat-divider::before, .ainur-chat-divider::after { content: ''; flex: 1; border-bottom: 1px solid #E5E5EA; }
         .ainur-chat-divider::before { margin-right: 10px; }
@@ -168,6 +169,7 @@
         
         .ainur-profile-title { font-size: 20px; font-weight: 600; color: #000; margin-top: 15px; text-align: center; }
         
+        /* Иконки соцсетей в профиле */
         .ainur-profile-socials { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 15px; }
         .ainur-social-icon { width: 44px; height: 44px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: opacity 0.2s, transform 0.2s; color: white; text-decoration: none;}
         .ainur-social-icon:active { transform: scale(0.95); opacity: 0.8;}
@@ -224,6 +226,7 @@
         .ainur-cart-step { display: none; flex-direction: column; height: 100%; }
         .ainur-cart-step.active { display: flex; }
 
+        /* --- НОВЫЙ ДИЗАЙН ОКНА КОНТАКТОВ (iOS Style) --- */
         #ainur-contacts-view .ainur-window-body { background: #F2F2F7; height: 100%; padding: 15px; }
         .ainur-ios-list { background: #FFFFFF; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
         .ainur-contact-row {
@@ -247,8 +250,6 @@
         .ainur-lead-desc { font-size: 14px; color: #8E8E93; text-align: center; margin-bottom: 25px; padding: 0 10px; line-height: 1.3;}
         
         .ainur-form-container { display: flex; flex-direction: column; align-items: center; width: 100%; margin-top: 0; }
-        
-        /* 16px - Защита от зума на iPhone */
         .ainur-lead-input { width: 100%; background: #F2F2F7; border: 1px solid transparent; padding: 14px 16px; border-radius: 14px; margin-bottom: 12px; font-size: 16px; outline: none; transition: border 0.2s; box-sizing: border-box; font-family: inherit;}
         .ainur-lead-input:focus { border-color: var(--ainur-primary); }
         .ainur-main-btn { width: 100%; background: var(--ainur-primary); color: var(--ainur-text-on-primary); font-weight: 600; font-size: 16px; border: none; padding: 15px; border-radius: 14px; cursor: pointer; transition: transform 0.2s; font-family: inherit; box-sizing: border-box;}
@@ -278,6 +279,7 @@
         .ainur-input-wrapper { flex-grow: 1; height: 100%; margin: 0 10px; display: flex; align-items: center; overflow: hidden; opacity: 1; transition: opacity 0.3s; }
         .intro-state .ainur-input-wrapper, .intro-state .ainur-send-btn { display: none; opacity: 0; }
         
+        /* Изменено на 16px для защиты от зума на Айфонах */
         .ainur-fake-input { width: 100%; color: #888; font-size: 16px; cursor: pointer; white-space: nowrap; font-family: inherit;}
         .ainur-typing-cursor { display: inline-block; width: 2px; height: 14px; background-color: #333; margin-left: 2px; animation: ainurBlink 1s step-end infinite; }
         @keyframes ainurBlink { 50% { opacity: 0; } }
@@ -430,7 +432,7 @@
                         <a href="#" target="_blank" class="ainur-social-icon brand-ig" id="ainur-profile-instagram" onclick="trackWidgetEvent('social_click', {network: 'instagram'})" style="display: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" /></svg></a>
                         <a href="#" target="_blank" class="ainur-social-icon brand-tg" id="ainur-profile-telegram" onclick="trackWidgetEvent('social_click', {network: 'telegram'})" style="display: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12zm5.894-16.481l-1.956 9.208c-.147.653-.531.812-1.074.507l-2.969-2.188-1.433 1.38c-.158.158-.291.291-.598.291l.213-3.03 5.513-4.981c.24-.214-.052-.332-.372-.119l-6.815 4.29-2.936-.917c-.638-.2-.65-.638.133-.945l11.482-4.426c.532-.197 1.002.12.812.93z"/></svg></a>
                         <a href="#" target="_blank" class="ainur-social-icon brand-yt" id="ainur-profile-youtube" onclick="trackWidgetEvent('social_click', {network: 'youtube'})" style="display: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
-                        <a href="#" target="_blank" class="ainur-social-icon brand-vk" id="ainur-profile-vk" onclick="trackWidgetEvent('social_click', {network: 'vk'})" style="display: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.982 7.72c.164-.546 0-.946-.777-.946h-2.42c-.636 0-.936.335-1.09.71 0 0-1.236 3-2.981 4.936-.563.564-.818.745-1.127.745-.155 0-.391-.182-.391-.71v-4.735c0-.636-.182-.946-.746-.946h-4.08c-.418 0-.673.31-.673.61 0 .636.955.782 1.055 2.581v3.91c0 .808-.146.945-.455.945-.818 0-2.8-3.018-3.98-6.463C2.072 7.227 1.817 6.772 1.18 6.772H-1.24c-.708 0-.853.336-.853.71 0 .673.863 4.018 4.054 8.472C4.081 19.018 7.08 21.055 9.771 21.055c1.618 0 1.818-.364 1.818-.982v-2.263c0-.709.155-.855.71-.855.4 0 1.09.2 2.69 1.636 1.819 1.818 2.119 2.636 3.064 2.636h2.418c.709 0 1.064-.354.855-1.054-.228-.7-.982-1.6-2.001-2.764-.563-.636-1.4-1.327-1.654-1.69-.364-.473-.255-.673 0-1.092 0 0 2.909-4.108 3.309-5.908z" transform="translate(1 1)"/></svg></a>
+                        <a href="#" target="_blank" class="ainur-social-icon brand-vk" id="ainur-profile-vk" onclick="trackWidgetEvent('social_click', {network: 'vk'})" style="display: none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M21.547 7.104c.2-.7-.5-1.1-.5-1.1s-1.801-.1-2.603-.1c-.1 0-.3.1-.4.2-.1.1-.3.4-.5.9-.6 1.6-1.5 3.3-2.3 4.3-.3.3-.6.5-1 .5s-.5-.2-.5-.8V7.304c0-.5-.2-.8-.6-.9-.3-.1-.9-.1-1.6-.1-1.2 0-2.3.1-2.8.4-.3.2-.5.4.6.1 0 .5.1.7.3.3.3.9.3 1.4v2.9c0 .7-.2.9-.6.9-.9 0-2.2-1.8-3.1-4.2-.1-.4-.3-.6-.7-.6H2.146c-.5 0-.7.2-.7.6 0 .5 1.1 4.5 3.5 8 2.1 3 4.9 4.6 7.6 4.6 1.6 0 1.9-.3 1.9-.9v-2.1c0-.6.2-.8.7-.8.4 0 .9.2 1.5.8 1.4 1.4 1.7 2.2 2.6 2.2h2.7c.5 0 .8-.3.7-.8-.1-.6-.6-1.3-1.4-2.3-.3-.4-.8-1-1-1.2-.3-.3-.4-.6-.2-.9.1-.2 1.4-2 1.8-2.5.5-.7.8-1 .6-1.2z"/></svg></a>
                         <a href="#" target="_blank" class="ainur-contact-row" id="ainur-contact-twogis" onclick="trackWidgetEvent('social_click', {network: '2gis'})" style="display: none;">
                             <div class="ainur-contact-icon-wrapper brand-2gis">
                                 <svg viewBox="0 0 24 24"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-weight="900" font-size="9" fill="currentColor" font-family="sans-serif">2GIS</text></svg>
@@ -464,7 +466,7 @@
             <div class="ainur-detail-body" style="padding: 20px;">
                 <div class="ainur-gallery-wrapper">
                     <div class="ainur-detail-gallery" id="ainur-detail-gallery">
-                        <img src="https://placehold.co/400x400/E5E5EA/8E8E93?text=Нет+фото" class="ainur-detail-slide" id="ainur-detail-img" alt=""/>
+                        <img src="https://placehold.co/400x400/E5E5EA/8E8E93?text=Photo" class="ainur-detail-slide" id="ainur-detail-img" alt=""/>
                     </div>
                 </div>
                 <div class="ainur-detail-title" id="ainur-detail-title">Название</div>
@@ -540,544 +542,516 @@
                     <a href="#" target="_blank" class="ainur-contact-row" id="ainur-contact-whatsapp" onclick="trackWidgetEvent('social_click', {network: 'whatsapp'})" style="display: none;">
                         <div class="ainur-contact-icon-wrapper brand-wa">
                             <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.82 9.82 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" /></svg>
-                        </div>
-                        <div class="ainur-contact-text">WhatsApp</div>
-                        <div class="ainur-contact-chevron"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6" /></svg></div>
-                    </a>
+                            </div>
+                            <div class="ainur-contact-text">WhatsApp</div>
+                            <div class="ainur-contact-chevron"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6" /></svg></div>
+                        </a>
 
-                    <a href="#" target="_blank" class="ainur-contact-row" id="ainur-contact-instagram" onclick="trackWidgetEvent('social_click', {network: 'instagram'})" style="display: none;">
-                        <div class="ainur-contact-icon-wrapper brand-ig">
-                            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" /></svg>
-                        </div>
-                        <div class="ainur-contact-text">Instagram</div>
-                        <div class="ainur-contact-chevron"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6" /></svg></div>
-                    </a>
+                        <a href="#" target="_blank" class="ainur-contact-row" id="ainur-contact-instagram" onclick="trackWidgetEvent('social_click', {network: 'instagram'})" style="display: none;">
+                            <div class="ainur-contact-icon-wrapper brand-ig">
+                                <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" /></svg>
+                            </div>
+                            <div class="ainur-contact-text">Instagram</div>
+                            <div class="ainur-contact-chevron"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6" /></svg></div>
+                        </a>
 
-                    <a href="#" target="_blank" class="ainur-contact-row" id="ainur-contact-telegram" onclick="trackWidgetEvent('social_click', {network: 'telegram'})" style="display: none;">
-                        <div class="ainur-contact-icon-wrapper brand-tg">
-                            <svg viewBox="0 0 24 24"><path d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12zm5.894-16.481l-1.956 9.208c-.147.653-.531.812-1.074.507l-2.969-2.188-1.433 1.38c-.158.158-.291.291-.598.291l.213-3.03 5.513-4.981c.24-.214-.052-.332-.372-.119l-6.815 4.29-2.936-.917c-.638-.2-.65-.638.133-.945l11.482-4.426c.532-.197 1.002.12.812.93z"/></svg>
-                        </div>
-                        <div class="ainur-contact-text">Telegram</div>
-                        <div class="ainur-contact-chevron"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6" /></svg></div>
-                    </a>
+                        <a href="#" target="_blank" class="ainur-contact-row" id="ainur-contact-telegram" onclick="trackWidgetEvent('social_click', {network: 'telegram'})" style="display: none;">
+                            <div class="ainur-contact-icon-wrapper brand-tg">
+                                <svg viewBox="0 0 24 24"><path d="M12 24c6.627 0 12-5.373 12-12S18.627 0 12 0 0 5.373 0 12s5.373 12 12 12zm5.894-16.481l-1.956 9.208c-.147.653-.531.812-1.074.507l-2.969-2.188-1.433 1.38c-.158.158-.291.291-.598.291l.213-3.03 5.513-4.981c.24-.214-.052-.332-.372-.119l-6.815 4.29-2.936-.917c-.638-.2-.65-.638.133-.945l11.482-4.426c.532-.197 1.002.12.812.93z"/></svg>
+                            </div>
+                            <div class="ainur-contact-text">Telegram</div>
+                            <div class="ainur-contact-chevron"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6" /></svg></div>
+                        </a>
 
-                    <a href="#" target="_blank" class="ainur-contact-row" id="ainur-contact-youtube" onclick="trackWidgetEvent('social_click', {network: 'youtube'})" style="display: none;">
-                        <div class="ainur-contact-icon-wrapper brand-yt">
-                            <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                        </div>
-                        <div class="ainur-contact-text">YouTube</div>
-                        <div class="ainur-contact-chevron"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6" /></svg></div>
-                    </a>
+                        <a href="#" target="_blank" class="ainur-contact-row" id="ainur-contact-youtube" onclick="trackWidgetEvent('social_click', {network: 'youtube'})" style="display: none;">
+                            <div class="ainur-contact-icon-wrapper brand-yt">
+                                <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                            </div>
+                            <div class="ainur-contact-text">YouTube</div>
+                            <div class="ainur-contact-chevron"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6" /></svg></div>
+                        </a>
 
-                    <a href="#" target="_blank" class="ainur-contact-row" id="ainur-contact-vk" onclick="trackWidgetEvent('social_click', {network: 'vk'})" style="display: none;">
-                        <div class="ainur-contact-icon-wrapper brand-vk">
-                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.982 7.72c.164-.546 0-.946-.777-.946h-2.42c-.636 0-.936.335-1.09.71 0 0-1.236 3-2.981 4.936-.563.564-.818.745-1.127.745-.155 0-.391-.182-.391-.71v-4.735c0-.636-.182-.946-.746-.946h-4.08c-.418 0-.673.31-.673.61 0 .636.955.782 1.055 2.581v3.91c0 .808-.146.945-.455.945-.818 0-2.8-3.018-3.98-6.463C2.072 7.227 1.817 6.772 1.18 6.772H-1.24c-.708 0-.853.336-.853.71 0 .673.863 4.018 4.054 8.472C4.081 19.018 7.08 21.055 9.771 21.055c1.618 0 1.818-.364 1.818-.982v-2.263c0-.709.155-.855.71-.855.4 0 1.09.2 2.69 1.636 1.819 1.818 2.119 2.636 3.064 2.636h2.418c.709 0 1.064-.354.855-1.054-.228-.7-.982-1.6-2.001-2.764-.563-.636-1.4-1.327-1.654-1.69-.364-.473-.255-.673 0-1.092 0 0 2.909-4.108 3.309-5.908z" transform="translate(1 1)"/></svg>
-                        </div>
-                        <div class="ainur-contact-text">VKontakte</div>
-                        <div class="ainur-contact-chevron"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6" /></svg></div>
-                    </a>
+                        <a href="#" target="_blank" class="ainur-contact-row" id="ainur-contact-vk" onclick="trackWidgetEvent('social_click', {network: 'vk'})" style="display: none;">
+                            <div class="ainur-contact-icon-wrapper brand-vk">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.547 7.104c.2-.7-.5-1.1-.5-1.1s-1.801-.1-2.603-.1c-.1 0-.3.1-.4.2-.1.1-.3.4-.5.9-.6 1.6-1.5 3.3-2.3 4.3-.3.3-.6.5-1 .5s-.5-.2-.5-.8V7.304c0-.5-.2-.8-.6-.9-.3-.1-.9-.1-1.6-.1-1.2 0-2.3.1-2.8.4-.3.2-.5.4.6.1 0 .5.1.7.3.3.3.9.3 1.4v2.9c0 .7-.2.9-.6.9-.9 0-2.2-1.8-3.1-4.2-.1-.4-.3-.6-.7-.6H2.146c-.5 0-.7.2-.7.6 0 .5 1.1 4.5 3.5 8 2.1 3 4.9 4.6 7.6 4.6 1.6 0 1.9-.3 1.9-.9v-2.1c0-.6.2-.8.7-.8.4 0 .9.2 1.5.8 1.4 1.4 1.7 2.2 2.6 2.2h2.7c.5 0 .8-.3.7-.8-.1-.6-.6-1.3-1.4-2.3-.3-.4-.8-1-1-1.2-.3-.3-.4-.6-.2-.9.1-.2 1.4-2 1.8-2.5.5-.7.8-1 .6-1.2z"/></svg>
+                            </div>
+                            <div class="ainur-contact-text">VKontakte</div>
+                            <div class="ainur-contact-chevron"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6" /></svg></div>
+                        </a>
 
-                    <a href="#" target="_blank" class="ainur-contact-row" id="ainur-contact-twogis" onclick="trackWidgetEvent('social_click', {network: '2gis'})" style="display: none;">
-                        <div class="ainur-contact-icon-wrapper brand-2gis">
-                            <svg viewBox="0 0 24 24"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-weight="900" font-size="9" fill="currentColor" font-family="sans-serif">2GIS</text></svg>
+                        <a href="#" target="_blank" class="ainur-contact-row" id="ainur-contact-twogis" onclick="trackWidgetEvent('social_click', {network: '2gis'})" style="display: none;">
+                            <div class="ainur-contact-icon-wrapper brand-2gis">
+                                <svg viewBox="0 0 24 24"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-weight="900" font-size="9" fill="currentColor" font-family="sans-serif">2GIS</text></svg>
+                            </div>
+                            <div class="ainur-contact-text">2GIS</div>
+                            <div class="ainur-contact-chevron"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6" /></svg></div>
+                        </a>
+                        
+                        <div class="ainur-contact-row" id="ainur-contact-address" style="display: none; cursor: default;">
+                            <div class="ainur-contact-icon-wrapper brand-address">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+                            </div>
+                            <div class="ainur-contact-text">
+                                <span>Адрес</span>
+                                <span class="ainur-contact-val"></span>
+                            </div>
                         </div>
-                        <div class="ainur-contact-text">2GIS</div>
-                        <div class="ainur-contact-chevron"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6" /></svg></div>
-                    </a>
-                    
-                    <div class="ainur-contact-row" id="ainur-contact-address" style="display: none; cursor: default;">
-                        <div class="ainur-contact-icon-wrapper brand-address">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
-                        </div>
-                        <div class="ainur-contact-text">
-                            <span>Адрес</span>
-                            <span class="ainur-contact-val"></span>
-                        </div>
+
                     </div>
-
                 </div>
             </div>
+
         </div>
 
-    </div>
-
-    <div id="ainur-bottom-bar" class="intro-state">
-        <button class="ainur-menu-btn" id="ainur-menu-toggle">
-            <div class="ainur-menu-icon-layer" id="ainur-icon-burger"></div>
-            <div class="ainur-menu-icon-layer" id="ainur-icon-cross">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8BFDA8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+        <div id="ainur-bottom-bar" class="intro-state">
+            <button class="ainur-menu-btn" id="ainur-menu-toggle">
+                <div class="ainur-menu-icon-layer" id="ainur-icon-burger"></div>
+                <div class="ainur-menu-icon-layer" id="ainur-icon-cross">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8BFDA8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+                </div>
+            </button>
+            <div class="ainur-input-wrapper">
+                <div class="ainur-fake-input" id="ainur-trigger"><span id="ainur-typewriter-text"></span><span class="ainur-typing-cursor"></span></div>
+                <input type="text" class="ainur-real-input" id="ainur-real-input" placeholder="Напиши вопрос я отвечу" />
             </div>
-        </button>
-        <div class="ainur-input-wrapper">
-            <div class="ainur-fake-input" id="ainur-trigger"><span id="ainur-typewriter-text"></span><span class="ainur-typing-cursor"></span></div>
-            <input type="text" class="ainur-real-input" id="ainur-real-input" placeholder="Напиши вопрос я отвечу" />
+            <button class="ainur-send-btn" id="ainur-real-send">
+                <svg viewBox="0 0 24 24" width="24" height="24"><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" /></svg>
+            </button>
         </div>
-        <button class="ainur-send-btn" id="ainur-real-send">
-            <svg viewBox="0 0 24 24" width="24" height="24"><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z" /></svg>
-        </button>
+
     </div>
 
-</div>
+    <script>
+        const API_BASE = 'https://ainur-backend-eta.vercel.app/api'; 
+        const urlParams = new URLSearchParams(window.location.search);
+        const MY_PROJECT_ID = urlParams.get('id');
 
-<script>
-    const API_BASE = 'https://ainur-backend-eta.vercel.app/api'; 
-    const urlParams = new URLSearchParams(window.location.search);
-    const MY_PROJECT_ID = urlParams.get('id');
+        if (!MY_PROJECT_ID) {
+            console.error("ID проекта не найден! Укажите его в ссылке ?id=...");
+        }
 
-    if (!MY_PROJECT_ID) {
-        console.error("ID проекта не найден! Укажите его в ссылке ?id=...");
-    }
+        function notifyParent(state) {
+            window.parent.postMessage(state, '*');
+        }
 
-    function notifyParent(state) {
-        window.parent.postMessage(state, '*');
-    }
-
-    function trackWidgetEvent(eventName, eventData = {}) {
-        fetch(`${API_BASE}/analytics`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                projectId: MY_PROJECT_ID,
-                event: eventName,
-                data: eventData,
-                timestamp: new Date().toISOString()
-            })
-        }).catch(err => console.log('Analytics sync error', err));
-    }
-
-    let ainurStoryTimer, ainurIsChatOpen = false, ainurIsMenuOpen = false, TOTAL_STORIES = 0;
-    let ainurProducts = [], ainurStories = [], projectData = null;
-    let ainurCart = [], currentDetailProduct = null, isCartStep2 = false;
-    let i = 0, typeTimeout;
-    const phrase = "Напиши мне и я отвечу на все вопросы";
-    let hasManagerJoined = false;
-
-    function getOrCreateConversationId() {
-        let id = localStorage.getItem('ainur_conv_id');
-        if (!id) { id = 'conv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('ainur_conv_id', id); }
-        return id;
-    }
-    const CONVERSATION_ID = getOrCreateConversationId();
-
-    function getContrastColor(hexcolor) {
-        let hex = (hexcolor || '#8BFDA8').replace('#', '');
-        if (hex.length !== 6) return '#000000';
-        let r = parseInt(hex.substring(0, 2), 16), g = parseInt(hex.substring(2, 4), 16), b = parseInt(hex.substring(4, 6), 16);
-        let yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-        return (yiq >= 128) ? '#000000' : '#FFFFFF';
-    }
-
-    async function initWidget() {
-        try {
-            const res = await fetch(`${API_BASE}/widget-init`, {
+        function trackWidgetEvent(eventName, eventData = {}) {
+            fetch(`${API_BASE}/analytics`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ projectId: MY_PROJECT_ID })
-            });
-            const data = await res.json();
-            
-            if (data.project) {
-                projectData = data.project;
-                ainurProducts = data.products || [];
-                ainurStories = data.stories || [];
+                body: JSON.stringify({
+                    projectId: MY_PROJECT_ID,
+                    event: eventName,
+                    data: eventData,
+                    timestamp: new Date().toISOString()
+                })
+            }).catch(err => console.log('Analytics sync error', err));
+        }
 
-                if (projectData.theme_color) {
-                    document.documentElement.style.setProperty('--ainur-primary', projectData.theme_color);
-                    document.querySelectorAll('.ainur-menu-item svg').forEach(svg => svg.setAttribute('stroke', projectData.theme_color));
-                    document.getElementById('ainur-icon-cross').querySelector('svg').setAttribute('stroke', projectData.theme_color);
-                }
+        let ainurStoryTimer, ainurIsChatOpen = false, ainurIsMenuOpen = false, TOTAL_STORIES = 0;
+        let ainurProducts = [], ainurStories = [], projectData = null;
+        let ainurCart = [], currentDetailProduct = null, isCartStep2 = false;
+        let i = 0, typeTimeout;
+        const phrase = "Напиши мне и я отвечу на все вопросы";
+        let hasManagerJoined = false;
+
+        function getOrCreateConversationId() {
+            let id = localStorage.getItem('ainur_conv_id');
+            if (!id) { id = 'conv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('ainur_conv_id', id); }
+            return id;
+        }
+        const CONVERSATION_ID = getOrCreateConversationId();
+
+        function getContrastColor(hexcolor) {
+            let hex = (hexcolor || '#8BFDA8').replace('#', '');
+            if (hex.length !== 6) return '#000000';
+            let r = parseInt(hex.substring(0, 2), 16), g = parseInt(hex.substring(2, 4), 16), b = parseInt(hex.substring(4, 6), 16);
+            let yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+            return (yiq >= 128) ? '#000000' : '#FFFFFF';
+        }
+
+        async function initWidget() {
+            try {
+                const res = await fetch(`${API_BASE}/widget-init`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ projectId: MY_PROJECT_ID })
+                });
+                const data = await res.json();
                 
-                let textColor = projectData.theme_text_color || getContrastColor(projectData.theme_color);
-                document.documentElement.style.setProperty('--ainur-text-on-primary', textColor);
+                if (data.project) {
+                    projectData = data.project;
+                    ainurProducts = data.products || [];
+                    ainurStories = data.stories || [];
 
-                if (projectData.company_name) {
-                    document.querySelectorAll('.ainur-brand-name').forEach(el => el.innerText = projectData.company_name);
-                }
-                if (projectData.logo_url) {
-                    document.querySelectorAll('.ainur-avatar-small, .ainur-avatar-large, .fs-story-author-avatar').forEach(el => el.src = projectData.logo_url);
-                }
-
-                if (projectData.social_links) {
-                    let links = projectData.social_links;
-                    if (typeof links === 'string') {
-                        try { links = JSON.parse(links); } catch(e) { links = {}; }
+                    if (projectData.theme_color) {
+                        document.documentElement.style.setProperty('--ainur-primary', projectData.theme_color);
+                        document.querySelectorAll('.ainur-menu-item svg').forEach(svg => svg.setAttribute('stroke', projectData.theme_color));
+                        document.getElementById('ainur-icon-cross').querySelector('svg').setAttribute('stroke', projectData.theme_color);
                     }
-                    const networks = ['whatsapp', 'instagram', 'telegram', 'youtube', 'vk', 'twogis'];
-                    networks.forEach(network => {
-                        const row = document.getElementById(`ainur-contact-${network}`);
-                        const profileIcon = document.getElementById(`ainur-profile-${network}`);
-                        if (links[network] && links[network].trim() !== '') {
-                            if (row) { row.href = links[network]; row.style.display = 'flex'; }
-                            if (profileIcon) { profileIcon.href = links[network]; profileIcon.style.display = 'flex'; }
+                    
+                    let textColor = projectData.theme_text_color || getContrastColor(projectData.theme_color);
+                    document.documentElement.style.setProperty('--ainur-text-on-primary', textColor);
+
+                    if (projectData.company_name) {
+                        document.querySelectorAll('.ainur-brand-name').forEach(el => el.innerText = projectData.company_name);
+                    }
+                    if (projectData.logo_url) {
+                        document.querySelectorAll('.ainur-avatar-small, .ainur-avatar-large, .fs-story-author-avatar').forEach(el => el.src = projectData.logo_url);
+                    }
+
+                    if (projectData.social_links) {
+                        let links = projectData.social_links;
+                        if (typeof links === 'string') {
+                            try { links = JSON.parse(links); } catch(e) { links = {}; }
+                        }
+                        const networks = ['whatsapp', 'instagram', 'telegram', 'youtube', 'vk', 'twogis'];
+                        networks.forEach(network => {
+                            const row = document.getElementById(`ainur-contact-${network}`);
+                            const profileIcon = document.getElementById(`ainur-profile-${network}`);
+                            if (links[network] && links[network].trim() !== '') {
+                                if (row) { row.href = links[network]; row.style.display = 'flex'; }
+                                if (profileIcon) { profileIcon.href = links[network]; profileIcon.style.display = 'flex'; }
+                            }
+                        });
+                    }
+
+                    const addressText = projectData.contacts_address || projectData.address;
+                    if (addressText && addressText.trim() !== '') {
+                        const addressRow = document.getElementById('ainur-contact-address');
+                        if(addressRow) {
+                            addressRow.querySelector('.ainur-contact-val').innerText = addressText;
+                            addressRow.style.display = 'flex';
+                        }
+                    }
+
+                    TOTAL_STORIES = ainurStories.length;
+                    setupRingSVG();
+                    window.renderCatalog();
+                    loadChatHistory();
+                }
+            } catch (e) {
+                console.error('Ошибка инициализации виджета:', e);
+                window.renderCatalog(); 
+            }
+        }
+
+        window.showManagerJoinedDivider = function() {
+            const chatBody = document.getElementById('ainur-chat-messages');
+            const div = document.createElement('div'); div.className = 'ainur-chat-divider';
+            div.innerHTML = '<span class="ainur-chat-divider-text">К диалогу подключился менеджер</span>';
+            chatBody.appendChild(div); chatBody.scrollTop = chatBody.scrollHeight;
+        };
+
+        async function loadChatHistory() {
+            const chatBody = document.getElementById('ainur-chat-messages');
+            try {
+                const res = await fetch(`${API_BASE}/chat-history`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ projectId: MY_PROJECT_ID, conversationId: CONVERSATION_ID })
+                });
+                const data = await res.json();
+                if (data.history && data.history.length > 0) {
+                    chatBody.innerHTML = ''; 
+                    data.history.forEach(msg => {
+                        if (msg.role === 'manager' && !hasManagerJoined) {
+                            window.showManagerJoinedDivider();
+                            hasManagerJoined = true;
+                        }
+                        if (msg.role === 'user') {
+                            renderClientMessage(msg.content);
+                        } else {
+                            renderAiMessage(msg.content, msg.role);
                         }
                     });
                 }
-
-                const addressText = projectData.contacts_address || projectData.address;
-                if (addressText && addressText.trim() !== '') {
-                    const addressRow = document.getElementById('ainur-contact-address');
-                    if(addressRow) {
-                        addressRow.querySelector('.ainur-contact-val').innerText = addressText;
-                        addressRow.style.display = 'flex';
-                    }
-                }
-
-                TOTAL_STORIES = ainurStories.length;
-                setupRingSVG();
-                window.renderCatalog();
-                loadChatHistory();
-            }
-        } catch (e) {
-            console.error('Ошибка инициализации виджета:', e);
-            window.renderCatalog(); 
+            } catch (e) { console.error('Ошибка загрузки истории:', e); }
         }
-    }
 
-    window.showManagerJoinedDivider = function() {
-        const chatBody = document.getElementById('ainur-chat-messages');
-        const div = document.createElement('div'); div.className = 'ainur-chat-divider';
-        div.innerHTML = '<span class="ainur-chat-divider-text">К диалогу подключился менеджер</span>';
-        chatBody.appendChild(div); chatBody.scrollTop = chatBody.scrollHeight;
-    };
-
-    async function loadChatHistory() {
-        const chatBody = document.getElementById('ainur-chat-messages');
-        try {
-            const res = await fetch(`${API_BASE}/chat-history`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ projectId: MY_PROJECT_ID, conversationId: CONVERSATION_ID })
-            });
-            const data = await res.json();
-            if (data.history && data.history.length > 0) {
-                chatBody.innerHTML = ''; 
-                data.history.forEach(msg => {
-                    if (msg.role === 'manager' && !hasManagerJoined) {
-                        window.showManagerJoinedDivider();
-                        hasManagerJoined = true;
-                    }
-                    if (msg.role === 'user') {
-                        renderClientMessage(msg.content);
-                    } else {
-                        renderAiMessage(msg.content, msg.role);
-                    }
-                });
-            }
-        } catch (e) { console.error('Ошибка загрузки истории:', e); }
-    }
-
-    function renderClientMessage(text) {
-        const chatBody = document.getElementById('ainur-chat-messages');
-        const wrapper = document.createElement('div'); wrapper.className = 'ainur-message-wrapper client';
-        wrapper.innerHTML = `<div class="ainur-message client">${text}</div>`;
-        chatBody.appendChild(wrapper); chatBody.scrollTop = chatBody.scrollHeight;
-    }
-
-    function renderAiMessage(text, role) {
-        const chatBody = document.getElementById('ainur-chat-messages');
-        const wrapper = document.createElement('div'); wrapper.className = `ainur-message-wrapper ${role === 'manager' ? 'manager' : 'ai'}`;
-        wrapper.innerHTML = `<div class="ainur-message ${role === 'manager' ? 'manager' : 'ai'}">${text}</div>`;
-        chatBody.appendChild(wrapper); chatBody.scrollTop = chatBody.scrollHeight;
-    }
-
-    window.ainurOpenView = function(viewId) {
-        notifyParent('ainur_opened');
-        document.getElementById('ainur-menu-window').style.display = 'none'; ainurIsMenuOpen = false;
-        document.getElementById('ainur-menu-toggle').classList.remove('menu-open');
-        document.getElementById('ainur-trigger').style.display = 'none';
-        document.getElementById('ainur-real-input').style.display = 'block';
-        if (!ainurIsChatOpen) { 
-            document.getElementById('ainur-chat-window').style.display = 'flex'; 
-            ainurIsChatOpen = true; 
-            trackWidgetEvent('widget_open');
+        function renderClientMessage(text) {
+            const chatBody = document.getElementById('ainur-chat-messages');
+            const wrapper = document.createElement('div'); wrapper.className = 'ainur-message-wrapper client';
+            wrapper.innerHTML = `<div class="ainur-message client">${text}</div>`;
+            chatBody.appendChild(wrapper); chatBody.scrollTop = chatBody.scrollHeight;
         }
-        if (viewId) { document.getElementById('ainur-' + viewId + '-view').classList.add('active'); }
-        if (viewId === 'profile') { window.renderCatalog(); window.playRingLoadingAnimation(); }
-        if (viewId === 'cart') window.renderCart();
-    };
 
-    window.ainurCloseView = function(viewId) { document.getElementById('ainur-' + viewId + '-view').classList.remove('active'); };
+        function renderAiMessage(text, role) {
+            const chatBody = document.getElementById('ainur-chat-messages');
+            const wrapper = document.createElement('div'); wrapper.className = `ainur-message-wrapper ${role === 'manager' ? 'manager' : 'ai'}`;
+            wrapper.innerHTML = `<div class="ainur-message ${role === 'manager' ? 'manager' : 'ai'}">${text}</div>`;
+            chatBody.appendChild(wrapper); chatBody.scrollTop = chatBody.scrollHeight;
+        }
 
-    window.ainurCloseAll = function() {
-        notifyParent('ainur_closed');
-        if (ainurIsChatOpen) { trackWidgetEvent('chat_ended'); }
-        document.querySelectorAll('.ainur-sub-window').forEach(el => el.classList.remove('active'));
-        document.getElementById('ainur-chat-window').style.display = 'none';
-        document.getElementById('ainur-menu-window').style.display = 'none';
-        document.getElementById('ainur-menu-toggle').classList.remove('menu-open');
-        ainurIsChatOpen = false; ainurIsMenuOpen = false;
-        resetRingAnimation();
-        document.getElementById('ainur-real-input').blur();
-    };
+        window.ainurOpenView = function(viewId) {
+            notifyParent('ainur_opened');
+            document.getElementById('ainur-menu-window').style.display = 'none'; ainurIsMenuOpen = false;
+            document.getElementById('ainur-menu-toggle').classList.remove('menu-open');
+            document.getElementById('ainur-trigger').style.display = 'none';
+            document.getElementById('ainur-real-input').style.display = 'block';
+            if (!ainurIsChatOpen) { 
+                document.getElementById('ainur-chat-window').style.display = 'flex'; 
+                ainurIsChatOpen = true; 
+                trackWidgetEvent('widget_open');
+            }
+            if (viewId) { document.getElementById('ainur-' + viewId + '-view').classList.add('active'); }
+            if (viewId === 'profile') { window.renderCatalog(); window.playRingLoadingAnimation(); }
+            if (viewId === 'cart') window.renderCart();
+        };
 
-    function setupRingSVG() {
-        if (TOTAL_STORIES === 0) { document.querySelectorAll('.ainur-story-svg').forEach(el => el.style.display = 'none'); return; }
-        document.querySelectorAll('.ainur-story-svg').forEach(el => el.style.display = 'block');
-        const gapSmall = 10; const cSmall = 2 * Math.PI * 26; const segSmall = (cSmall - (TOTAL_STORIES * gapSmall)) / TOTAL_STORIES;
-        const pathSmall = document.getElementById('ainur-svg-ring-path-small');
-        if (pathSmall) { pathSmall.style.strokeDasharray = `${segSmall} ${gapSmall}`; pathSmall.style.strokeDashoffset = cSmall; }
-        const gapLarge = 14; const cLarge = 2 * Math.PI * 54; const segLarge = (cLarge - (TOTAL_STORIES * gapLarge)) / TOTAL_STORIES;
-        const pathLarge = document.getElementById('ainur-svg-ring-path-large');
-        if (pathLarge) { pathLarge.style.strokeDasharray = `${segLarge} ${gapLarge}`; pathLarge.style.strokeDashoffset = cLarge; }
-    }
-    
-    window.playRingLoadingAnimation = function() {
-        if (TOTAL_STORIES === 0) return;
-        const pathSmall = document.getElementById('ainur-svg-ring-path-small');
-        const pathLarge = document.getElementById('ainur-svg-ring-path-large');
-        if (pathSmall) { pathSmall.style.transition = 'none'; pathSmall.style.strokeDashoffset = 2 * Math.PI * 26; }
-        if (pathLarge) { pathLarge.style.transition = 'none'; pathLarge.style.strokeDashoffset = 2 * Math.PI * 54; }
-        setTimeout(() => {
-            if (pathSmall) { pathSmall.style.transition = 'stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)'; pathSmall.style.strokeDashoffset = 0; }
-            if (pathLarge) { pathLarge.style.transition = 'stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)'; pathLarge.style.strokeDashoffset = 0; }
-        }, 50);
-    };
+        window.ainurCloseView = function(viewId) { document.getElementById('ainur-' + viewId + '-view').classList.remove('active'); };
 
-    function resetRingAnimation() { 
-        const pathSmall = document.getElementById('ainur-svg-ring-path-small'); if (pathSmall) pathSmall.style.strokeDashoffset = 2 * Math.PI * 26;
-        const pathLarge = document.getElementById('ainur-svg-ring-path-large'); if (pathLarge) pathLarge.style.strokeDashoffset = 2 * Math.PI * 54;
-    }
+        window.ainurCloseAll = function() {
+            notifyParent('ainur_closed');
+            if (ainurIsChatOpen) { trackWidgetEvent('chat_ended'); }
+            document.querySelectorAll('.ainur-sub-window').forEach(el => el.classList.remove('active'));
+            document.getElementById('ainur-chat-window').style.display = 'none';
+            document.getElementById('ainur-menu-window').style.display = 'none';
+            document.getElementById('ainur-menu-toggle').classList.remove('menu-open');
+            ainurIsChatOpen = false; ainurIsMenuOpen = false;
+            resetRingAnimation();
+            document.getElementById('ainur-real-input').blur();
+        };
 
-    // ==========================================
-    // БРОНЕЖИЛЕТ КАТАЛОГА (АВТОВОССТАНОВЛЕНИЕ)
-    // ==========================================
-    window.renderCatalog = function() {
-        let container = document.getElementById('ainur-catalog-render');
+        function setupRingSVG() {
+            if (TOTAL_STORIES === 0) { document.querySelectorAll('.ainur-story-svg').forEach(el => el.style.display = 'none'); return; }
+            document.querySelectorAll('.ainur-story-svg').forEach(el => el.style.display = 'block');
+            const gapSmall = 10; const cSmall = 2 * Math.PI * 26; const segSmall = (cSmall - (TOTAL_STORIES * gapSmall)) / TOTAL_STORIES;
+            const pathSmall = document.getElementById('ainur-svg-ring-path-small');
+            if (pathSmall) { pathSmall.style.strokeDasharray = `${segSmall} ${gapSmall}`; pathSmall.style.strokeDashoffset = cSmall; }
+            const gapLarge = 14; const cLarge = 2 * Math.PI * 54; const segLarge = (cLarge - (TOTAL_STORIES * gapLarge)) / TOTAL_STORIES;
+            const pathLarge = document.getElementById('ainur-svg-ring-path-large');
+            if (pathLarge) { pathLarge.style.strokeDasharray = `${segLarge} ${gapLarge}`; pathLarge.style.strokeDashoffset = cLarge; }
+        }
         
-        if (!container) {
-            const profileContent = document.querySelector('.ainur-profile-content');
-            if (profileContent) {
-                container = document.createElement('div');
-                container.id = 'ainur-catalog-render';
-                container.className = 'ainur-catalog-list';
-                container.style.marginTop = '15px';
-                profileContent.appendChild(container);
-            } else {
-                return;
-            }
+        window.playRingLoadingAnimation = function() {
+            if (TOTAL_STORIES === 0) return;
+            const pathSmall = document.getElementById('ainur-svg-ring-path-small');
+            const pathLarge = document.getElementById('ainur-svg-ring-path-large');
+            if (pathSmall) { pathSmall.style.transition = 'none'; pathSmall.style.strokeDashoffset = 2 * Math.PI * 26; }
+            if (pathLarge) { pathLarge.style.transition = 'none'; pathLarge.style.strokeDashoffset = 2 * Math.PI * 54; }
+            setTimeout(() => {
+                if (pathSmall) { pathSmall.style.transition = 'stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)'; pathSmall.style.strokeDashoffset = 0; }
+                if (pathLarge) { pathLarge.style.transition = 'stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1)'; pathLarge.style.strokeDashoffset = 0; }
+            }, 50);
+        };
+
+        function resetRingAnimation() { 
+            const pathSmall = document.getElementById('ainur-svg-ring-path-small'); if (pathSmall) pathSmall.style.strokeDashoffset = 2 * Math.PI * 26;
+            const pathLarge = document.getElementById('ainur-svg-ring-path-large'); if (pathLarge) pathLarge.style.strokeDashoffset = 2 * Math.PI * 54;
         }
 
-        if (!ainurProducts || ainurProducts.length === 0) { 
-            container.innerHTML = '<div style="text-align:center; color:#888; padding: 20px;">Каталог пуст</div>'; 
-            return; 
-        }
-
-        try {
+        window.renderCatalog = function() {
+            const container = document.getElementById('ainur-catalog-render');
+            if (ainurProducts.length === 0) { container.innerHTML = '<div style="text-align:center; color:#888; padding: 20px;">Каталог пуст</div>'; return; }
             container.innerHTML = ainurProducts.map(p => {
                 const firstImg = p.image_url ? p.image_url.split(',')[0].trim() : 'https://placehold.co/80x80/E5E5EA/8E8E93?text=Photo';
-                const price = p.price || 0;
-                const name = p.name || 'Товар';
-                const desc = p.description || '';
                 return `
                 <div class="ainur-product-card">
                     <div class="ainur-product-top" onclick="window.openProductDetail('${p.id}')">
                         <img class="ainur-product-img" src="${firstImg}" alt=""/>
                         <div class="ainur-product-info">
-                            <div class="ainur-product-title">${name}</div>
-                            <div class="ainur-product-desc">${desc}</div>
-                            <div class="ainur-product-price">${Number(price).toLocaleString('ru-RU')} ₸</div>
+                            <div class="ainur-product-title">${p.name}</div>
+                            <div class="ainur-product-desc">${p.description || ''}</div>
+                            <div class="ainur-product-price">${Number(p.price).toLocaleString('ru-RU')} ₸</div>
                         </div>
                     </div>
                     <div class="ainur-product-actions">
                         <button class="ainur-btn-sec" onclick="window.openProductDetail('${p.id}')">Подробнее</button>
                         <button class="ainur-btn-prim" onclick="window.addToCart('${p.id}')">В корзину</button>
                     </div>
-                </div>`;
-            }).join('');
-        } catch (err) {
-            console.error('Ошибка при рендере списка товаров:', err);
+                </div>`}).join('');
+        };
+
+        window.openProductDetail = function(id) {
+            currentDetailProduct = ainurProducts.find(p => p.id === id);
+            if(!currentDetailProduct) return;
+            document.getElementById('ainur-detail-title').innerText = currentDetailProduct.name;
+            document.getElementById('ainur-detail-price').innerText = Number(currentDetailProduct.price).toLocaleString('ru-RU') + ' ₸';
+            document.getElementById('ainur-detail-desc').innerText = currentDetailProduct.description || '';
+            const images = currentDetailProduct.image_url ? currentDetailProduct.image_url.split(',') : ['https://placehold.co/400x400/E5E5EA/8E8E93?text=Photo'];
+            document.getElementById('ainur-detail-gallery').innerHTML = images.map(url => `<img src="${url.trim()}" class="ainur-detail-slide" alt=""/>`).join('');
+            window.ainurOpenView('detail');
+        };
+
+        window.scrollGallery = function(dir) { const gallery = document.getElementById('ainur-detail-gallery'); gallery.scrollBy({ left: dir * gallery.clientWidth, behavior: 'smooth' }); };
+        window.addToCartFromDetail = function() { if(currentDetailProduct) window.addToCart(currentDetailProduct.id); };
+        window.addToCart = function(id) {
+            const product = ainurProducts.find(p => p.id === id); const existing = ainurCart.find(i => i.id === id);
+            if(existing) existing.qty++; else ainurCart.push({...product, qty: 1});
+            const badge = document.getElementById('ainur-menu-cart-badge'); badge.innerText = ainurCart.length; badge.style.display = ainurCart.length > 0 ? 'inline-block' : 'none'; window.ainurOpenView('cart');
+        };
+
+        window.renderCart = function() {
+            const container = document.getElementById('ainur-cart-items-container'), emptyMsg = document.getElementById('ainur-cart-empty'), footer = document.getElementById('ainur-cart-footer');
+            isCartStep2 = false; document.getElementById('ainur-cart-step-1').classList.add('active'); document.getElementById('ainur-cart-step-2').classList.remove('active'); document.getElementById('ainur-cart-success').classList.remove('active');
+            if(ainurCart.length === 0) { container.innerHTML = ''; emptyMsg.style.display = 'block'; footer.style.display = 'none'; return; }
+            emptyMsg.style.display = 'none'; footer.style.display = 'block'; let total = 0;
+            container.innerHTML = ainurCart.map(item => {
+                total += item.price * item.qty; const firstImg = item.image_url ? item.image_url.split(',')[0].trim() : 'https://placehold.co/60x60/E5E5EA/8E8E93?text=Photo';
+                return `
+                <div class="ainur-cart-item">
+                    <img src="${firstImg}" class="ainur-cart-img" alt=""/>
+                    <div class="ainur-cart-info"><div class="ainur-cart-title">${item.name}</div><div class="ainur-cart-price">${(item.price * item.qty).toLocaleString('ru-RU')} ₸</div></div>
+                    <div class="ainur-cart-controls"><button class="ainur-cart-btn" onclick="window.changeQty('${item.id}', -1)">-</button><div class="ainur-cart-qty">${item.qty}</div><button class="ainur-cart-btn" onclick="window.changeQty('${item.id}', 1)">+</button></div>
+                </div>`; }).join('');
+            document.getElementById('ainur-cart-total-price').innerText = total.toLocaleString('ru-RU') + ' ₸';
+        };
+
+        window.changeQty = function(id, delta) {
+            const item = ainurCart.find(i => i.id === id); if(!item) return; item.qty += delta; if(item.qty <= 0) ainurCart = ainurCart.filter(i => i.id !== id);
+            const badge = document.getElementById('ainur-menu-cart-badge'); badge.innerText = ainurCart.length; badge.style.display = ainurCart.length > 0 ? 'inline-block' : 'none'; window.renderCart();
+        };
+
+        window.goToCartStep2 = function() { isCartStep2 = true; document.getElementById('ainur-cart-step-1').classList.remove('active'); document.getElementById('ainur-cart-step-2').classList.add('active'); };
+        window.handleCartBack = function() { if(isCartStep2) { window.renderCart(); } else { window.ainurCloseView('cart'); } };
+
+        window.addAiCartTicketMessage = function(name, phone, cartItems, total) {
+            const chatBody = document.getElementById('ainur-chat-messages'); const wrapper = document.createElement('div'); wrapper.className = 'ainur-message-wrapper ai';
+            const msg = document.createElement('div'); msg.className = 'ainur-message ai'; const ticket = document.createElement('div'); ticket.className = 'ainur-lead-ticket';
+            let itemsHtml = cartItems.map(item => `<div style="font-size: 13px; color: #666; margin-bottom: 2px;">• ${item.name} (x${item.qty})</div>`).join('');
+            ticket.innerHTML = `<div class="ainur-lead-ticket-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg> НОВЫЙ ЗАКАЗ</div><div class="ainur-lead-ticket-row"><span class="ainur-lead-ticket-label">Имя:</span><span class="ainur-lead-ticket-val">${name}</span></div><div class="ainur-lead-ticket-row"><span class="ainur-lead-ticket-label">Телефон:</span><span class="ainur-lead-ticket-val">${phone}</span></div><div style="margin-top: 8px; border-top: 1px dashed #eee; padding-top: 8px;"><div style="font-size: 12px; font-weight: 600; margin-bottom: 4px;">Товары:</div>${itemsHtml}</div><div class="ainur-lead-ticket-row" style="margin-top: 8px; border-top: 1px dashed #eee; padding-top: 8px;"><span class="ainur-lead-ticket-label" style="font-weight: bold; color: #000;">Сумма:</span><span class="ainur-lead-ticket-val" style="font-weight: bold; color: #000;">${total.toLocaleString('ru-RU')} ₸</span></div>`;
+            const textNode = document.createElement('div'); textNode.style.marginTop = '4px'; textNode.innerText = 'Заказ успешно оформлен! Наш менеджер свяжется с вами в ближайшее время для подтверждения.';
+            msg.appendChild(ticket); msg.appendChild(textNode); wrapper.appendChild(msg); chatBody.appendChild(wrapper); chatBody.scrollTop = chatBody.scrollHeight;
+        };
+
+        window.submitCartOrder = async function() {
+            const name = document.getElementById('ainur-cart-name').value.trim(); const phone = document.getElementById('ainur-cart-phone').value.trim();
+            if(!name || !phone) return alert("Заполните данные"); const currentCart = [...ainurCart]; const currentTotal = currentCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            document.getElementById('ainur-cart-step-2').classList.remove('active'); document.getElementById('ainur-cart-success').classList.add('active');
+            try { await fetch(`${API_BASE}/lead`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ projectId: MY_PROJECT_ID, conversationId: CONVERSATION_ID, name: name, phone: phone, cartItems: currentCart, total: currentTotal }) }); } catch (e) { console.error('Ошибка отправки заказа:', e); }
+            setTimeout(() => { window.openChatOnly(); ainurCart = []; document.getElementById('ainur-menu-cart-badge').style.display = 'none'; setTimeout(() => { window.addAiCartTicketMessage(name, phone, currentCart, currentTotal); }, 400); }, 2000);
+        };
+
+        window.ainurOpenLeadForm = function() { window.ainurOpenView('lead'); }; window.ainurCloseLeadForm = function() { document.getElementById('ainur-lead-view').classList.remove('active'); };
+        window.ainurOpenLeadFromStory = function() { window.ainurCloseFullscreenStory(); setTimeout(() => { window.ainurOpenLeadForm(); }, 300); };
+        
+        window.addAiTicketMessage = function(name, phone) {
+            const chatBody = document.getElementById('ainur-chat-messages'); const wrapper = document.createElement('div'); wrapper.className = 'ainur-message-wrapper ai';
+            const msg = document.createElement('div'); msg.className = 'ainur-message ai'; const ticket = document.createElement('div'); ticket.className = 'ainur-lead-ticket';
+            ticket.innerHTML = `<div class="ainur-lead-ticket-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg> Заявка зафиксирована</div><div class="ainur-lead-ticket-row"><span class="ainur-lead-ticket-label">Имя:</span><span class="ainur-lead-ticket-val">${name}</span></div><div class="ainur-lead-ticket-row"><span class="ainur-lead-ticket-label">Телефон:</span><span class="ainur-lead-ticket-val">${phone}</span></div>`;
+            const textNode = document.createElement('div'); textNode.style.marginTop = '4px'; textNode.innerText = 'Отлично! Ваша заявка отправлена и в скором времени с вами свяжутся. Если у вас есть еще вопросы, смело пишите!';
+            msg.appendChild(ticket); msg.appendChild(textNode); wrapper.appendChild(msg); chatBody.appendChild(wrapper); chatBody.scrollTop = chatBody.scrollHeight;
+        };
+
+        window.ainurSubmitLead = async function() {
+            const name = document.getElementById('ainur-lead-name').value.trim(); const phone = document.getElementById('ainur-lead-phone').value.trim();
+            if(!name || !phone) return alert("Пожалуйста, заполните все поля");
+            document.getElementById('ainur-lead-form-content').classList.remove('active'); document.getElementById('ainur-lead-success').classList.add('active');
+            try { await fetch(`${API_BASE}/lead`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ projectId: MY_PROJECT_ID, conversationId: CONVERSATION_ID, name: name, phone: phone }) }); } catch (e) { console.error('Ошибка отправки заявки:', e); }
+            setTimeout(() => { window.openChatOnly(); document.getElementById('ainur-lead-form-content').classList.add('active'); document.getElementById('ainur-lead-success').classList.remove('active'); document.getElementById('ainur-lead-name').value = ''; document.getElementById('ainur-lead-phone').value = ''; setTimeout(() => { window.addAiTicketMessage(name, phone); }, 400); }, 2000);
+        };
+
+        let currentStory = 0, storyProgress = 0, storyInterval, ainurIsPaused = false, isHoldingStory = false, holdTimer;
+        
+        window.ainurOpenFullscreenStory = function(e) {
+            if (TOTAL_STORIES === 0) return; 
+            notifyParent('ainur_fullscreen'); 
+            setupStoryBars(); const rect = e.currentTarget.getBoundingClientRect(); const screenX = ((rect.left + rect.width / 2) / window.innerWidth) - 0.5; const screenY = ((rect.top + rect.height / 2) / window.innerHeight) - 0.5;
+            const fs = document.getElementById('ainur-fullscreen-story'); fs.style.setProperty('--origin-x', screenX); fs.style.setProperty('--origin-y', screenY); fs.classList.remove('closing'); fs.classList.add('active'); currentStory = 0; startStoryProgress();
+        };
+        window.ainurCloseFullscreenStory = function() { 
+            notifyParent('ainur_opened'); 
+            const fs = document.getElementById('ainur-fullscreen-story'); fs.classList.add('closing'); clearInterval(storyInterval); setTimeout(() => { fs.classList.remove('active'); fs.classList.remove('closing'); }, 300); 
+        };
+        
+        function setupStoryBars() { const container = document.getElementById('fs-progress-bars'); container.innerHTML = ''; for(let i=0; i<TOTAL_STORIES; i++) { container.innerHTML += `<div class="fs-story-bar"><div class="fs-story-fill" id="fs-fill-${i}"></div></div>`; } }
+        
+        function startStoryProgress() {
+            clearInterval(storyInterval); storyProgress = 0; for(let i=0; i<TOTAL_STORIES; i++) { document.getElementById(`fs-fill-${i}`).style.width = (i < currentStory ? '100%' : '0%'); }
+            const story = ainurStories[currentStory]; const mediaContainer = document.getElementById('fs-story-media');
+            if (story && story.media_url) { if (story.media_url.toLowerCase().endsWith('.mp4')) { mediaContainer.innerHTML = `<video src="${story.media_url}" autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover;"></video>`; } else { mediaContainer.innerHTML = `<img src="${story.media_url}" style="width:100%; height:100%; object-fit:cover;" alt=""/>`; } } else { mediaContainer.innerHTML = `Стори ${currentStory + 1}`; }
+            storyInterval = setInterval(() => { if(ainurIsPaused) return; storyProgress += 50; document.getElementById(`fs-fill-${currentStory}`).style.width = `${(storyProgress/4000)*100}%`; if (storyProgress >= 4000) { currentStory++; if (currentStory >= TOTAL_STORIES) window.ainurCloseFullscreenStory(); else startStoryProgress(); } }, 50);
         }
-    };
+        
+        window.ainurPrevStory = function() { if(currentStory > 0) currentStory--; startStoryProgress(); }; window.ainurNextStory = function() { if(currentStory < TOTAL_STORIES - 1) { currentStory++; startStoryProgress(); } else window.ainurCloseFullscreenStory(); };
+        window.startStoryPress = function(e) { e.preventDefault(); holdTimer = setTimeout(() => { ainurIsPaused = true; isHoldingStory = true; }, 150); }; window.endStoryPress = function(e, direction) { e.preventDefault(); clearTimeout(holdTimer); if (isHoldingStory) { ainurIsPaused = false; isHoldingStory = false; } else { if (direction === 'prev') window.ainurPrevStory(); else window.ainurNextStory(); } };
 
-    window.openProductDetail = function(id) {
-        currentDetailProduct = ainurProducts.find(p => p.id === id);
-        if(!currentDetailProduct) return;
-        document.getElementById('ainur-detail-title').innerText = currentDetailProduct.name;
-        document.getElementById('ainur-detail-price').innerText = Number(currentDetailProduct.price).toLocaleString('ru-RU') + ' ₸';
-        document.getElementById('ainur-detail-desc').innerText = currentDetailProduct.description || '';
-        const images = currentDetailProduct.image_url ? currentDetailProduct.image_url.split(',') : ['https://placehold.co/400x400/E5E5EA/8E8E93?text=No+Photo'];
-        document.getElementById('ainur-detail-gallery').innerHTML = images.map(url => `<img src="${url.trim()}" class="ainur-detail-slide" alt=""/>`).join('');
-        window.ainurOpenView('detail');
-    };
+        window.ainurTypeWriter = function() { if (i < phrase.length) { document.getElementById('ainur-typewriter-text').innerHTML += phrase.charAt(i); i++; typeTimeout = setTimeout(window.ainurTypeWriter, 50); } else { typeTimeout = setTimeout(() => { document.getElementById('ainur-typewriter-text').innerHTML = ""; i = 0; window.ainurTypeWriter(); }, 4000); } };
 
-    window.scrollGallery = function(dir) { const gallery = document.getElementById('ainur-detail-gallery'); gallery.scrollBy({ left: dir * gallery.clientWidth, behavior: 'smooth' }); };
-    window.addToCartFromDetail = function() { if(currentDetailProduct) window.addToCart(currentDetailProduct.id); };
-    window.addToCart = function(id) {
-        const product = ainurProducts.find(p => p.id === id); const existing = ainurCart.find(i => i.id === id);
-        if(existing) existing.qty++; else ainurCart.push({...product, qty: 1});
-        const badge = document.getElementById('ainur-menu-cart-badge'); badge.innerText = ainurCart.length; badge.style.display = ainurCart.length > 0 ? 'inline-block' : 'none'; window.ainurOpenView('cart');
-    };
+        window.addAiMessageWithButtons = function(text, buttons) {
+            const chatBody = document.getElementById('ainur-chat-messages'); const wrapper = document.createElement('div'); wrapper.className = 'ainur-message-wrapper ai';
+            const msg = document.createElement('div'); msg.className = 'ainur-message ai'; msg.innerText = text; wrapper.appendChild(msg);
+            if (buttons && buttons.length > 0) {
+                const btnContainer = document.createElement('div'); btnContainer.className = 'ainur-quick-replies';
+                buttons.forEach(btnText => {
+                    const btn = document.createElement('button'); btn.className = 'ainur-qr-btn'; btn.innerText = btnText;
+                    btn.onclick = () => { 
+                        btnContainer.style.opacity = '0.5'; btnContainer.style.pointerEvents = 'none'; 
+                        const matchedProduct = ainurProducts.find(p => p.name.toLowerCase() === btnText.toLowerCase());
+                        if (btnText === 'Оформить заказ') { window.ainurOpenView('cart'); } else if (btnText === 'Перейти в каталог' || btnText === 'Расскажите про услуги') { window.ainurOpenView('profile'); } else if (matchedProduct) { window.openProductDetail(matchedProduct.id); } else { window.sendClientMessageAuto(btnText); }
+                    }; btnContainer.appendChild(btn);
+                }); wrapper.appendChild(btnContainer);
+            } chatBody.appendChild(wrapper); chatBody.scrollTop = chatBody.scrollHeight;
+        };
 
-    window.renderCart = function() {
-        const container = document.getElementById('ainur-cart-items-container'), emptyMsg = document.getElementById('ainur-cart-empty'), footer = document.getElementById('ainur-cart-footer');
-        isCartStep2 = false; document.getElementById('ainur-cart-step-1').classList.add('active'); document.getElementById('ainur-cart-step-2').classList.remove('active'); document.getElementById('ainur-cart-success').classList.remove('active');
-        if(ainurCart.length === 0) { container.innerHTML = ''; emptyMsg.style.display = 'block'; footer.style.display = 'none'; return; }
-        emptyMsg.style.display = 'none'; footer.style.display = 'block'; let total = 0;
-        container.innerHTML = ainurCart.map(item => {
-            total += item.price * item.qty; const firstImg = item.image_url ? item.image_url.split(',')[0].trim() : 'https://placehold.co/80x80/E5E5EA/8E8E93?text=Photo';
-            return `
-            <div class="ainur-cart-item">
-                <img src="${firstImg}" class="ainur-cart-img" alt=""/>
-                <div class="ainur-cart-info"><div class="ainur-cart-title">${item.name}</div><div class="ainur-cart-price">${(item.price * item.qty).toLocaleString('ru-RU')} ₸</div></div>
-                <div class="ainur-cart-controls"><button class="ainur-cart-btn" onclick="window.changeQty('${item.id}', -1)">-</button><div class="ainur-cart-qty">${item.qty}</div><button class="ainur-cart-btn" onclick="window.changeQty('${item.id}', 1)">+</button></div>
-            </div>`; }).join('');
-        document.getElementById('ainur-cart-total-price').innerText = total.toLocaleString('ru-RU') + ' ₸';
-    };
+        window.showTypingIndicator = function() {
+            const chatBody = document.getElementById('ainur-chat-messages'); const wrapper = document.createElement('div'); wrapper.className = 'ainur-message-wrapper ai typing-wrapper';
+            const indicator = document.createElement('div'); indicator.className = 'ainur-typing-indicator'; indicator.innerHTML = '<div class="ainur-dot"></div><div class="ainur-dot"></div><div class="ainur-dot"></div>';
+            wrapper.appendChild(indicator); chatBody.appendChild(wrapper); chatBody.scrollTop = chatBody.scrollHeight; return wrapper;
+        };
 
-    window.changeQty = function(id, delta) {
-        const item = ainurCart.find(i => i.id === id); if(!item) return; item.qty += delta; if(item.qty <= 0) ainurCart = ainurCart.filter(i => i.id !== id);
-        const badge = document.getElementById('ainur-menu-cart-badge'); badge.innerText = ainurCart.length; badge.style.display = ainurCart.length > 0 ? 'inline-block' : 'none'; window.renderCart();
-    };
+        window.addClientMessage = async function(text) {
+            const chatBody = document.getElementById('ainur-chat-messages'); const wrapper = document.createElement('div'); wrapper.className = 'ainur-message-wrapper client';
+            const msg = document.createElement('div'); msg.className = 'ainur-message client'; msg.innerText = text; wrapper.appendChild(msg); chatBody.appendChild(wrapper); chatBody.scrollTop = chatBody.scrollHeight;
+            trackWidgetEvent('send_message', { text: text }); const typingIndicatorEl = window.showTypingIndicator();
+            try {
+                const response = await fetch(`${API_BASE}/chat`, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ 
+                        projectId: MY_PROJECT_ID, 
+                        message: text, 
+                        conversationId: CONVERSATION_ID, 
+                        aiDisabled: hasManagerJoined,
+                        products: ainurProducts // ОТПРАВЛЯЕМ КАТАЛОГ ДЛЯ ИИ
+                    }) 
+                });
+                const data = await response.json(); chatBody.removeChild(typingIndicatorEl);
+                if (data.reply) { window.addAiMessageWithButtons(data.reply, []); } else if (!hasManagerJoined) { window.addAiMessageWithButtons('Ой, что-то пошло не так.', []); }
+            } catch(e) { chatBody.removeChild(typingIndicatorEl); if(!hasManagerJoined) window.addAiMessageWithButtons('Сервер сейчас недоступен.', []); }
+        };
 
-    window.goToCartStep2 = function() { isCartStep2 = true; document.getElementById('ainur-cart-step-1').classList.remove('active'); document.getElementById('ainur-cart-step-2').classList.add('active'); };
-    window.handleCartBack = function() { if(isCartStep2) { window.renderCart(); } else { window.ainurCloseView('cart'); } };
+        window.openChatOnly = function() {
+            notifyParent('ainur_opened');
+            document.querySelectorAll('.ainur-sub-window').forEach(el => el.classList.remove('active')); document.getElementById('ainur-menu-window').style.display = 'none'; ainurIsMenuOpen = false; document.getElementById('ainur-menu-toggle').classList.remove('menu-open');
+            if (!ainurIsChatOpen) { 
+                document.getElementById('ainur-chat-window').style.display = 'flex'; 
+                ainurIsChatOpen = true; 
+                trackWidgetEvent('widget_open');
+                window.playRingLoadingAnimation(); 
+                const chatBody = document.getElementById('ainur-chat-messages'); 
+                if(chatBody.children.length === 0) { 
+                    setTimeout(() => { 
+                        if(chatBody.children.length === 0) {
+                           // ПУСТЫЕ КНОПКИ ПРИ СТАРТЕ
+                           window.addAiMessageWithButtons('Здравствуйте, я ИИ ассистент! Напишите, чем могу вам помочь?', []); 
+                        }
+                    }, 500); 
+                } 
+            }
+        };
 
-    window.addAiCartTicketMessage = function(name, phone, cartItems, total) {
-        const chatBody = document.getElementById('ainur-chat-messages'); const wrapper = document.createElement('div'); wrapper.className = 'ainur-message-wrapper ai';
-        const msg = document.createElement('div'); msg.className = 'ainur-message ai'; const ticket = document.createElement('div'); ticket.className = 'ainur-lead-ticket';
-        let itemsHtml = cartItems.map(item => `<div style="font-size: 13px; color: #666; margin-bottom: 2px;">• ${item.name} (x${item.qty})</div>`).join('');
-        ticket.innerHTML = `<div class="ainur-lead-ticket-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg> НОВЫЙ ЗАКАЗ</div><div class="ainur-lead-ticket-row"><span class="ainur-lead-ticket-label">Имя:</span><span class="ainur-lead-ticket-val">${name}</span></div><div class="ainur-lead-ticket-row"><span class="ainur-lead-ticket-label">Телефон:</span><span class="ainur-lead-ticket-val">${phone}</span></div><div style="margin-top: 8px; border-top: 1px dashed #eee; padding-top: 8px;"><div style="font-size: 12px; font-weight: 600; margin-bottom: 4px;">Товары:</div>${itemsHtml}</div><div class="ainur-lead-ticket-row" style="margin-top: 8px; border-top: 1px dashed #eee; padding-top: 8px;"><span class="ainur-lead-ticket-label" style="font-weight: bold; color: #000;">Сумма:</span><span class="ainur-lead-ticket-val" style="font-weight: bold; color: #000;">${total.toLocaleString('ru-RU')} ₸</span></div>`;
-        const textNode = document.createElement('div'); textNode.style.marginTop = '4px'; textNode.innerText = 'Заказ успешно оформлен! Наш менеджер свяжется с вами в ближайшее время для подтверждения.';
-        msg.appendChild(ticket); msg.appendChild(textNode); wrapper.appendChild(msg); chatBody.appendChild(wrapper); chatBody.scrollTop = chatBody.scrollHeight;
-    };
+        window.sendClientMessageAuto = function(text) { const fakeInput = document.getElementById('ainur-trigger'); const realInput = document.getElementById('ainur-real-input'); if (text) { if (fakeInput.style.display !== 'none') { clearTimeout(typeTimeout); fakeInput.style.display = 'none'; realInput.style.display = 'block'; realInput.blur(); } window.openChatOnly(); window.addClientMessage(text); } };
 
-    window.submitCartOrder = async function() {
-        const name = document.getElementById('ainur-cart-name').value.trim(); const phone = document.getElementById('ainur-cart-phone').value.trim();
-        if(!name || !phone) return alert("Заполните данные"); const currentCart = [...ainurCart]; const currentTotal = currentCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-        document.getElementById('ainur-cart-step-2').classList.remove('active'); document.getElementById('ainur-cart-success').classList.add('active');
-        try { await fetch(`${API_BASE}/lead`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ projectId: MY_PROJECT_ID, conversationId: CONVERSATION_ID, name: name, phone: phone, cartItems: currentCart, total: currentTotal }) }); } catch (e) { console.error('Ошибка отправки заказа:', e); }
-        setTimeout(() => { window.openChatOnly(); ainurCart = []; document.getElementById('ainur-menu-cart-badge').style.display = 'none'; setTimeout(() => { window.addAiCartTicketMessage(name, phone, currentCart, currentTotal); }, 400); }, 2000);
-    };
+        document.addEventListener('DOMContentLoaded', () => {
+            initWidget();
+            trackWidgetEvent('page_view', { source: window.location.href });
 
-    window.ainurOpenLeadForm = function() { window.ainurOpenView('lead'); }; window.ainurCloseLeadForm = function() { document.getElementById('ainur-lead-view').classList.remove('active'); };
-    window.ainurOpenLeadFromStory = function() { window.ainurCloseFullscreenStory(); setTimeout(() => { window.ainurOpenLeadForm(); }, 300); };
-    
-    window.addAiTicketMessage = function(name, phone) {
-        const chatBody = document.getElementById('ainur-chat-messages'); const wrapper = document.createElement('div'); wrapper.className = 'ainur-message-wrapper ai';
-        const msg = document.createElement('div'); msg.className = 'ainur-message ai'; const ticket = document.createElement('div'); ticket.className = 'ainur-lead-ticket';
-        ticket.innerHTML = `<div class="ainur-lead-ticket-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg> Заявка зафиксирована</div><div class="ainur-lead-ticket-row"><span class="ainur-lead-ticket-label">Имя:</span><span class="ainur-lead-ticket-val">${name}</span></div><div class="ainur-lead-ticket-row"><span class="ainur-lead-ticket-label">Телефон:</span><span class="ainur-lead-ticket-val">${phone}</span></div>`;
-        const textNode = document.createElement('div'); textNode.style.marginTop = '4px'; textNode.innerText = 'Отлично! Ваша заявка отправлена и в скором времени с вами свяжутся. Если у вас есть еще вопросы, смело пишите!';
-        msg.appendChild(ticket); msg.appendChild(textNode); wrapper.appendChild(msg); chatBody.appendChild(wrapper); chatBody.scrollTop = chatBody.scrollHeight;
-    };
+            const widgetBase = document.getElementById('ainur-widget'), bottomBar = document.getElementById('ainur-bottom-bar'), iconBurger = document.getElementById('ainur-icon-burger'), sendBtn = document.getElementById('ainur-real-send'), fakeInput = document.getElementById('ainur-trigger'), realInput = document.getElementById('ainur-real-input'), menuBtn = document.getElementById('ainur-menu-toggle'), menuWindow = document.getElementById('ainur-menu-window'), swipeZone = document.getElementById('fs-swipe-zone');
 
-    window.ainurSubmitLead = async function() {
-        const name = document.getElementById('ainur-lead-name').value.trim(); const phone = document.getElementById('ainur-lead-phone').value.trim();
-        if(!name || !phone) return alert("Пожалуйста, заполните все поля");
-        document.getElementById('ainur-lead-form-content').classList.remove('active'); document.getElementById('ainur-lead-success').classList.add('active');
-        try { await fetch(`${API_BASE}/lead`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ projectId: MY_PROJECT_ID, conversationId: CONVERSATION_ID, name: name, phone: phone }) }); } catch (e) { console.error('Ошибка отправки заявки:', e); }
-        setTimeout(() => { window.openChatOnly(); document.getElementById('ainur-lead-form-content').classList.add('active'); document.getElementById('ainur-lead-success').classList.remove('active'); document.getElementById('ainur-lead-name').value = ''; document.getElementById('ainur-lead-phone').value = ''; setTimeout(() => { window.addAiTicketMessage(name, phone); }, 400); }, 2000);
-    };
+            let touchStartY = 0;
+            if (swipeZone) {
+                swipeZone.addEventListener('touchstart', e => { touchStartY = e.changedTouches[0].screenY; swipeZone.style.transition = 'none'; }, {passive: true});
+                swipeZone.addEventListener('touchmove', e => { let dy = e.changedTouches[0].screenY - touchStartY; if (dy > 0) { swipeZone.style.transform = `translateY(${dy}px)`; } }, {passive: true});
+                swipeZone.addEventListener('touchend', e => { let dy = e.changedTouches[0].screenY - touchStartY; swipeZone.style.transition = 'transform 0.2s cubic-bezier(0.1, 0.7, 0.1, 1)'; swipeZone.style.transform = ''; if (dy > 100) { window.ainurCloseFullscreenStory(); } }, {passive: true});
+            }
 
-    let currentStory = 0, storyProgress = 0, storyInterval, ainurIsPaused = false, isHoldingStory = false, holdTimer;
-    
-    window.ainurOpenFullscreenStory = function(e) {
-        if (TOTAL_STORIES === 0) return; 
-        notifyParent('ainur_fullscreen'); 
-        setupStoryBars(); const rect = e.currentTarget.getBoundingClientRect(); const screenX = ((rect.left + rect.width / 2) / window.innerWidth) - 0.5; const screenY = ((rect.top + rect.height / 2) / window.innerHeight) - 0.5;
-        const fs = document.getElementById('ainur-fullscreen-story'); fs.style.setProperty('--origin-x', screenX); fs.style.setProperty('--origin-y', screenY); fs.classList.remove('closing'); fs.classList.add('active'); currentStory = 0; startStoryProgress();
-    };
-    window.ainurCloseFullscreenStory = function() { 
-        notifyParent('ainur_opened'); 
-        const fs = document.getElementById('ainur-fullscreen-story'); fs.classList.add('closing'); clearInterval(storyInterval); setTimeout(() => { fs.classList.remove('active'); fs.classList.remove('closing'); }, 300); 
-    };
-    
-    function setupStoryBars() { const container = document.getElementById('fs-progress-bars'); container.innerHTML = ''; for(let i=0; i<TOTAL_STORIES; i++) { container.innerHTML += `<div class="fs-story-bar"><div class="fs-story-fill" id="fs-fill-${i}"></div></div>`; } }
-    
-    function startStoryProgress() {
-        clearInterval(storyInterval); storyProgress = 0; for(let i=0; i<TOTAL_STORIES; i++) { document.getElementById(`fs-fill-${i}`).style.width = (i < currentStory ? '100%' : '0%'); }
-        const story = ainurStories[currentStory]; const mediaContainer = document.getElementById('fs-story-media');
-        if (story && story.media_url) { if (story.media_url.toLowerCase().endsWith('.mp4')) { mediaContainer.innerHTML = `<video src="${story.media_url}" autoplay muted loop playsinline style="width:100%; height:100%; object-fit:cover;"></video>`; } else { mediaContainer.innerHTML = `<img src="${story.media_url}" style="width:100%; height:100%; object-fit:cover;" alt=""/>`; } } else { mediaContainer.innerHTML = `Стори ${currentStory + 1}`; }
-        storyInterval = setInterval(() => { if(ainurIsPaused) return; storyProgress += 50; document.getElementById(`fs-fill-${currentStory}`).style.width = `${(storyProgress/4000)*100}%`; if (storyProgress >= 4000) { currentStory++; if (currentStory >= TOTAL_STORIES) window.ainurCloseFullscreenStory(); else startStoryProgress(); } }, 50);
-    }
-    
-    window.ainurPrevStory = function() { if(currentStory > 0) currentStory--; startStoryProgress(); }; window.ainurNextStory = function() { if(currentStory < TOTAL_STORIES - 1) { currentStory++; startStoryProgress(); } else window.ainurCloseFullscreenStory(); };
-    window.startStoryPress = function(e) { e.preventDefault(); holdTimer = setTimeout(() => { ainurIsPaused = true; isHoldingStory = true; }, 150); }; window.endStoryPress = function(e, direction) { e.preventDefault(); clearTimeout(holdTimer); if (isHoldingStory) { ainurIsPaused = false; isHoldingStory = false; } else { if (direction === 'prev') window.ainurPrevStory(); else window.ainurNextStory(); } };
+            fakeInput.addEventListener('click', () => { fakeInput.style.display = 'none'; realInput.style.display = 'block'; window.openChatOnly(); });
 
-    window.ainurTypeWriter = function() { if (i < phrase.length) { document.getElementById('ainur-typewriter-text').innerHTML += phrase.charAt(i); i++; typeTimeout = setTimeout(window.ainurTypeWriter, 50); } else { typeTimeout = setTimeout(() => { document.getElementById('ainur-typewriter-text').innerHTML = ""; i = 0; window.ainurTypeWriter(); }, 4000); } };
+            function preventKeyboardIfOverlays(e) { const hasActiveWindows = document.querySelectorAll('.ainur-sub-window.active').length > 0; if (hasActiveWindows || ainurIsMenuOpen || !ainurIsChatOpen) { e.preventDefault(); realInput.blur(); window.openChatOnly(); } }
+            realInput.addEventListener('touchstart', preventKeyboardIfOverlays, {passive: false}); realInput.addEventListener('mousedown', preventKeyboardIfOverlays);
 
-    window.addAiMessageWithButtons = function(text, buttons) {
-        const chatBody = document.getElementById('ainur-chat-messages'); const wrapper = document.createElement('div'); wrapper.className = 'ainur-message-wrapper ai';
-        const msg = document.createElement('div'); msg.className = 'ainur-message ai'; msg.innerText = text; wrapper.appendChild(msg);
-        if (buttons && buttons.length > 0) {
-            const btnContainer = document.createElement('div'); btnContainer.className = 'ainur-quick-replies';
-            buttons.forEach(btnText => {
-                const btn = document.createElement('button'); btn.className = 'ainur-qr-btn'; btn.innerText = btnText;
-                btn.onclick = () => { 
-                    btnContainer.style.opacity = '0.5'; btnContainer.style.pointerEvents = 'none'; 
-                    const matchedProduct = ainurProducts.find(p => p.name.toLowerCase() === btnText.toLowerCase());
-                    if (btnText === 'Оформить заказ') { window.ainurOpenView('cart'); } else if (btnText === 'Перейти в каталог' || btnText === 'Расскажите про услуги') { window.ainurOpenView('profile'); } else if (matchedProduct) { window.openProductDetail(matchedProduct.id); } else { window.sendClientMessageAuto(btnText); }
-                }; btnContainer.appendChild(btn);
-            }); wrapper.appendChild(btnContainer);
-        } chatBody.appendChild(wrapper); chatBody.scrollTop = chatBody.scrollHeight;
-    };
-
-    window.showTypingIndicator = function() {
-        const chatBody = document.getElementById('ainur-chat-messages'); const wrapper = document.createElement('div'); wrapper.className = 'ainur-message-wrapper ai typing-wrapper';
-        const indicator = document.createElement('div'); indicator.className = 'ainur-typing-indicator'; indicator.innerHTML = '<div class="ainur-dot"></div><div class="ainur-dot"></div><div class="ainur-dot"></div>';
-        wrapper.appendChild(indicator); chatBody.appendChild(wrapper); chatBody.scrollTop = chatBody.scrollHeight; return wrapper;
-    };
-
-    window.addClientMessage = async function(text) {
-        const chatBody = document.getElementById('ainur-chat-messages'); const wrapper = document.createElement('div'); wrapper.className = 'ainur-message-wrapper client';
-        const msg = document.createElement('div'); msg.className = 'ainur-message client'; msg.innerText = text; wrapper.appendChild(msg); chatBody.appendChild(wrapper); chatBody.scrollTop = chatBody.scrollHeight;
-        trackWidgetEvent('send_message', { text: text }); const typingIndicatorEl = window.showTypingIndicator();
-        try {
-            const response = await fetch(`${API_BASE}/chat`, { 
-                method: 'POST', 
-                headers: { 'Content-Type': 'application/json' }, 
-                body: JSON.stringify({ 
-                    projectId: MY_PROJECT_ID, 
-                    message: text, 
-                    conversationId: CONVERSATION_ID, 
-                    aiDisabled: hasManagerJoined,
-                    products: ainurProducts 
-                }) 
-            });
-            const data = await response.json(); chatBody.removeChild(typingIndicatorEl);
-            if (data.reply) { window.addAiMessageWithButtons(data.reply, []); } else if (!hasManagerJoined) { window.addAiMessageWithButtons('Ой, что-то пошло не так.', []); }
-        } catch(e) { chatBody.removeChild(typingIndicatorEl); if(!hasManagerJoined) window.addAiMessageWithButtons('Сервер сейчас недоступен.', []); }
-    };
-
-    window.openChatOnly = function() {
-        notifyParent('ainur_opened');
-        document.querySelectorAll('.ainur-sub-window').forEach(el => el.classList.remove('active')); document.getElementById('ainur-menu-window').style.display = 'none'; ainurIsMenuOpen = false; document.getElementById('ainur-menu-toggle').classList.remove('menu-open');
-        if (!ainurIsChatOpen) { 
-            document.getElementById('ainur-chat-window').style.display = 'flex'; 
-            ainurIsChatOpen = true; 
-            trackWidgetEvent('widget_open');
-            window.playRingLoadingAnimation(); 
-            const chatBody = document.getElementById('ainur-chat-messages'); 
-            if(chatBody.children.length === 0) { 
-                setTimeout(() => { 
-                    if(chatBody.children.length === 0) {
-                       window.addAiMessageWithButtons('Здравствуйте, я ИИ ассистент! Напишите, чем могу вам помочь?', []); 
-                    }
-                }, 500); 
-            } 
-        }
-    };
-
-    window.sendClientMessageAuto = function(text) { const fakeInput = document.getElementById('ainur-trigger'); const realInput = document.getElementById('ainur-real-input'); if (text) { if (fakeInput.style.display !== 'none') { clearTimeout(typeTimeout); fakeInput.style.display = 'none'; realInput.style.display = 'block'; realInput.blur(); } window.openChatOnly(); window.addClientMessage(text); } };
-
-    document.addEventListener('DOMContentLoaded', () => {
-        initWidget();
-        trackWidgetEvent('page_view', { source: window.location.href });
-
-        const widgetBase = document.getElementById('ainur-widget'), bottomBar = document.getElementById('ainur-bottom-bar'), iconBurger = document.getElementById('ainur-icon-burger'), sendBtn = document.getElementById('ainur-real-send'), fakeInput = document.getElementById('ainur-trigger'), realInput = document.getElementById('ainur-real-input'), menuBtn = document.getElementById('ainur-menu-toggle'), menuWindow = document.getElementById('ainur-menu-window'), swipeZone = document.getElementById('fs-swipe-zone');
-
-        let touchStartY = 0;
-        if (swipeZone) {
-            swipeZone.addEventListener('touchstart', e => { touchStartY = e.changedTouches[0].screenY; swipeZone.style.transition = 'none'; }, {passive: true});
-            swipeZone.addEventListener('touchmove', e => { let dy = e.changedTouches[0].screenY - touchStartY; if (dy > 0) { swipeZone.style.transform = `translateY(${dy}px)`; } }, {passive: true});
-            swipeZone.addEventListener('touchend', e => { let dy = e.changedTouches[0].screenY - touchStartY; swipeZone.style.transition = 'transform 0.2s cubic-bezier(0.1, 0.7, 0.1, 1)'; swipeZone.style.transform = ''; if (dy > 100) { window.ainurCloseFullscreenStory(); } }, {passive: true});
-        }
-
-        fakeInput.addEventListener('click', () => { fakeInput.style.display = 'none'; realInput.style.display = 'block'; window.openChatOnly(); });
-
-        function preventKeyboardIfOverlays(e) { const hasActiveWindows = document.querySelectorAll('.ainur-sub-window.active').length > 0; if (hasActiveWindows || ainurIsMenuOpen || !ainurIsChatOpen) { e.preventDefault(); realInput.blur(); window.openChatOnly(); } }
-        realInput.addEventListener('touchstart', preventKeyboardIfOverlays, {passive: false}); realInput.addEventListener('mousedown', preventKeyboardIfOverlays);
-
-        const svgProfile = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="7" r="4" /><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /></svg>`; const svgCatalog = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /></svg>`; const svgLead = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" /></svg>`; const svgContact = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg>`; const svgMainBurger = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.77616 11C3.93775 11 0.0013245 7.06225 0 2.22384C0.0013245 0.99735 1 0 2.22385 0C2.34967 0 2.47416 0.0105957 2.59337 0.0317878C2.85562 0.0754964 3.10464 0.164238 3.33378 0.298013C3.36689 0.317881 3.3894 0.349669 3.3947 0.386755L3.90596 3.60927C3.91258 3.64768 3.90066 3.68477 3.8755 3.71258C3.59338 4.02517 3.23311 4.25033 2.83179 4.36291L2.63841 4.41722L2.71125 4.60397C3.37085 6.28344 4.71391 7.62516 6.3947 8.28742L6.58146 8.36159L6.63575 8.16821C6.74834 7.76689 6.97351 7.40662 7.28609 7.1245C7.30861 7.10331 7.33907 7.09271 7.36953 7.09271C7.37616 7.09271 7.38278 7.09271 7.39073 7.09404L10.6132 7.6053C10.6517 7.61192 10.6834 7.63311 10.7033 7.66622C10.8358 7.89536 10.9245 8.14569 10.9695 8.40795C10.9907 8.5245 11 8.64768 11 8.77616C11 10.0013 10.0026 10.9987 8.77616 11Z" fill="currentColor" /><path d="M7.38477 12.9229C9.42385 12.9229 11.0771 14.5762 11.0771 16.6152V20.3076C11.0771 22.2829 9.52583 23.8959 7.5752 23.9951L7.38477 24H3.69238L3.50195 23.9951C1.61426 23.8993 0.100744 22.3857 0.00488281 20.498L0 20.3076V16.6152C8.61986e-05 14.5761 1.65323 12.9229 3.69238 12.9229H7.38477ZM20.3086 12.9229C22.3477 12.9229 24.0009 14.5762 24.001 16.6152V20.3076C24.001 22.2829 22.4497 23.8959 20.499 23.9951L20.3086 24H16.6162L16.4258 23.9951C14.5381 23.8993 13.0246 22.3857 12.9287 20.498L12.9238 20.3076V16.6152C12.9239 14.5761 14.5771 12.9229 16.6162 12.9229H20.3086ZM3.69238 14.7695C2.67283 14.7695 1.84579 15.5957 1.8457 16.6152V20.3076C1.8457 21.3272 2.67278 22.1543 3.69238 22.1543H7.38477C8.4043 22.1542 9.23047 21.3272 9.23047 20.3076V16.6152C9.23038 15.5958 8.40425 14.7696 7.38477 14.7695H3.69238ZM16.6162 14.7695C15.5967 14.7695 14.7696 15.5957 14.7695 16.6152V20.3076C14.7695 21.3272 15.5966 22.1543 16.6162 22.1543H20.3086C21.3281 22.1542 22.1543 21.3272 22.1543 20.3076V16.6152C22.1542 15.5958 21.3281 14.7696 20.3086 14.7695H16.6162ZM20.3086 0C22.3477 8.11737e-05 24.001 1.65323 24.001 3.69238V7.38477C24.0009 9.35999 22.4496 10.9731 20.499 11.0723L20.3086 11.0771H16.6162L16.4258 11.0723C14.5382 10.9764 13.0247 9.46278 12.9287 7.5752L12.9238 7.38477V3.69238C12.9238 1.65318 14.577 5.94698e-08 16.6162 0H20.3086ZM16.6162 1.8457C15.5966 1.8457 14.7695 2.67278 14.7695 3.69238V7.38477C14.7696 8.4043 15.5967 9.23047 16.6162 9.23047H20.3086C21.3281 9.23039 22.1542 8.40425 22.1543 7.38477V3.69238C22.1543 2.67283 21.3281 1.84578 20.3086 1.8457H16.6162Z" fill="currentColor" /></svg>`;
+            const svgProfile = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="7" r="4" /><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /></svg>`; const svgCatalog = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /></svg>`; const svgLead = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" /></svg>`; const svgContact = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg>`; const svgMainBurger = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.77616 11C3.93775 11 0.0013245 7.06225 0 2.22384C0.0013245 0.99735 1 0 2.22385 0C2.34967 0 2.47416 0.0105957 2.59337 0.0317878C2.85562 0.0754964 3.10464 0.164238 3.33378 0.298013C3.36689 0.317881 3.3894 0.349669 3.3947 0.386755L3.90596 3.60927C3.91258 3.64768 3.90066 3.68477 3.8755 3.71258C3.59338 4.02517 3.23311 4.25033 2.83179 4.36291L2.63841 4.41722L2.71125 4.60397C3.37085 6.28344 4.71391 7.62516 6.3947 8.28742L6.58146 8.36159L6.63575 8.16821C6.74834 7.76689 6.97351 7.40662 7.28609 7.1245C7.30861 7.10331 7.33907 7.09271 7.36953 7.09271C7.37616 7.09271 7.38278 7.09271 7.39073 7.09404L10.6132 7.6053C10.6517 7.61192 10.6834 7.63311 10.7033 7.66622C10.8358 7.89536 10.9245 8.14569 10.9695 8.40795C10.9907 8.5245 11 8.64768 11 8.77616C11 10.0013 10.0026 10.9987 8.77616 11Z" fill="currentColor" /><path d="M7.38477 12.9229C9.42385 12.9229 11.0771 14.5762 11.0771 16.6152V20.3076C11.0771 22.2829 9.52583 23.8959 7.5752 23.9951L7.38477 24H3.69238L3.50195 23.9951C1.61426 23.8993 0.100744 22.3857 0.00488281 20.498L0 20.3076V16.6152C8.61986e-05 14.5761 1.65323 12.9229 3.69238 12.9229H7.38477ZM20.3086 12.9229C22.3477 12.9229 24.0009 14.5762 24.001 16.6152V20.3076C24.001 22.2829 22.4497 23.8959 20.499 23.9951L20.3086 24H16.6162L16.4258 23.9951C14.5381 23.8993 13.0246 22.3857 12.9287 20.498L12.9238 20.3076V16.6152C12.9239 14.5761 14.5771 12.9229 16.6162 12.9229H20.3086ZM3.69238 14.7695C2.67283 14.7695 1.84579 15.5957 1.8457 16.6152V20.3076C1.8457 21.3272 2.67278 22.1543 3.69238 22.1543H7.38477C8.4043 22.1542 9.23047 21.3272 9.23047 20.3076V16.6152C9.23038 15.5958 8.40425 14.7696 7.38477 14.7695H3.69238ZM16.6162 14.7695C15.5967 14.7695 14.7696 15.5957 14.7695 16.6152V20.3076C14.7695 21.3272 15.5966 22.1543 16.6162 22.1543H20.3086C21.3281 22.1542 22.1543 21.3272 22.1543 20.3076V16.6152C22.1542 15.5958 21.3281 14.7696 20.3086 14.7695H16.6162ZM20.3086 0C22.3477 8.11737e-05 24.001 1.65323 24.001 3.69238V7.38477C24.0009 9.35999 22.4496 10.9731 20.499 11.0723L20.3086 11.0771H16.6162L16.4258 11.0723C14.5382 10.9764 13.0247 9.46278 12.9287 7.5752L12.9238 7.38477V3.69238C12.9238 1.65318 14.577 5.94698e-08 16.6162 0H20.3086ZM16.6162 1.8457C15.5966 1.8457 14.7695 2.67278 14.7695 3.69238V7.38477C14.7696 8.4043 15.5967 9.23047 16.6162 9.23047H20.3086C21.3281 9.23039 22.1542 8.40425 22.1543 7.38477V3.69238C22.1543 2.67283 21.3281 1.84578 20.3086 1.8457H16.6162Z" fill="currentColor" /></svg>`;
             const introIcons = [svgProfile, svgCatalog, svgLead, svgContact, svgMainBurger];
 
             setTimeout(() => {
