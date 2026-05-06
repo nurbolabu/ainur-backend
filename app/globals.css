@@ -1,42 +1,86 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @layer base {
   body {
-    /* Оставили только цвет фона и текста */
-    @apply bg-[#F2F2F7] text-[#000000];
+    background-color: #F2F2F7;
+    color: #000000;
     -webkit-tap-highlight-color: transparent; 
   }
 }
 
 @layer components {
-  /* Базовый модуль: белый фон, скругление 16px, рамка */
+  /* Базовый модуль */
   .ios-module {
-    @apply bg-[#FFFFFF] rounded-[16px] border border-[#E5E5EA] overflow-hidden shadow-sm;
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    border: 1px solid #E5E5EA;
+    overflow: hidden;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   }
 
-  /* Большой заголовок */
+  /* Заголовки */
   .ios-large-title {
-    @apply text-[28px] font-bold text-[#000000] mb-4 tracking-tight;
+    font-size: 28px;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 16px;
+    letter-spacing: -0.025em;
   }
   
   .ios-title-2 {
-    @apply text-[20px] font-semibold text-[#000000];
+    font-size: 20px;
+    font-weight: 600;
+    color: #000000;
   }
 
-  /* Фирменная зеленая кнопка (скругление 8px, отступы внутри) */
+  /* Фирменная зеленая кнопка */
   .btn-primary {
-    @apply bg-[#8BFDA8] text-[#000000] font-semibold text-[15px] px-5 py-3 flex items-center justify-center rounded-[8px] transition-transform active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100;
+    background-color: #8BFDA8;
+    color: #000000;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: transform 0.2s;
   }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled { opacity: 0.5; pointer-events: none; }
 
-  /* Второстепенная серая кнопка */
+  /* Серая кнопка */
   .btn-secondary {
-    @apply bg-[#E5E5EA] text-[#000000] font-medium text-[15px] px-5 py-3 flex items-center justify-center rounded-[8px] transition-transform active:scale-[0.98];
+    background-color: #E5E5EA;
+    color: #000000;
+    font-weight: 500;
+    font-size: 15px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: transform 0.2s;
   }
+  .btn-secondary:active { transform: scale(0.98); }
 
-  /* Поля ввода */
+  /* Инпуты */
   .input-ios {
-    @apply w-full bg-[#F2F2F7] text-[15px] text-[#000000] px-4 py-3 rounded-[8px] outline-none focus:bg-[#FFFFFF] focus:ring-1 focus:ring-[#8BFDA8] transition-all placeholder:text-[#8E8E93];
+    width: 100%;
+    background-color: #F2F2F7;
+    color: #000000;
+    font-size: 15px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    outline: none;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+  }
+  .input-ios:focus {
+    background-color: #FFFFFF;
+    border-color: #8BFDA8;
+  }
+  .input-ios::placeholder {
+    color: #8E8E93;
   }
 }
