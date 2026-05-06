@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 import { 
   Bot, Database, Palette, Link2, Mail, Lock, CreditCard, LogOut, 
-  ChevronRight, ChevronLeft, Building2, Loader2, X, Check, UploadCloud, User, Pencil, Code, Copy
+  ChevronRight, ChevronLeft, Building2, Loader2, X, Check, UploadCloud, User, Pencil, Code, Copy, ExternalLink
 } from 'lucide-react';
 
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
@@ -37,6 +37,9 @@ export default function SettingsPage() {
   const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [isYearly, setIsYearly] = useState(false);
+  
+  // Состояние для оплаты
+  const [selectedPlan, setSelectedPlan] = useState<any>(null);
 
   useEffect(() => {
     const fetchUserAndProject = async () => {
@@ -74,7 +77,8 @@ export default function SettingsPage() {
         telegram: links.telegram || '',
         youtube: links.youtube || '',
         vk: links.vk || '',
-        twogis: links.twogis || ''
+        twogis: links.twogis || '',
+        is_paid: data.is_paid || false // Флаг оплаты
       });
     }
     setIsLoading(false);
@@ -85,6 +89,7 @@ export default function SettingsPage() {
     setNewEmail('');
     setNewPassword('');
     setIsCopied(false);
+    setSelectedPlan(null);
     setActiveModal(modalName);
   }
 
@@ -171,9 +176,6 @@ export default function SettingsPage() {
     }
   };
 
-  // Генерация кода для вставки
-  // Генерация УМНОГО кода для вставки (со скриптом управления размерами)
-  // Генерация УМНОГО кода для вставки (Центрирование по экрану)
   const getEmbedCode = () => {
     return `<script>
 (function(){
@@ -181,10 +183,8 @@ export default function SettingsPage() {
     iframe.src = "https://ainur-backend-eta.vercel.app/widget.html?id=${projectId}";
     iframe.style.position = "fixed";
     iframe.style.bottom = "0";
-    // Центрируем iframe по горизонтали:
     iframe.style.left = "50%";
     iframe.style.transform = "translateX(-50%)";
-    
     iframe.style.width = "100%";
     iframe.style.maxWidth = "400px";
     iframe.style.height = "120px";
@@ -216,7 +216,7 @@ export default function SettingsPage() {
     setTimeout(() => setIsCopied(false), 2000);
   };
 
-  const SettingsRow = ({ icon: Icon, color, title, isLast = false, onClick }: any) => (
+  const SettingsRow = ({ icon: Icon, color, title, isLast = false, onClick, rightIcon: RightIcon = ChevronRight }: any) => (
     <div 
       onClick={onClick}
       className={`flex items-center justify-between p-4 cursor-pointer active:bg-[#F2F2F7] transition-colors ${!isLast ? 'border-b border-[#E5E5EA]' : ''}`}
@@ -227,7 +227,7 @@ export default function SettingsPage() {
         </div>
         <span className="text-[16px] font-medium text-[#000000]">{title}</span>
       </div>
-      <ChevronRight size={20} strokeWidth={1.5} className="text-[#C6C6C8]" />
+      <RightIcon size={20} strokeWidth={1.5} className="text-[#C6C6C8]" />
     </div>
   );
 
@@ -270,7 +270,12 @@ export default function SettingsPage() {
               </div>
               <div className="flex flex-col min-w-0 flex-1">
                 <h2 className="text-[20px] font-bold text-[#000000] leading-tight truncate">{projectData?.company_name || 'Название компании'}</h2>
-                <p className="text-[14px] text-[#8E8E93] mt-1 truncate">{userEmail}</p>
+                <div className="flex items-center gap-2 mt-1">
+                    <p className="text-[14px] text-[#8E8E93] truncate">{userEmail}</p>
+                    {projectData?.is_paid && (
+                        <span className="bg-[#8BFDA8] text-[#000000] text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shrink-0">PRO</span>
+                    )}
+                </div>
               </div>
             </div>
           </div>
@@ -290,7 +295,13 @@ export default function SettingsPage() {
             <div className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] overflow-hidden flex flex-col">
               <SettingsRow icon={Palette} color="#FF9500" title="Внешний вид и цвета" onClick={() => openModal('appearance')} />
               <SettingsRow icon={Link2} color="#34C759" title="Контакты и соцсети" onClick={() => openModal('contacts')} />
-              <SettingsRow icon={Code} color="#000000" title="Код для вставки на сайт" isLast={true} onClick={() => openModal('integration')} />
+              
+              {/* Прототип открывается в новой вкладке (на странице самого виджета) */}
+              <a href={`/widget.html?id=${projectId}`} target="_blank" className="text-decoration-none">
+                 <SettingsRow icon={ExternalLink} color="#8E8E93" title="Прототип виджета" rightIcon={ExternalLink} />
+              </a>
+
+              <SettingsRow icon={Code} color={projectData?.is_paid ? "#000000" : "#8E8E93"} title="Код для вставки на сайт" isLast={true} onClick={() => openModal('integration')} rightIcon={projectData?.is_paid ? ChevronRight : Lock} />
             </div>
           </div>
 
@@ -354,24 +365,44 @@ export default function SettingsPage() {
             {/* Контент модалки */}
             <div className="flex-1 overflow-y-auto p-5 pb-10">
               
-              {/* Интеграция / Код для вставки */}
+              {/* PAYWALL ИНТЕГРАЦИИ */}
               {activeModal === 'integration' && (
                 <div className="flex flex-col gap-4">
-                  <p className="text-[15px] text-[#8E8E93] leading-relaxed">
-                    Скопируйте этот код и вставьте его перед закрывающим тегом <code className="bg-[#F2F2F7] px-1 rounded">&lt;/body&gt;</code> на вашем сайте. Он содержит ваш уникальный ID, поэтому виджет сразу начнет работать!
-                  </p>
-                  <div className="relative">
-                    <pre className="w-full bg-[#F2F2F7] p-4 rounded-[16px] text-[13px] text-[#000000] overflow-x-auto border border-[#E5E5EA] whitespace-pre-wrap word-break">
-                      {getEmbedCode()}
-                    </pre>
-                  </div>
-                  <button 
-                    onClick={copyToClipboard}
-                    className={`h-[50px] w-full rounded-[12px] font-semibold text-[16px] flex items-center justify-center gap-2 active:scale-95 transition-all ${isCopied ? 'bg-[#8BFDA8] text-[#000000]' : 'bg-[#000000] text-[#FFFFFF]'}`}
-                  >
-                    {isCopied ? <Check size={20} /> : <Copy size={20} />}
-                    {isCopied ? 'Скопировано!' : 'Скопировать код'}
-                  </button>
+                  {projectData?.is_paid ? (
+                      <>
+                        <p className="text-[15px] text-[#8E8E93] leading-relaxed">
+                            Скопируйте этот код и вставьте его перед закрывающим тегом <code className="bg-[#F2F2F7] px-1 rounded">&lt;/body&gt;</code> на вашем сайте. Он содержит ваш уникальный ID, поэтому виджет сразу начнет работать!
+                        </p>
+                        <div className="relative">
+                            <pre className="w-full bg-[#F2F2F7] p-4 rounded-[16px] text-[13px] text-[#000000] overflow-x-auto border border-[#E5E5EA] whitespace-pre-wrap word-break">
+                            {getEmbedCode()}
+                            </pre>
+                        </div>
+                        <button 
+                            onClick={copyToClipboard}
+                            className={`h-[50px] w-full rounded-[12px] font-semibold text-[16px] flex items-center justify-center gap-2 active:scale-95 transition-all ${isCopied ? 'bg-[#8BFDA8] text-[#000000]' : 'bg-[#000000] text-[#FFFFFF]'}`}
+                        >
+                            {isCopied ? <Check size={20} /> : <Copy size={20} />}
+                            {isCopied ? 'Скопировано!' : 'Скопировать код'}
+                        </button>
+                      </>
+                  ) : (
+                      <div className="bg-[#F2F2F7] rounded-[22px] p-8 flex flex-col items-center justify-center text-center mt-4">
+                          <div className="w-16 h-16 bg-[#FFFFFF] rounded-full flex items-center justify-center mb-4 shadow-sm border border-[#E5E5EA]">
+                              <Lock size={28} className="text-[#FF3B30]" strokeWidth={1.5}/>
+                          </div>
+                          <h3 className="text-[20px] font-bold text-[#000000] mb-2">Код скрыт</h3>
+                          <p className="text-[15px] text-[#8E8E93] mb-6 max-w-[280px]">
+                              Чтобы установить виджет на свой боевой сайт, необходимо активировать подписку. Пока вы можете тестировать его в Прототипе.
+                          </p>
+                          <button 
+                            onClick={() => setActiveModal('plans')} 
+                            className="h-[50px] px-8 rounded-[12px] bg-[#8BFDA8] text-[#000000] font-semibold text-[16px] active:scale-95 transition-transform"
+                          >
+                            Выбрать тариф
+                          </button>
+                      </div>
+                  )}
                 </div>
               )}
 
@@ -494,29 +525,75 @@ export default function SettingsPage() {
                 </div>
               )}
 
+              {/* ТАРИФЫ И ОПЛАТА */}
               {activeModal === 'plans' && (
                 <div className="flex flex-col gap-6">
-                  <div className="flex justify-between items-center bg-[#F2F2F7] p-1 rounded-[12px]">
-                    <button onClick={() => setIsYearly(false)} className={`flex-1 py-2 text-[14px] font-semibold rounded-[10px] transition-all ${!isYearly ? 'bg-[#FFFFFF] shadow-sm text-[#000000]' : 'text-[#8E8E93]'}`}>Месяц</button>
-                    <button onClick={() => setIsYearly(true)} className={`flex-1 py-2 text-[14px] font-semibold rounded-[10px] transition-all ${isYearly ? 'bg-[#FFFFFF] shadow-sm text-[#000000]' : 'text-[#8E8E93]'}`}>Год -20%</button>
-                  </div>
-                  <div className="flex flex-col gap-4">
-                    {plans.map((plan) => (
-                      <div key={plan.name} className={`p-5 rounded-[22px] border-2 transition-all ${plan.recommended ? 'border-[#8BFDA8] bg-[#8BFDA8]/5' : 'border-[#E5E5EA] bg-[#FFFFFF]'}`}>
-                        <div className="flex justify-between items-start mb-4">
-                          <div>
-                            <h3 className="text-[18px] font-bold text-[#000000]">{plan.name}</h3>
-                            <div className="text-[24px] font-black mt-1 text-[#000000]">{plan.price} ₸ <span className="text-[14px] font-normal text-[#8E8E93]">/{isYearly ? 'год' : 'мес'}</span></div>
+                  
+                  {selectedPlan ? (
+                      <div className="flex flex-col items-center text-center animate-in slide-in-from-right-4 duration-300">
+                          <div className="bg-[#F2F2F7] rounded-[22px] p-6 w-full mb-6 border border-[#E5E5EA]">
+                              <div className="text-[14px] text-[#8E8E93] uppercase font-bold tracking-wider mb-2">К оплате</div>
+                              <div className="text-[32px] font-black text-[#000000]">{selectedPlan.price} ₸</div>
+                              <div className="text-[15px] font-medium text-[#000000] mt-1">Тариф "{selectedPlan.name}" ({isYearly ? 'Год' : 'Месяц'})</div>
                           </div>
-                          {plan.recommended && <span className="bg-[#8BFDA8] text-[10px] font-black px-2 py-1 rounded-full uppercase text-[#000000]">Популярный</span>}
-                        </div>
-                        <ul className="space-y-2 mb-6">
-                          {plan.features.map(f => <li key={f} className="flex items-center gap-2 text-[14px] font-medium text-[#000000]"><Check size={16} strokeWidth={2.5} className="text-[#34C759]" /> {f}</li>)}
-                        </ul>
-                        <button className="w-full h-[44px] rounded-[12px] bg-[#000000] text-[#FFFFFF] font-semibold text-[14px] active:scale-95 transition-transform">Выбрать тариф</button>
+
+                          <div className="w-16 h-16 bg-[#FF3B30]/10 rounded-full flex items-center justify-center mb-4 text-[#FF3B30]">
+                              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                          </div>
+                          
+                          <h3 className="text-[20px] font-bold text-[#000000] mb-2">Оплата через Kaspi</h3>
+                          <p className="text-[15px] text-[#8E8E93] mb-6">
+                              Сделайте перевод на сумму <b>{selectedPlan.price} ₸</b> по номеру ниже. В сообщении к переводу укажите ваш Email.
+                          </p>
+
+                          <div className="bg-[#F9F9F9] border border-[#E5E5EA] w-full p-4 rounded-[14px] flex items-center justify-between mb-6">
+                              <span className="font-mono text-[18px] font-bold text-[#000000]">+7 (777) 123-45-67</span>
+                              <button 
+                                onClick={() => navigator.clipboard.writeText('+77771234567')}
+                                className="text-[#8BFDA8] bg-[#000000] px-4 py-2 rounded-[8px] text-[13px] font-bold active:scale-95 transition-transform"
+                              >
+                                Копировать
+                              </button>
+                          </div>
+
+                          <p className="text-[14px] text-[#8E8E93] mb-4">После перевода отправьте чек нам в WhatsApp для быстрой активации.</p>
+
+                          <a href="https://wa.me/77771234567" target="_blank" className="w-full bg-[#25D366] text-[#FFFFFF] font-semibold text-[16px] h-[50px] rounded-[12px] flex items-center justify-center gap-2 active:scale-95 transition-transform mb-4">
+                              Написать в WhatsApp
+                          </a>
+                          
+                          <button onClick={() => setSelectedPlan(null)} className="text-[#8E8E93] font-medium text-[15px]">Вернуться к тарифам</button>
                       </div>
-                    ))}
-                  </div>
+                  ) : (
+                      <>
+                          <div className="flex justify-between items-center bg-[#F2F2F7] p-1 rounded-[12px]">
+                            <button onClick={() => setIsYearly(false)} className={`flex-1 py-2 text-[14px] font-semibold rounded-[10px] transition-all ${!isYearly ? 'bg-[#FFFFFF] shadow-sm text-[#000000]' : 'text-[#8E8E93]'}`}>Месяц</button>
+                            <button onClick={() => setIsYearly(true)} className={`flex-1 py-2 text-[14px] font-semibold rounded-[10px] transition-all ${isYearly ? 'bg-[#FFFFFF] shadow-sm text-[#000000]' : 'text-[#8E8E93]'}`}>Год -20%</button>
+                          </div>
+                          <div className="flex flex-col gap-4">
+                            {plans.map((plan) => (
+                              <div key={plan.name} className={`p-5 rounded-[22px] border-2 transition-all ${plan.recommended ? 'border-[#8BFDA8] bg-[#8BFDA8]/5' : 'border-[#E5E5EA] bg-[#FFFFFF]'}`}>
+                                <div className="flex justify-between items-start mb-4">
+                                  <div>
+                                    <h3 className="text-[18px] font-bold text-[#000000]">{plan.name}</h3>
+                                    <div className="text-[24px] font-black mt-1 text-[#000000]">{plan.price} ₸ <span className="text-[14px] font-normal text-[#8E8E93]">/{isYearly ? 'год' : 'мес'}</span></div>
+                                  </div>
+                                  {plan.recommended && <span className="bg-[#8BFDA8] text-[10px] font-black px-2 py-1 rounded-full uppercase text-[#000000]">Популярный</span>}
+                                </div>
+                                <ul className="space-y-2 mb-6">
+                                  {plan.features.map(f => <li key={f} className="flex items-center gap-2 text-[14px] font-medium text-[#000000]"><Check size={16} strokeWidth={2.5} className="text-[#34C759]" /> {f}</li>)}
+                                </ul>
+                                <button 
+                                    onClick={() => setSelectedPlan(plan)}
+                                    className="w-full h-[44px] rounded-[12px] bg-[#000000] text-[#FFFFFF] font-semibold text-[14px] active:scale-95 transition-transform"
+                                >
+                                    Выбрать тариф
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                      </>
+                  )}
                 </div>
               )}
 
