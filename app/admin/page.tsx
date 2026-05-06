@@ -100,8 +100,8 @@ export default function AdminDashboard() {
   return (
     <div className="w-full max-w-[690px] mx-auto px-[17px] md:px-0 pt-[100px] animate-in fade-in duration-300 flex flex-col gap-8 pb-[100px]">
       
-      {/* 1. ФИКСИРОВАННЫЙ HEADER (Идеальные отступы: 20px слева, 10px сверху/снизу/справа) */}
-      <div className="fixed top-[10px] left-1/2 -translate-x-1/2 w-[calc(100%-34px)] md:w-full max-w-[690px] z-40 bg-[#FFFFFF] rounded-[22px] flex items-center justify-between pl-[20px] pr-[10px] py-[10px] shadow-sm border border-[#E5E5EA]">
+      {/* 1. ФИКСИРОВАННЫЙ HEADER (Без теней) */}
+      <div className="fixed top-[10px] left-1/2 -translate-x-1/2 w-[calc(100%-34px)] md:w-full max-w-[690px] z-40 bg-[#FFFFFF] rounded-[22px] flex items-center justify-between pl-[20px] pr-[10px] py-[10px] border border-[#E5E5EA]">
         {/* Логотип SVG */}
         <div className="flex items-center">
           <svg width="99" height="14" viewBox="0 0 99 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -112,7 +112,7 @@ export default function AdminDashboard() {
           </svg>
         </div>
         
-        {/* Кнопка настроек - Линейная иконка strokeWidth 1.5 */}
+        {/* Кнопка настроек */}
         <Link href="/admin/settings" className="w-[50px] h-[50px] shrink-0 bg-[#8BFDA8] rounded-[11px] flex items-center justify-center active:scale-95 transition-transform">
           <Settings size={24} strokeWidth={1.5} className="text-[#000000]" />
         </Link>
@@ -135,7 +135,7 @@ export default function AdminDashboard() {
           {stories.map((s) => {
             const isVideo = s.media_url.toLowerCase().includes('.mp4');
             return (
-              <div key={s.id} className="w-[140px] h-[165px] md:w-[165px] bg-[#FFFFFF] rounded-[22px] p-4 flex flex-col justify-between shrink-0 shadow-sm border border-[#E5E5EA] relative overflow-hidden group">
+              <div key={s.id} className="w-[140px] h-[165px] md:w-[165px] bg-[#FFFFFF] rounded-[22px] p-4 flex flex-col justify-between shrink-0 border border-[#E5E5EA] relative overflow-hidden group">
                 <div className="absolute inset-0 z-0">
                    {isVideo ? (
                      <video src={s.media_url} className="w-full h-full object-cover opacity-80" muted playsInline />
@@ -166,19 +166,19 @@ export default function AdminDashboard() {
         <h2 className="text-[#949494] text-[14px] font-medium uppercase tracking-wide">Статистика</h2>
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-          <div className="bg-[#FFFFFF] rounded-[22px] p-5 flex flex-col justify-between h-[150px] shadow-sm border border-[#E5E5EA]">
+          <div className="bg-[#FFFFFF] rounded-[22px] p-5 flex flex-col justify-between h-[150px] border border-[#E5E5EA]">
             <span className="text-[#000000] text-[15px] font-medium leading-tight">Посетителей сайта</span>
             <span className="text-[#000000] text-[24px] font-bold">{stats.visitors}</span>
           </div>
-          <div className="bg-[#FFFFFF] rounded-[22px] p-5 flex flex-col justify-between h-[150px] shadow-sm border border-[#E5E5EA]">
+          <div className="bg-[#FFFFFF] rounded-[22px] p-5 flex flex-col justify-between h-[150px] border border-[#E5E5EA]">
             <span className="text-[#000000] text-[15px] font-medium leading-tight">Открытий виджета</span>
             <span className="text-[#000000] text-[24px] font-bold">{stats.widgets}</span>
           </div>
-          <div className="bg-[#FFFFFF] rounded-[22px] p-5 flex flex-col justify-between h-[150px] shadow-sm border border-[#E5E5EA]">
+          <div className="bg-[#FFFFFF] rounded-[22px] p-5 flex flex-col justify-between h-[150px] border border-[#E5E5EA]">
             <span className="text-[#000000] text-[15px] font-medium leading-tight">Оставили заявку</span>
             <span className="text-[#000000] text-[24px] font-bold">{stats.leads}</span>
           </div>
-          <div className="bg-[#FFFFFF] rounded-[22px] p-5 flex flex-col justify-between h-[150px] shadow-sm border border-[#E5E5EA]">
+          <div className="bg-[#FFFFFF] rounded-[22px] p-5 flex flex-col justify-between h-[150px] border border-[#E5E5EA]">
             <span className="text-[#000000] text-[15px] font-medium leading-tight">Нажатий на соцсети</span>
             <span className="text-[#000000] text-[24px] font-bold">{stats.social}</span>
           </div>
@@ -192,7 +192,7 @@ export default function AdminDashboard() {
         <div className="flex flex-col gap-2.5">
           {recentChats.length > 0 ? (
             recentChats.map((chat) => (
-              <Link key={chat.id} href="/admin/chats" className="bg-[#FFFFFF] rounded-[22px] p-5 flex items-center justify-between shadow-sm border border-[#E5E5EA] active:scale-[0.98] transition-transform">
+              <Link key={chat.id} href="/admin/chats" className="bg-[#FFFFFF] rounded-[22px] p-5 flex items-center justify-between border border-[#E5E5EA] active:scale-[0.98] transition-transform">
                 <div className="flex flex-col gap-1">
                   <span className="text-[#000000] text-[14px]">{formatTime(chat.date)}, {formatDate(chat.date)}</span>
                   <span className="text-[#000000] text-[20px] font-bold uppercase truncate max-w-[200px] md:max-w-[400px]">
@@ -205,7 +205,7 @@ export default function AdminDashboard() {
               </Link>
             ))
           ) : (
-            <div className="bg-[#FFFFFF] rounded-[22px] p-5 flex items-center justify-center shadow-sm border border-[#E5E5EA] text-[#949494] text-[15px] min-h-[96px]">
+            <div className="bg-[#FFFFFF] rounded-[22px] p-5 flex items-center justify-center border border-[#E5E5EA] text-[#949494] text-[15px] min-h-[96px]">
               Диалогов пока нет
             </div>
           )}
