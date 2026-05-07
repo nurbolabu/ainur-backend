@@ -25,12 +25,25 @@ export default function LoginPage() {
   const [successMsg, setSuccessMsg] = useState('');
 
   useEffect(() => {
+    // 1. Ловим новый формат ссылки (PKCE с параметром ?code=)
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    
+    if (code) {
+      setMode('update');
+      // Обмениваем одноразовый код на сессию, чтобы получить права на смену пароля
+      supabase.auth.exchangeCodeForSession(code).catch(console.error);
+    }
+
+    // 2. Ловим старый формат ссылки (с хэшем #type=recovery)
+    if (window.location.hash.includes('type=recovery')) {
+      setMode('update');
+    }
+
+    // 3. Стандартный слушатель Supabase
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'PASSWORD_RECOVERY') {
         setMode('update');
-        setPassword('');
-        setError('');
-        setSuccessMsg('');
       }
     });
 
