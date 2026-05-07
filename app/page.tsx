@@ -463,7 +463,7 @@ export default function LandingPage() {
                {/* Неоновый зеленый линейный график */}
                <svg className="absolute top-1/2 right-10 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity" width="220" height="120" viewBox="0 0 220 120">
                   <path d="M0,110 C40,90 60,60 100,50 S140,20 180,10 L220,10" fill="none" stroke="#8BFDA8" strokeWidth="4" strokeLinecap="round" style={{filter: 'drop-shadow(0 0 10px #8BFDA8)'}}/>
-                  <path d="M0,110 C40,90 60,60 100,50 S140,20 180,10 L220,10 L220,120 L0,120 Z" fill="url(#ga)" stroke="none" />
+                  <path d="M0,110 C40,90 60,60 100,50 S140,20 180,10 L220,120 L0,120 Z" fill="url(#ga)" stroke="none" />
                   <defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#8BFDA8" stopOpacity="0.2"/><stop offset="100%" stopColor="#8BFDA8" stopOpacity="0"/></linearGradient></defs>
                </svg>
             </div>
@@ -537,7 +537,7 @@ export default function LandingPage() {
             <div className="p-8">
                <span className="text-[#8BFDA8] font-bold text-lg mb-2 block">2 шаг</span>
                <h3 className="text-2xl font-black mb-3 leading-tight text-white">Товары и Stories</h3>
-               <p className="text-zinc-400 text-sm leading-relaxed">Загрузите каталог услуг и добавьте вовлекающие истории.</p>
+               <p className="text-zinc-400 text-sm leading-relaxed">Загрузите каталог услуг, добавьте вовлекающие истории и настройте цвета.</p>
             </div>
           </div>
 
@@ -550,8 +550,8 @@ export default function LandingPage() {
                   <p><span className="text-zinc-700">&lt;body&gt;</span></p>
                   <p>...</p>
                   <p><span className="text-zinc-500">&lt;!-- AI NUR widget script --&gt;</span></p>
-                  <p><span className="text-white">&lt;script <span className="text-zinc-400">src</span><span className="text-[#8BFDA8]">&quot;...ainur.pro/w.js&quot;</span> <span className="text-zinc-400">id</span><span className="text-[#8BFDA8]">&quot;nur-w&quot;</span>&gt;&lt;/script&gt;</span></p>
-                  <p><span className="text-white">&lt;script&gt;<span className="text-zinc-400">AinurW</span><span className="text-zinc-500">.init</span>({<span className="text-zinc-400">id:</span> <span className="text-[#8BFDA8]">&quot;nur-user-5a...9e&quot;</span>})&lt;/script&gt;</span></p>
+                  <p><span className="text-white">&lt;script <span className="text-zinc-400">src=</span><span className="text-[#8BFDA8]">&quot;...ainur.pro/w.js&quot;</span> <span className="text-zinc-400">id=</span><span className="text-[#8BFDA8]">&quot;nur-w&quot;</span>&gt;&lt;/script&gt;</span></p>
+                  <p><span className="text-white">&lt;script&gt;<span className="text-zinc-400">AinurW</span><span className="text-zinc-500">.init</span>({"{"}<span className="text-zinc-400">id:</span> <span className="text-[#8BFDA8]">&quot;nur-user-5a...9e&quot;</span>{"}"})&lt;/script&gt;</span></p>
                   <p><span className="text-zinc-700">&lt;/body&gt;</span></p>
                </div>
                <div className="absolute w-24 h-24 bg-[#00B0F2] rounded-full blur-[90px] opacity-10"></div>
@@ -559,7 +559,7 @@ export default function LandingPage() {
             <div className="p-8">
                <span className="text-[#8BFDA8] font-bold text-lg mb-2 block">3 шаг</span>
                <h3 className="text-2xl font-black mb-3 leading-tight text-white">Установка кода</h3>
-               <p className="text-zinc-400 text-sm leading-relaxed">Просто вставьте одну строку кода перед закрывающим <span className="font-mono text-xs text-white">&lt;/body&gt;</span>.</p>
+               <p className="text-zinc-400 text-sm leading-relaxed">Скопируйте и установите одну строку кода перед закрывающим <span className="font-mono text-xs text-white">&lt;/body&gt;</span>.</p>
             </div>
           </div>
 
