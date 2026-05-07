@@ -9,59 +9,117 @@ export default function LandingPage() {
       
       {/* КЛЮЧЕВЫЕ АНИМАЦИИ (Вшиты через CSS) */}
       <style dangerouslySetInnerHTML={{__html: `
-        /* Анимация чата */
-        .anim-msg-user { animation: chatUser 8s infinite cubic-bezier(0.25, 0.8, 0.25, 1); transform-origin: bottom right; }
-        .anim-typing { animation: chatTyping 8s infinite; transform-origin: bottom left; }
-        .anim-msg-ai { animation: chatAi 8s infinite cubic-bezier(0.25, 0.8, 0.25, 1); transform-origin: bottom left; }
+        /* 1. Чат */
+        .anim-msg-user { animation: chatUser 10s infinite cubic-bezier(0.25, 0.8, 0.25, 1); transform-origin: bottom right; }
+        .anim-typing { animation: chatTyping 10s infinite; transform-origin: bottom left; }
+        .anim-msg-ai { animation: chatAi 10s infinite cubic-bezier(0.25, 0.8, 0.25, 1); transform-origin: bottom left; }
         .dot-1 { animation: dotBlink 1.4s infinite ease-in-out both; animation-delay: -0.32s; }
         .dot-2 { animation: dotBlink 1.4s infinite ease-in-out both; animation-delay: -0.16s; }
         .dot-3 { animation: dotBlink 1.4s infinite ease-in-out both; }
 
         @keyframes chatUser {
           0%, 5% { opacity: 0; transform: scale(0.8) translate(10px, 10px); }
-          10%, 90% { opacity: 1; transform: scale(1) translate(0, 0); }
-          95%, 100% { opacity: 0; transform: scale(0.9) translateY(10px); }
+          10%, 85% { opacity: 1; transform: scale(1) translate(0, 0); }
+          90%, 100% { opacity: 0; transform: scale(0.9) translateY(10px); }
         }
         @keyframes chatTyping {
           0%, 15% { opacity: 0; transform: scale(0.8); }
-          20%, 40% { opacity: 1; transform: scale(1); }
-          45%, 100% { opacity: 0; transform: scale(0.8); }
+          20%, 35% { opacity: 1; transform: scale(1); }
+          40%, 100% { opacity: 0; transform: scale(0.8); }
         }
         @keyframes chatAi {
-          0%, 45% { opacity: 0; transform: scale(0.8) translate(-10px, 10px); }
-          50%, 90% { opacity: 1; transform: scale(1) translate(0, 0); }
-          95%, 100% { opacity: 0; transform: scale(0.9) translateY(10px); }
+          0%, 40% { opacity: 0; transform: scale(0.8) translate(-10px, 10px); }
+          45%, 85% { opacity: 1; transform: scale(1) translate(0, 0); }
+          90%, 100% { opacity: 0; transform: scale(0.9) translateY(10px); }
         }
         @keyframes dotBlink {
           0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; } 
           40% { transform: scale(1); opacity: 1; }
         }
 
-        /* Анимация Каталога и Курсора */
-        .anim-cursor { animation: cursorMove 8s infinite; }
-        .anim-btn-click { animation: btnClick 8s infinite; }
-        .anim-badge { animation: badgePop 8s infinite cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        /* 2. Stories */
+        .anim-spin-grad { animation: spinGrad 3s linear infinite; }
+        .anim-story-avatar { animation: storyAvatar 10s infinite; }
+        .anim-story-modal { animation: storyModal 10s infinite cubic-bezier(0.25, 0.8, 0.25, 1); transform-origin: center; }
+        .anim-story-cursor { animation: storyCursor 10s infinite; }
+        .anim-story-btn { animation: storyBtn 10s infinite; }
 
-        @keyframes cursorMove {
+        @keyframes spinGrad { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes storyAvatar {
+          0%, 15% { transform: scale(1); opacity: 1; }
+          18% { transform: scale(0.9); opacity: 1; }
+          22%, 80% { transform: scale(0.9); opacity: 0; pointer-events: none; }
+          85%, 100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes storyModal {
+          0%, 20% { opacity: 0; transform: scale(0.5) translateY(50px); pointer-events: none; }
+          25%, 75% { opacity: 1; transform: scale(1) translateY(0); pointer-events: auto; }
+          80%, 100% { opacity: 0; transform: scale(0.8) translateY(20px); pointer-events: none; }
+        }
+        @keyframes storyCursor {
+          0%, 35% { transform: translate(40px, 60px); opacity: 0; }
+          40% { transform: translate(40px, 60px); opacity: 1; }
+          50%, 65% { transform: translate(0px, 0px); opacity: 1; }
+          70%, 100% { transform: translate(40px, 60px); opacity: 0; }
+        }
+        @keyframes storyBtn {
+          0%, 53% { transform: scale(1); background: #8BFDA8; }
+          55% { transform: scale(0.95); background: #34C759; }
+          58%, 100% { transform: scale(1); background: #8BFDA8; }
+        }
+
+        /* 3. Каталог */
+        .anim-cat-cursor { animation: catCursor 10s infinite; }
+        .anim-cat-btn { animation: catBtn 10s infinite; }
+        .anim-cat-badge { animation: catBadge 10s infinite cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+        @keyframes catCursor {
           0%, 15% { transform: translate(50px, 50px); opacity: 0; }
           25% { transform: translate(50px, 50px); opacity: 1; }
-          40%, 60% { transform: translate(0px, 0px); opacity: 1; }
-          70%, 100% { transform: translate(50px, 50px); opacity: 0; }
+          40%, 75% { transform: translate(0px, 0px); opacity: 1; }
+          85%, 100% { transform: translate(50px, 50px); opacity: 0; }
         }
-        @keyframes btnClick {
+        @keyframes catBtn {
           0%, 48% { transform: scale(1); background-color: #8BFDA8; }
           50% { transform: scale(0.95); background-color: #34C759; }
           55%, 100% { transform: scale(1); background-color: #8BFDA8; }
         }
-        @keyframes badgePop {
+        @keyframes catBadge {
           0%, 50% { opacity: 0; transform: scale(0); }
           55%, 90% { opacity: 1; transform: scale(1); }
           95%, 100% { opacity: 0; transform: scale(0); }
         }
 
-        /* Анимация Stories */
-        .anim-spin-grad { animation: spinGrad 3s linear infinite; }
-        @keyframes spinGrad { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        /* 4. Заявки (Лиды) */
+        .anim-lead-form { animation: leadForm 10s infinite; }
+        .anim-lead-type1 { animation: leadType1 10s infinite cubic-bezier(0.4, 0, 0.2, 1); }
+        .anim-lead-type2 { animation: leadType2 10s infinite cubic-bezier(0.4, 0, 0.2, 1); }
+        .anim-lead-btn { animation: leadBtn 10s infinite; }
+        .anim-lead-success { animation: leadSuccess 10s infinite; }
+
+        @keyframes leadForm {
+          0%, 65% { opacity: 1; transform: scale(1); pointer-events: auto; }
+          70%, 100% { opacity: 0; transform: scale(0.9); pointer-events: none; }
+        }
+        @keyframes leadType1 { 0%, 15% { width: 0%; opacity: 0; } 25%, 100% { width: 60%; opacity: 1; } }
+        @keyframes leadType2 { 0%, 30% { width: 0%; opacity: 0; } 40%, 100% { width: 80%; opacity: 1; } }
+        @keyframes leadBtn {
+          0%, 48% { transform: scale(1); } 50% { transform: scale(0.95); background: #34C759; } 55%, 100% { transform: scale(1); }
+        }
+        @keyframes leadSuccess {
+          0%, 65% { opacity: 0; transform: scale(0.5); pointer-events: none; }
+          70%, 95% { opacity: 1; transform: scale(1); pointer-events: auto; }
+          100% { opacity: 0; transform: scale(0.9); pointer-events: none; }
+        }
+
+        /* 5. Аналитика */
+        .anim-bar-1 { animation: bar1 10s infinite cubic-bezier(0.4, 0, 0.2, 1); }
+        .anim-bar-2 { animation: bar2 10s infinite cubic-bezier(0.4, 0, 0.2, 1); }
+        .anim-bar-3 { animation: bar3 10s infinite cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        @keyframes bar1 { 0%, 10% { height: 10%; } 30%, 90% { height: 60%; } 100% { height: 10%; } }
+        @keyframes bar2 { 0%, 20% { height: 15%; } 40%, 90% { height: 40%; } 100% { height: 15%; } }
+        @keyframes bar3 { 0%, 30% { height: 20%; } 50%, 90% { height: 90%; } 100% { height: 20%; } }
       `}} />
 
       {/* СЕТКА НА ФОНЕ */}
@@ -71,7 +129,7 @@ export default function LandingPage() {
 
       {/* HEADER */}
       <header className="relative z-10 border-b border-zinc-900 backdrop-blur-md bg-black/50 sticky top-0">
-        <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div className="max-w-[1400px] mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center cursor-pointer">
              <svg className="h-[18px] w-auto" viewBox="0 0 99 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M98.0879 13.7771H92.4758L89.457 10.1911H83.0142V13.7771H78.8203V6.84812H90.6118C91.2602 6.84812 91.8072 6.71305 92.2529 6.44291C92.6987 6.17278 92.9215 5.80134 92.9215 5.3286C92.9215 4.80183 92.7189 4.41013 92.3137 4.1535C91.9085 3.88336 91.3412 3.7483 90.6118 3.7483H78.8203V0.223007H90.2674C91.0373 0.223007 91.8342 0.297295 92.6581 0.44587C93.4821 0.580939 94.2317 0.830816 94.9071 1.1955C95.5824 1.56019 96.1362 2.05319 96.5684 2.6745C97.0141 3.29582 97.237 4.09272 97.237 5.06522C97.237 5.59198 97.156 6.09174 96.9939 6.56448C96.8318 7.03722 96.5954 7.46268 96.2848 7.84087C95.9876 8.21906 95.6162 8.54323 95.1704 8.81337C94.7382 9.07 94.2452 9.25234 93.6914 9.36039C93.921 9.53598 94.1777 9.75885 94.4613 10.029C94.745 10.2991 95.1232 10.6706 95.5959 11.1433L98.0879 13.7771Z" fill="white"/>
@@ -82,7 +140,6 @@ export default function LandingPage() {
           </div>
           <nav className="hidden md:flex items-center gap-8 text-[14px] font-medium text-zinc-400">
             <a href="#features" className="hover:text-white transition-colors">Возможности</a>
-            <a href="#how-it-works" className="hover:text-white transition-colors">Как начать</a>
             <Link href="/login" className="bg-[#1A1A1A] border border-zinc-800 text-white px-5 py-2 rounded-full hover:border-[#8BFDA8] hover:text-[#8BFDA8] transition-all active:scale-95">
               Войти в кабинет
             </Link>
@@ -112,157 +169,192 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ФУНКЦИОНАЛ: BENTO GRID (Модульная сетка блоков) */}
-      <section id="features" className="relative z-10 py-16 px-6 max-w-6xl mx-auto">
-        
-        {/* БЛОК 1: ИИ-ЧАТ (На всю ширину) */}
-        <div className="bg-[#111111] border border-zinc-800/80 rounded-[32px] overflow-hidden flex flex-col md:flex-row mb-6">
-           <div className="p-12 md:w-1/2 flex flex-col justify-center">
-              <h3 className="text-3xl font-black mb-4">Нейросеть-продавец</h3>
-              <p className="text-zinc-400 leading-relaxed mb-6">
-                 ИИ изучает ваши товары, цены и базу знаний. Он мгновенно отвечает клиентам, консультирует как лучший продавец и сам закрывает сделки.
-              </p>
-              <ul className="space-y-3">
-                 <li className="flex items-center gap-3 text-sm text-zinc-300"><CheckCircle2 size={16} className="text-[#8BFDA8]"/> Отвечает за 1 секунду</li>
-                 <li className="flex items-center gap-3 text-sm text-zinc-300"><CheckCircle2 size={16} className="text-[#8BFDA8]"/> Не придумывает цены (берет из базы)</li>
-                 <li className="flex items-center gap-3 text-sm text-zinc-300"><CheckCircle2 size={16} className="text-[#8BFDA8]"/> Забирает контакты (лидогенерация)</li>
-              </ul>
-           </div>
-           {/* Анимация чата */}
-           <div className="md:w-1/2 bg-[#1A1A1A] p-8 md:p-12 flex items-center justify-center border-l border-zinc-800/80">
-              <div className="w-full max-w-[320px] flex flex-col gap-4">
-                 {/* Сообщение клиента */}
-                 <div className="anim-msg-user self-end bg-[#8BFDA8] text-black px-4 py-3 rounded-2xl rounded-br-sm text-[15px] font-medium max-w-[85%] shadow-lg">
-                    Сколько стоят кроссовки Nike?
+      {/* ФУНКЦИОНАЛ: BENTO GRID */}
+      <section id="features" className="relative z-10 py-16 px-6 max-w-[1400px] mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          {/* БЛОК 1: ИИ-ЧАТ (Занимает 2 колонки) */}
+          <div className="col-span-1 lg:col-span-2 bg-[#111111] border border-zinc-800/80 rounded-[32px] overflow-hidden flex flex-col">
+            {/* Анимация */}
+            <div className="h-[320px] bg-[#1A1A1A] border-b border-zinc-800/80 flex items-center justify-center relative overflow-hidden">
+               <div className="w-full max-w-[400px] flex flex-col gap-4 px-6 relative z-10">
+                 <div className="anim-msg-user self-end bg-[#8BFDA8] text-black px-4 py-3 rounded-2xl rounded-br-sm text-[15px] font-medium shadow-lg">
+                    У вас есть в наличии кроссовки Nike?
                  </div>
-                 {/* Индикатор печати ИИ */}
-                 <div className="anim-typing self-start bg-[#2C2C2E] px-4 py-4 rounded-2xl rounded-bl-sm flex gap-1 items-center w-fit shadow-lg">
+                 <div className="anim-typing self-start bg-[#2C2C2E] px-4 py-4 rounded-2xl rounded-bl-sm flex gap-1 items-center shadow-lg">
                     <div className="w-1.5 h-1.5 rounded-full bg-zinc-400 dot-1"></div>
                     <div className="w-1.5 h-1.5 rounded-full bg-zinc-400 dot-2"></div>
                     <div className="w-1.5 h-1.5 rounded-full bg-zinc-400 dot-3"></div>
                  </div>
-                 {/* Ответ ИИ */}
                  <div className="anim-msg-ai self-start bg-[#2C2C2E] text-white px-4 py-3 rounded-2xl rounded-bl-sm text-[15px] font-medium shadow-lg leading-relaxed mt-[-46px]">
-                    Nike Air Max сейчас в наличии. Цена 45 000 ₸. Желаете оформить заказ прямо сейчас в корзине?
+                    Да! Nike Air Max в наличии. Цена 45 000 ₸. Можете оформить заказ прямо здесь в корзине.
                  </div>
-              </div>
-           </div>
-        </div>
+               </div>
+            </div>
+            {/* Текст */}
+            <div className="p-8 md:p-10 flex-shrink-0">
+               <h3 className="text-2xl font-black mb-3">Нейросеть-продавец</h3>
+               <p className="text-zinc-400 leading-relaxed mb-6">
+                 ИИ мгновенно отвечает клиентам 24/7, консультирует по каталогу и сам закрывает сделки.
+               </p>
+               <div className="bg-[#8BFDA8]/5 border border-[#8BFDA8]/20 rounded-2xl p-5">
+                 <span className="text-[#8BFDA8] font-bold text-sm block mb-1">Зачем это бизнесу?</span>
+                 <span className="text-zinc-300 text-sm leading-relaxed">Вы перестаете терять горячих клиентов ночью, в выходные или когда менеджер занят. Повышает лояльность за счет моментального и точного ответа.</span>
+               </div>
+            </div>
+          </div>
 
-        {/* НИЖНИЙ РЯД: КАТАЛОГ И STORIES (2 колонки) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-           
-           {/* БЛОК 2: КАТАЛОГ */}
-           <div className="bg-[#111111] border border-zinc-800/80 rounded-[32px] overflow-hidden flex flex-col h-[500px]">
-              <div className="p-10 pb-6 flex-shrink-0">
-                 <h3 className="text-2xl font-black mb-3">Встроенный каталог</h3>
-                 <p className="text-zinc-400 text-sm leading-relaxed">
-                    Клиентам не нужно искать товары на сайте. Весь каталог доступен внутри виджета с корзиной и чекаутом.
-                 </p>
-              </div>
-              {/* Анимация каталога */}
-              <div className="flex-1 bg-[#1A1A1A] border-t border-zinc-800/80 p-8 flex items-center justify-center relative overflow-hidden">
-                 
-                 {/* Шапка виджета с корзиной */}
-                 <div className="absolute top-0 left-0 w-full p-4 flex justify-end">
-                    <div className="relative bg-zinc-800/50 p-2 rounded-full">
-                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8BFDA8" strokeWidth="2"><circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" /><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" /></svg>
-                       <div className="anim-badge absolute -top-1 -right-1 w-4 h-4 bg-[#8BFDA8] text-black text-[10px] font-bold rounded-full flex items-center justify-center border border-[#1A1A1A]">1</div>
-                    </div>
-                 </div>
+          {/* БЛОК 2: STORIES */}
+          <div className="col-span-1 bg-[#111111] border border-zinc-800/80 rounded-[32px] overflow-hidden flex flex-col">
+            {/* Анимация */}
+            <div className="h-[320px] bg-[#1A1A1A] border-b border-zinc-800/80 flex items-center justify-center relative">
+               
+               {/* Кружок Stories */}
+               <div className="anim-story-avatar relative w-24 h-24 flex-shrink-0 z-10">
+                  <svg className="anim-spin-grad absolute inset-0 w-full h-full" viewBox="0 0 60 60">
+                     <defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#8BFDA8"/><stop offset="100%" stopColor="#00B0F2"/></linearGradient></defs>
+                     <circle cx="30" cy="30" r="28" stroke="url(#grad1)" strokeWidth="2.5" fill="none" strokeDasharray="50 15" strokeLinecap="round" />
+                  </svg>
+                  <div className="absolute inset-[4px] bg-zinc-800 rounded-full border-[3px] border-[#1A1A1A] flex items-center justify-center">
+                    <span className="text-zinc-500 text-xs font-bold">News</span>
+                  </div>
+               </div>
 
-                 {/* Карточка товара */}
-                 <div className="bg-zinc-900 border border-zinc-800 rounded-[20px] p-3 w-[220px] flex flex-col gap-3 relative z-10 shadow-2xl">
-                    <div className="w-full h-[100px] bg-zinc-800 rounded-[12px] animate-pulse"></div>
-                    <div>
-                       <div className="h-4 w-3/4 bg-zinc-700 rounded mb-2"></div>
-                       <div className="h-4 w-1/3 bg-zinc-800 rounded"></div>
-                    </div>
-                    <div className="mt-2 anim-btn-click text-black font-bold text-[13px] py-2 rounded-[8px] flex justify-center items-center cursor-default">
-                       В корзину
-                    </div>
-                    {/* Курсор (Имитация мыши) */}
-                    <div className="anim-cursor absolute bottom-2 right-4 z-20" style={{ filter: 'drop-shadow(0px 2px 4px rgba(0,0,0,0.5))'}}>
-                       <svg width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="black" strokeWidth="1"><path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86 3.6 7.4c.14.28.47.4.75.26l2.16-1.05c.28-.14.4-.47.26-.75l-3.55-7.3 5.48-.55c.44-.04.62-.6.28-.88L6.34 2.86c-.32-.28-.84-.06-.84.35z"/></svg>
-                    </div>
-                 </div>
-              </div>
-           </div>
+               {/* Модальное окно (Открытый сторис) */}
+               <div className="anim-story-modal absolute inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm z-20">
+                  <div className="w-[180px] h-[280px] bg-zinc-900 rounded-2xl border border-zinc-700 relative overflow-hidden flex flex-col">
+                     <div className="absolute top-2 left-2 right-2 flex gap-1"><div className="h-1 bg-white/50 w-full rounded"></div></div>
+                     <div className="flex-1 flex items-center justify-center text-white/20 font-bold text-sm">VIDEO</div>
+                     <div className="p-3 absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent">
+                        <div className="anim-story-btn w-full bg-[#8BFDA8] text-black text-xs font-bold py-2 rounded-lg text-center">Оставить заявку</div>
+                     </div>
+                     {/* Курсор */}
+                     <div className="anim-story-cursor absolute z-30" style={{ bottom: '15px', left: '80px', filter: 'drop-shadow(0px 2px 4px rgba(0,0,0,0.5))'}}>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="black" strokeWidth="1"><path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86 3.6 7.4c.14.28.47.4.75.26l2.16-1.05c.28-.14.4-.47.26-.75l-3.55-7.3 5.48-.55c.44-.04.62-.6.28-.88L6.34 2.86c-.32-.28-.84-.06-.84.35z"/></svg>
+                     </div>
+                  </div>
+               </div>
 
-           {/* БЛОК 3: STORIES */}
-           <div className="bg-[#111111] border border-zinc-800/80 rounded-[32px] overflow-hidden flex flex-col h-[500px]">
-              <div className="p-10 pb-6 flex-shrink-0">
-                 <h3 className="text-2xl font-black mb-3">Ваши Stories</h3>
-                 <p className="text-zinc-400 text-sm leading-relaxed">
-                    Загружайте короткие видео и фото прямо из админки. Вовлекайте посетителей привычным "инстаграмным" форматом.
-                 </p>
-              </div>
-              {/* Анимация Stories */}
-              <div className="flex-1 bg-[#1A1A1A] border-t border-zinc-800/80 p-8 flex items-center justify-center">
-                 <div className="flex gap-4">
-                    {/* Story 1 (Крутится) */}
-                    <div className="relative w-20 h-20 flex-shrink-0">
-                       <svg className="anim-spin-grad absolute inset-0 w-full h-full" viewBox="0 0 60 60">
-                          <defs>
-                             <linearGradient id="grad-story" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stopColor="#8BFDA8" /><stop offset="100%" stopColor="#00B0F2" />
-                             </linearGradient>
-                          </defs>
-                          <circle cx="30" cy="30" r="28" stroke="url(#grad-story)" strokeWidth="3" fill="none" strokeLinecap="round" strokeDasharray="60 10" />
-                       </svg>
-                       <div className="absolute inset-[4px] bg-zinc-800 rounded-full border-2 border-[#1A1A1A]"></div>
-                    </div>
-                    {/* Story 2 */}
-                    <div className="relative w-20 h-20 flex-shrink-0">
-                       <circle cx="30" cy="30" r="28" stroke="#333" strokeWidth="2" fill="none" />
-                       <div className="absolute inset-[4px] bg-zinc-800 rounded-full border-2 border-[#1A1A1A]"></div>
-                    </div>
-                    {/* Story 3 */}
-                    <div className="relative w-20 h-20 flex-shrink-0 hidden sm:block">
-                       <circle cx="30" cy="30" r="28" stroke="#333" strokeWidth="2" fill="none" />
-                       <div className="absolute inset-[4px] bg-zinc-800 rounded-full border-2 border-[#1A1A1A]"></div>
-                    </div>
-                 </div>
-              </div>
-           </div>
+            </div>
+            {/* Текст */}
+            <div className="p-8 md:p-10 flex-shrink-0">
+               <h3 className="text-2xl font-black mb-3">Интерактивные Stories</h3>
+               <p className="text-zinc-400 leading-relaxed mb-6">
+                 Загружайте короткие видео и фото прямо из админки в привычном формате.
+               </p>
+               <div className="bg-[#8BFDA8]/5 border border-[#8BFDA8]/20 rounded-2xl p-5">
+                 <span className="text-[#8BFDA8] font-bold text-sm block mb-1">Зачем это бизнесу?</span>
+                 <span className="text-zinc-300 text-sm leading-relaxed">Быстро делитесь акциями или новинками. Вовлекает клиента с первой секунды и конвертирует просмотры в заявки напрямую через кнопки в видео.</span>
+               </div>
+            </div>
+          </div>
 
-        </div>
-      </section>
+          {/* БЛОК 3: КАТАЛОГ */}
+          <div className="col-span-1 bg-[#111111] border border-zinc-800/80 rounded-[32px] overflow-hidden flex flex-col">
+            {/* Анимация */}
+            <div className="h-[320px] bg-[#1A1A1A] border-b border-zinc-800/80 flex items-center justify-center relative">
+               <div className="absolute top-4 right-6 bg-zinc-800 p-2 rounded-full">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8BFDA8" strokeWidth="2"><circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" /><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" /></svg>
+                  <div className="anim-cat-badge absolute -top-1 -right-1 w-4 h-4 bg-[#8BFDA8] text-black text-[10px] font-bold rounded-full flex items-center justify-center">1</div>
+               </div>
+               <div className="bg-zinc-900 border border-zinc-800 rounded-[20px] p-4 w-[220px] shadow-2xl relative">
+                  <div className="w-full h-[100px] bg-zinc-800 rounded-xl mb-3"></div>
+                  <div className="h-3 w-3/4 bg-zinc-700 rounded mb-2"></div>
+                  <div className="h-3 w-1/3 bg-zinc-800 rounded mb-4"></div>
+                  <div className="anim-cat-btn bg-[#8BFDA8] text-black font-bold text-xs py-2.5 rounded-lg text-center">В корзину</div>
+                  <div className="anim-cat-cursor absolute z-20" style={{ bottom: '5px', right: '20px', filter: 'drop-shadow(0px 2px 4px rgba(0,0,0,0.5))'}}>
+                     <svg width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="black" strokeWidth="1"><path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86 3.6 7.4c.14.28.47.4.75.26l2.16-1.05c.28-.14.4-.47.26-.75l-3.55-7.3 5.48-.55c.44-.04.62-.6.28-.88L6.34 2.86c-.32-.28-.84-.06-.84.35z"/></svg>
+                  </div>
+               </div>
+            </div>
+            {/* Текст */}
+            <div className="p-8 md:p-10 flex-shrink-0">
+               <h3 className="text-2xl font-black mb-3">Встроенный каталог</h3>
+               <p className="text-zinc-400 leading-relaxed mb-6">
+                 Клиенты просматривают услуги и товары, не покидая чат.
+               </p>
+               <div className="bg-[#8BFDA8]/5 border border-[#8BFDA8]/20 rounded-2xl p-5">
+                 <span className="text-[#8BFDA8] font-bold text-sm block mb-1">Зачем это бизнесу?</span>
+                 <span className="text-zinc-300 text-sm leading-relaxed">Бесшовный опыт. Клиенту не нужно искать товары на основном сайте — удобная корзина и оформление заказа прямо в виджете повышают конверсию.</span>
+               </div>
+            </div>
+          </div>
 
-      {/* ШАГИ ПОДКЛЮЧЕНИЯ */}
-      <section id="how-it-works" className="relative z-10 py-24">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-           <h2 className="text-3xl md:text-5xl font-black mb-16">Установка в <span className="text-[#8BFDA8]">3 шага</span></h2>
-           
-           <div className="flex flex-col md:flex-row justify-between gap-8 text-left relative">
-              {/* Линия связи на десктопе */}
-              <div className="hidden md:block absolute top-6 left-10 right-10 h-[1px] bg-zinc-800 z-0"></div>
-              
-              <div className="flex-1 relative z-10">
-                 <div className="w-12 h-12 rounded-full bg-[#8BFDA8] text-black font-black flex items-center justify-center text-xl mb-4 border-[4px] border-black">1</div>
-                 <h4 className="font-bold text-lg mb-2">Кабинет</h4>
-                 <p className="text-zinc-500 text-sm">Создайте аккаунт и настройте промпт для ИИ.</p>
-              </div>
-              <div className="flex-1 relative z-10">
-                 <div className="w-12 h-12 rounded-full bg-zinc-900 text-white border border-zinc-800 font-black flex items-center justify-center text-xl mb-4">2</div>
-                 <h4 className="font-bold text-lg mb-2">Наполнение</h4>
-                 <p className="text-zinc-500 text-sm">Добавьте свои товары, цены и загрузите Stories.</p>
-              </div>
-              <div className="flex-1 relative z-10">
-                 <div className="w-12 h-12 rounded-full bg-zinc-900 text-white border border-zinc-800 font-black flex items-center justify-center text-xl mb-4">3</div>
-                 <h4 className="font-bold text-lg mb-2">Установка</h4>
-                 <p className="text-zinc-500 text-sm">Вставьте одну строку кода на ваш Tilda или кастомный сайт.</p>
-              </div>
-           </div>
+          {/* БЛОК 4: ЗАЯВКИ */}
+          <div className="col-span-1 bg-[#111111] border border-zinc-800/80 rounded-[32px] overflow-hidden flex flex-col">
+            {/* Анимация */}
+            <div className="h-[320px] bg-[#1A1A1A] border-b border-zinc-800/80 flex items-center justify-center relative">
+               
+               <div className="anim-lead-form bg-zinc-900 border border-zinc-800 rounded-[20px] p-6 w-[240px] shadow-2xl absolute flex flex-col gap-3">
+                  <div className="h-4 w-1/2 bg-zinc-700 rounded mb-2 mx-auto"></div>
+                  <div className="h-10 w-full bg-zinc-800 rounded-xl relative overflow-hidden px-3 flex items-center">
+                     <div className="anim-lead-type1 h-4 bg-zinc-600 rounded"></div>
+                  </div>
+                  <div className="h-10 w-full bg-zinc-800 rounded-xl relative overflow-hidden px-3 flex items-center">
+                     <div className="anim-lead-type2 h-4 bg-zinc-600 rounded"></div>
+                  </div>
+                  <div className="anim-lead-btn bg-[#8BFDA8] text-black font-bold text-sm py-3 rounded-xl text-center mt-2">Отправить</div>
+               </div>
+
+               <div className="anim-lead-success absolute flex flex-col items-center gap-3">
+                  <div className="w-16 h-16 bg-[#34C759] rounded-full flex items-center justify-center">
+                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                  </div>
+                  <div className="text-white font-bold">Отправлено</div>
+               </div>
+
+            </div>
+            {/* Текст */}
+            <div className="p-8 md:p-10 flex-shrink-0">
+               <h3 className="text-2xl font-black mb-3">Генерация лидов</h3>
+               <p className="text-zinc-400 leading-relaxed mb-6">
+                 Сбор контактов без сложных форм.
+               </p>
+               <div className="bg-[#8BFDA8]/5 border border-[#8BFDA8]/20 rounded-2xl p-5">
+                 <span className="text-[#8BFDA8] font-bold text-sm block mb-1">Зачем это бизнесу?</span>
+                 <span className="text-zinc-300 text-sm leading-relaxed">ИИ сам предложит клиенту оставить номер WhatsApp, если тот сомневается. Вы получаете базу теплых контактов для дальнейших продаж.</span>
+               </div>
+            </div>
+          </div>
+
+          {/* БЛОК 5: АНАЛИТИКА */}
+          <div className="col-span-1 bg-[#111111] border border-zinc-800/80 rounded-[32px] overflow-hidden flex flex-col">
+            {/* Анимация */}
+            <div className="h-[320px] bg-[#1A1A1A] border-b border-zinc-800/80 flex items-center justify-center relative p-8">
+               <div className="w-full h-full border-b-2 border-l-2 border-zinc-800 flex items-end justify-around pb-1 pl-4 gap-4">
+                  <div className="w-1/3 bg-zinc-700 rounded-t-lg anim-bar-1 relative">
+                     <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs text-zinc-500 font-mono">1.2k</div>
+                  </div>
+                  <div className="w-1/3 bg-zinc-700 rounded-t-lg anim-bar-2 relative">
+                     <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs text-zinc-500 font-mono">840</div>
+                  </div>
+                  <div className="w-1/3 bg-[#8BFDA8] rounded-t-lg anim-bar-3 relative shadow-[0_0_20px_rgba(139,253,168,0.3)]">
+                     <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs text-[#8BFDA8] font-bold font-mono">3.4k</div>
+                  </div>
+               </div>
+            </div>
+            {/* Текст */}
+            <div className="p-8 md:p-10 flex-shrink-0">
+               <h3 className="text-2xl font-black mb-3">Сквозная аналитика</h3>
+               <p className="text-zinc-400 leading-relaxed mb-6">
+                 Следите за всеми метриками в удобной панели управления.
+               </p>
+               <div className="bg-[#8BFDA8]/5 border border-[#8BFDA8]/20 rounded-2xl p-5">
+                 <span className="text-[#8BFDA8] font-bold text-sm block mb-1">Зачем это бизнесу?</span>
+                 <span className="text-zinc-300 text-sm leading-relaxed">Вы точно знаете, сколько человек открыли виджет, кликнули на соцсети или перешли в каталог. Помогает оценивать эффективность маркетинга.</span>
+               </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
       {/* FINAL CTA */}
-      <section className="relative z-10 py-32 border-t border-zinc-900 bg-gradient-to-b from-transparent to-[#8BFDA8]/5">
+      <section className="relative z-10 py-32 border-t border-zinc-900 bg-gradient-to-b from-transparent to-[#8BFDA8]/5 mt-10">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-4xl md:text-6xl font-black mb-8">Начните собирать заявки <br /> уже сегодня</h2>
           <p className="text-lg text-zinc-400 mb-12">
-            Регистрация и базовая настройка бесплатны.
+            Регистрация и базовая настройка полностью бесплатны.
           </p>
           <Link href="/login" className="inline-flex h-16 px-12 bg-[#8BFDA8] text-black rounded-[20px] font-black text-xl items-center justify-center hover:scale-105 transition-all active:scale-95 shadow-[0_0_40px_rgba(139,253,168,0.3)]">
             Зарегистрироваться
@@ -272,7 +364,7 @@ export default function LandingPage() {
 
       {/* FOOTER */}
       <footer className="relative z-10 py-12 border-t border-zinc-900 bg-black">
-        <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+        <div className="max-w-[1400px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="opacity-40 grayscale hover:opacity-100 hover:grayscale-0 transition-all cursor-pointer flex items-center">
              <span className="text-white font-black text-xl tracking-tighter">AI NUR</span>
           </div>
@@ -285,34 +377,3 @@ export default function LandingPage() {
     </div>
   );
 }
-<script>
-(function(){
-    var iframe = document.createElement('iframe');
-    iframe.src = "https://ainur-backend-eta.vercel.app/widget.html?id=80f5479f-10dd-4859-aa56-234f4879396c";
-    iframe.style.position = "fixed";
-    iframe.style.bottom = "0";
-    iframe.style.left = "50%";
-    iframe.style.transform = "translateX(-50%)";
-    iframe.style.width = "100%";
-    iframe.style.maxWidth = "400px";
-    iframe.style.height = "120px";
-    iframe.style.border = "none";
-    iframe.style.zIndex = "999999";
-    iframe.style.background = "transparent";
-    iframe.style.transition = "height 0.3s ease, max-width 0.3s ease";
-    document.body.appendChild(iframe);
-
-    window.addEventListener('message', function(e) {
-        if(e.data === 'ainur_opened') {
-            iframe.style.height = "750px";
-            iframe.style.maxWidth = "400px";
-        } else if(e.data === 'ainur_closed') {
-            iframe.style.height = "120px";
-            iframe.style.maxWidth = "400px";
-        } else if(e.data === 'ainur_fullscreen') {
-            iframe.style.height = "100vh";
-            iframe.style.maxWidth = "100vw";
-        }
-    });
-})();
-</script>
