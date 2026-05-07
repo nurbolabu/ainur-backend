@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 import { Loader2, ArrowLeft, CheckCircle2, AlertCircle } from 'lucide-react';
 
-// Инициализация клиента Supabase
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -30,7 +29,7 @@ export default function LoginPage() {
     const code = urlParams.get('code');
     if (code) {
       setMode('update');
-      supabase.auth.exchangeCodeForSession(code).catch(err => console.error("Session exchange error:", err));
+      supabase.auth.exchangeCodeForSession(code).catch(err => console.error("Session error:", err));
     }
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'PASSWORD_RECOVERY') setMode('update');
@@ -40,39 +39,40 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // РУЧНАЯ ВАЛИДАЦИЯ (ЧТОБЫ ИЗБЕЖАТЬ БАГА iOS SAFARI)
+    if (mode !== 'update' && !email.trim()) {
+      setError('Пожалуйста, введите Email');
+      return;
+    }
+    if (mode !== 'forgot' && !password.trim()) {
+      setError('Пожалуйста, введите пароль');
+      return;
+    }
+
     setIsLoading(true);
     setError('');
     setSuccessMsg('');
 
-    console.log(`--- Starting ${mode} process ---`);
-
     try {
       if (mode === 'register') {
-        if (!companyName) throw new Error('Укажите название компании');
+        if (!companyName.trim()) throw new Error('Укажите название компании');
+        if (password.length < 6) throw new Error('Пароль должен быть минимум 6 символов');
         
-        console.log("1. Calling signUp...");
         const { data: authData, error: authError } = await supabase.auth.signUp({ 
           email, 
           password,
           options: { emailRedirectTo: `${window.location.origin}/login` }
         });
 
-        if (authError) {
-            console.error("SignUp Error:", authError);
-            throw authError;
-        }
-
-        console.log("2. SignUp successful, user ID:", authData.user?.id);
+        if (authError) throw authError;
 
         if (authData.user) {
-          // Если сессии нет, значит включено подтверждение по почте
           if (!authData.session) {
-            console.log("3. Session null: Email confirmation is likely REQUIRED in Supabase settings.");
-            setSuccessMsg('Аккаунт создан! Пожалуйста, подтвердите почту (проверьте Спам), чтобы завершить настройку проекта.');
+            setSuccessMsg('Аккаунт создан! Пожалуйста, подтвердите почту (проверьте Спам), чтобы завершить настройку.');
             return;
           }
 
-          console.log("3. Creating project in DB...");
           const { error: dbError } = await supabase
             .from('projects')
             .insert([{ 
@@ -81,38 +81,23 @@ export default function LoginPage() {
                 system_prompt: "Ты — ИИ-ассистент компании " + companyName + ". Твоя задача — помогать клиентам и продавать услуги."
             }]);
             
-          if (dbError) {
-            console.error("Database Insert Error:", dbError);
-            throw new Error('Авторизация успешна, но не удалось создать проект. Пожалуйста, обратитесь в поддержку.');
-          }
+          if (dbError) throw new Error('Ошибка БД: ' + dbError.message);
           
-          console.log("4. Project created! Redirecting...");
           router.push('/admin');
         }
 
       } else if (mode === 'login') {
-        console.log("1. Calling signIn...");
         const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password });
-        
-        if (authError) {
-            console.error("SignIn Error:", authError);
-            throw new Error('Неверный почта или пароль');
-        }
+        if (authError) throw new Error('Неверный email или пароль');
 
         if (data.user) {
-          console.log("2. Login success. Fetching project ID...");
-          const { data: project, error: pError } = await supabase
+          const { data: project } = await supabase
             .from('projects')
             .select('id')
             .eq('user_id', data.user.id)
             .maybeSingle();
 
-          if (pError) console.error("Project Fetch Error:", pError);
-
-          if (project) {
-            console.log("3. Project found:", project.id);
-            localStorage.setItem('ainur_admin_project_id', project.id);
-          }
+          if (project) localStorage.setItem('ainur_admin_project_id', project.id);
           router.push('/admin');
         }
 
@@ -124,6 +109,7 @@ export default function LoginPage() {
         setSuccessMsg('Инструкции отправлены на вашу почту.');
 
       } else if (mode === 'update') {
+        if (password.length < 6) throw new Error('Новый пароль должен быть минимум 6 символов');
         const { error: updateError } = await supabase.auth.updateUser({ password });
         if (updateError) throw updateError;
         setSuccessMsg('Пароль успешно изменен!');
@@ -131,7 +117,8 @@ export default function LoginPage() {
       }
 
     } catch (err: any) {
-      console.error("Catch Error:", err);
+      // ВЫВОДИМ ОШИБКУ НА ЭКРАН ТЕЛЕФОНА ДЛЯ ДЕБАГА
+      alert("Техническая ошибка: " + err.message);
       setError(err.message || 'Произошла ошибка при связи с сервером');
     } finally {
       setIsLoading(false);
@@ -139,11 +126,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-[#FAFAFA] p-4 font-sans selection:bg-[#8BFDA8] selection:text-black">
-      <div className="w-full max-w-[420px] bg-white rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#F0F0F0] p-8 md:p-10">
+    <div className="min-h-screen w-full flex items-center justify-center bg-[#FAFAFA] p-4 font-sans selection:bg-[#8BFDA8] selection:text-black relative z-10">
+      <div className="w-full max-w-[420px] bg-white rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#F0F0F0] p-8 md:p-10 relative z-20">
         
         <div className="flex flex-col items-center mb-8">
-          {/* LOGO */}
           <div className="mb-8">
             <svg className="h-[18px] w-auto" viewBox="0 0 99 14" fill="none">
               <path d="M98.0879 13.7771H92.4758L89.457 10.1911H83.0142V13.7771H78.8203V6.84812H90.6118C91.2602 6.84812 91.8072 6.71305 92.2529 6.44291C92.6987 6.17278 92.9215 5.80134 92.9215 5.3286C92.9215 4.80183 92.7189 4.41013 92.3137 4.1535C91.9085 3.88336 91.3412 3.7483 90.6118 3.7483H78.8203V0.223007H90.2674C91.0373 0.223007 91.8342 0.297295 92.6581 0.44587C93.4821 0.580939 94.2317 0.830816 94.9071 1.1955C95.5824 1.56019 96.1362 2.05319 96.5684 2.6745C97.0141 3.29582 97.237 4.09272 97.237 5.06522C97.237 5.59198 97.156 6.09174 96.9939 6.56448C96.8318 7.03722 96.5954 7.46268 96.2848 7.84087C95.9876 8.21906 95.6162 8.54323 95.1704 8.81337C94.7382 9.07 94.2452 9.25234 93.6914 9.36039C93.921 9.53598 94.1777 9.75885 94.4613 10.029C94.745 10.2991 95.1232 10.6706 95.5959 11.1433L98.0879 13.7771Z" fill="black"/>
@@ -153,7 +139,6 @@ export default function LoginPage() {
             </svg>
           </div>
 
-          {/* TAB SWITCHER */}
           {(mode === 'login' || mode === 'register') && (
             <div className="w-full bg-[#F2F2F7] rounded-full p-1 flex relative mb-4">
               <div 
@@ -176,14 +161,19 @@ export default function LoginPage() {
               </button>
             </div>
           )}
+
+          {mode === 'forgot' && <h1 className="text-[22px] font-bold text-black text-center mt-2 mb-2">Забыли пароль?</h1>}
+          {mode === 'update' && <h1 className="text-[22px] font-bold text-black text-center mt-2 mb-2">Новый пароль</h1>}
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          
           {mode === 'register' && (
-            <div className="flex flex-col gap-1.5 animate-in slide-in-from-top-2 duration-300">
+            <div className="flex flex-col gap-1.5">
               <label className="text-[12px] font-bold text-[#8E8E93] uppercase tracking-wide ml-1">Название компании</label>
+              {/* УБРАЛИ REQUIRED! */}
               <input 
-                type="text" required value={companyName} onChange={(e) => setCompanyName(e.target.value)}
+                type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)}
                 className="w-full h-[52px] bg-white border border-[#E5E5EA] focus:border-[#8BFDA8] focus:ring-4 focus:ring-[#8BFDA8]/10 rounded-[14px] px-4 text-[16px] text-black outline-none transition-all"
                 placeholder="Мой бизнес"
               />
@@ -193,8 +183,9 @@ export default function LoginPage() {
           {mode !== 'update' && (
             <div className="flex flex-col gap-1.5">
               <label className="text-[12px] font-bold text-[#8E8E93] uppercase tracking-wide ml-1">Email</label>
+              {/* УБРАЛИ REQUIRED! */}
               <input 
-                type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
+                type="email" value={email} onChange={(e) => setEmail(e.target.value)}
                 className="w-full h-[52px] bg-white border border-[#E5E5EA] focus:border-[#8BFDA8] focus:ring-4 focus:ring-[#8BFDA8]/10 rounded-[14px] px-4 text-[16px] text-black outline-none transition-all"
                 placeholder="name@mail.com"
               />
@@ -206,22 +197,21 @@ export default function LoginPage() {
               <label className="text-[12px] font-bold text-[#8E8E93] uppercase tracking-wide ml-1">
                  {mode === 'update' ? 'Новый пароль' : 'Пароль'}
               </label>
+              {/* УБРАЛИ REQUIRED! */}
               <input 
-                type="password" required value={password} onChange={(e) => setPassword(e.target.value)}
+                type="password" value={password} onChange={(e) => setPassword(e.target.value)}
                 className="w-full h-[52px] bg-white border border-[#E5E5EA] focus:border-[#8BFDA8] focus:ring-4 focus:ring-[#8BFDA8]/10 rounded-[14px] px-4 text-[16px] text-black outline-none transition-all"
                 placeholder="••••••••"
               />
             </div>
           )}
 
-          {/* STATUS MESSAGES */}
           {error && <div className="text-[#FF3B30] text-[13px] font-medium bg-[#FF3B30]/10 border border-[#FF3B30]/20 p-3 rounded-[12px] flex gap-2 items-center"><AlertCircle size={16}/> {error}</div>}
           {successMsg && <div className="text-[#34C759] text-[13px] font-medium bg-[#34C759]/10 border border-[#34C759]/20 p-3 rounded-[12px] flex items-start gap-2"><CheckCircle2 size={16} className="shrink-0 mt-0.5" /><span>{successMsg}</span></div>}
 
-          {/* MAIN ACTION BUTTON (BLACK / GREEN) */}
           <button 
             type="submit" disabled={isLoading}
-            className="w-full h-[52px] bg-black text-[#8BFDA8] rounded-[14px] font-bold text-[16px] mt-4 flex items-center justify-center disabled:opacity-50 active:scale-[0.98] transition-all hover:opacity-90"
+            className="w-full h-[52px] bg-black text-[#8BFDA8] rounded-[14px] font-bold text-[16px] mt-4 flex items-center justify-center disabled:opacity-50 active:scale-[0.98] transition-all hover:opacity-90 relative z-30 cursor-pointer"
           >
             {isLoading ? <Loader2 size={22} className="animate-spin" /> : (
               mode === 'login' ? 'Войти' : 
@@ -231,7 +221,6 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* FORGOT PASSWORD (BELOW BUTTON) */}
         {mode === 'login' && (
           <div className="mt-5 text-center">
             <button 
