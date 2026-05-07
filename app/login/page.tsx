@@ -129,7 +129,7 @@ export default function LoginPage() {
             </svg>
           </div>
 
-          {/* Переключатель Вход / Создать (Скрыт в режимах сброса пароля) */}
+          {/* Переключатель Вход / Создать */}
           {(mode === 'login' || mode === 'register') && (
             <div className="w-full bg-[#F2F2F7] rounded-full p-1 flex relative mb-4">
               <div 
@@ -196,20 +196,9 @@ export default function LoginPage() {
           {/* Поле Пароль (для входа, регистрации и установки нового) */}
           {mode !== 'forgot' && (
             <div className="flex flex-col gap-1.5">
-              <div className="flex items-center justify-between ml-1">
-                 <label className="text-[12px] font-bold text-[#8E8E93] uppercase tracking-wide">
-                    {mode === 'update' ? 'Новый пароль' : 'Пароль'}
-                 </label>
-                 {mode === 'login' && (
-                    <button 
-                      type="button"
-                      onClick={() => { setMode('forgot'); setError(''); setSuccessMsg(''); }}
-                      className="text-[12px] font-semibold text-[#8BFDA8] hover:opacity-70 transition-opacity"
-                    >
-                      Забыли пароль?
-                    </button>
-                 )}
-              </div>
+              <label className="text-[12px] font-bold text-[#8E8E93] uppercase tracking-wide ml-1">
+                 {mode === 'update' ? 'Новый пароль' : 'Пароль'}
+              </label>
               <input 
                 type="password" 
                 required 
@@ -230,22 +219,35 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* Главная кнопка действия */}
+          {/* Главная кнопка действия (Черный фон, Зеленый текст) */}
           <button 
             type="submit" 
             disabled={isLoading}
-            className="w-full h-[52px] bg-[#8BFDA8] text-black rounded-[14px] font-bold text-[16px] mt-4 flex items-center justify-center disabled:opacity-50 active:scale-[0.98] transition-all hover:shadow-[0_0_20px_rgba(139,253,168,0.4)]"
+            className="w-full h-[52px] bg-black text-[#8BFDA8] rounded-[14px] font-bold text-[16px] mt-4 flex items-center justify-center disabled:opacity-50 active:scale-[0.98] transition-all hover:shadow-lg"
           >
             {isLoading ? <Loader2 size={22} className="animate-spin" /> : (
               <>
                 {mode === 'login' && 'Войти'}
-                {mode === 'register' && 'Создать платформу'}
+                {mode === 'register' && 'Создать аккаунт'}
                 {mode === 'forgot' && 'Отправить ссылку'}
                 {mode === 'update' && 'Сохранить пароль'}
               </>
             )}
           </button>
         </form>
+
+        {/* Ссылка "Забыли пароль?" под кнопкой входа */}
+        {mode === 'login' && (
+          <div className="mt-5 text-center">
+            <button 
+              type="button"
+              onClick={() => { setMode('forgot'); setError(''); setSuccessMsg(''); }}
+              className="text-[14px] font-semibold text-black hover:underline transition-all"
+            >
+              Забыли пароль?
+            </button>
+          </div>
+        )}
 
         {/* Кнопка "Назад" для забытого пароля */}
         {mode === 'forgot' && (
