@@ -285,3 +285,34 @@ export default function LandingPage() {
     </div>
   );
 }
+<script>
+(function(){
+    var iframe = document.createElement('iframe');
+    iframe.src = "https://ainur-backend-eta.vercel.app/widget.html?id=80f5479f-10dd-4859-aa56-234f4879396c";
+    iframe.style.position = "fixed";
+    iframe.style.bottom = "0";
+    iframe.style.left = "50%";
+    iframe.style.transform = "translateX(-50%)";
+    iframe.style.width = "100%";
+    iframe.style.maxWidth = "400px";
+    iframe.style.height = "120px";
+    iframe.style.border = "none";
+    iframe.style.zIndex = "999999";
+    iframe.style.background = "transparent";
+    iframe.style.transition = "height 0.3s ease, max-width 0.3s ease";
+    document.body.appendChild(iframe);
+
+    window.addEventListener('message', function(e) {
+        if(e.data === 'ainur_opened') {
+            iframe.style.height = "750px";
+            iframe.style.maxWidth = "400px";
+        } else if(e.data === 'ainur_closed') {
+            iframe.style.height = "120px";
+            iframe.style.maxWidth = "400px";
+        } else if(e.data === 'ainur_fullscreen') {
+            iframe.style.height = "100vh";
+            iframe.style.maxWidth = "100vw";
+        }
+    });
+})();
+</script>
