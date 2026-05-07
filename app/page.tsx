@@ -2,252 +2,248 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { MessageSquare, LayoutGrid, ShoppingBag, ListOrdered, CheckCircle2, PlaySquare, ArrowRight } from 'lucide-react';
 
-export default function MobileLandingPage() {
+export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-black text-white font-sans relative overflow-hidden flex justify-center">
-      
-      {/* ФОН: Градиент + Сетка из точек (шаг 8px) */}
-      <div className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-b from-[#181818] via-black to-[#2B2B2B]"></div>
-      <div 
-        className="absolute inset-0 z-0 pointer-events-none opacity-40"
-        style={{ 
-          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.15) 1.5px, transparent 1.5px)', 
-          backgroundSize: '8px 8px' 
-        }}
-      ></div>
-
-      {/* АНИМАЦИИ */}
+    <>
       <style dangerouslySetInnerHTML={{__html: `
-        .anim-slide-up { animation: slideUp 4s infinite cubic-bezier(0.16, 1, 0.3, 1); transform-origin: bottom center; }
-        .anim-pulse-glow { animation: pulseGlow 3s infinite alternate; }
-        .anim-spin-grad { animation: spinGrad 4s linear infinite; }
-        .anim-scroll-y { animation: scrollY 6s infinite linear; }
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
         
-        @keyframes slideUp {
-          0%, 10% { transform: translateY(100px); opacity: 0; }
-          20%, 80% { transform: translateY(0); opacity: 1; }
-          90%, 100% { transform: translateY(100px); opacity: 0; }
+        .font-montserrat { font-family: 'Montserrat', sans-serif; }
+        
+        /* Плавные анимации элементов макета */
+        .anim-bubble-user { animation: popIn 3s infinite alternate cubic-bezier(0.25, 0.8, 0.25, 1); transform-origin: bottom right; }
+        .anim-bubble-ai { animation: popIn 3s infinite alternate-reverse cubic-bezier(0.25, 0.8, 0.25, 1); transform-origin: bottom left; }
+        .anim-pulse-ring { animation: ringPulse 2s infinite; }
+        .anim-float { animation: float 6s ease-in-out infinite; }
+        .anim-story-ring { animation: spin 4s linear infinite; }
+        
+        @keyframes popIn {
+          0%, 10% { transform: scale(0.95); opacity: 0.8; }
+          90%, 100% { transform: scale(1); opacity: 1; }
         }
-        @keyframes pulseGlow {
-          0% { box-shadow: 0 0 10px rgba(139,253,168,0.2); }
-          100% { box-shadow: 0 0 25px rgba(139,253,168,0.6); }
+        @keyframes ringPulse {
+          0% { box-shadow: 0 0 0 0 rgba(139, 253, 168, 0.4); }
+          70% { box-shadow: 0 0 0 10px rgba(139, 253, 168, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(139, 253, 168, 0); }
         }
-        @keyframes spinGrad { 
-          from { transform: rotate(0deg); } 
-          to { transform: rotate(360deg); } 
+        @keyframes float {
+          0% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+          100% { transform: translateY(0px); }
         }
-        @keyframes scrollY {
-          0%, 10% { transform: translateY(0); }
-          45%, 55% { transform: translateY(-40px); }
-          90%, 100% { transform: translateY(0); }
-        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
       `}} />
 
-      {/* ГЛАВНЫЙ КОНТЕЙНЕР (Мобильная ширина) */}
-      <div className="relative z-10 w-full max-w-[430px] px-6 pt-12 pb-24 flex flex-col">
+      <div className="min-h-screen bg-black text-white font-montserrat relative overflow-hidden flex flex-col items-center">
         
-        {/* ХЕДЕР (Закрепленный) */}
-        <header className="fixed top-0 left-0 w-full z-50 flex justify-center pointer-events-none">
-          <div className="w-full max-w-[430px] px-6 py-4 flex justify-between items-center pointer-events-auto backdrop-blur-md bg-black/40 border-b border-white/5">
-            <span className="font-black text-xl tracking-tighter">AI NUR</span>
-            <Link href="/login" className="bg-[#1A1A1A] border border-white/10 text-white text-xs font-semibold px-4 py-2 rounded-full">
-              Войти
-            </Link>
+        {/* ФОН: Градиент + Сетка из точек (шаг ~20px, размер 3.29px как в макете) */}
+        <div className="absolute inset-0 z-0 pointer-events-none" style={{ background: 'linear-gradient(0deg, #181818 0%, black 50%, #2B2B2B 100%)' }}></div>
+        <div className="absolute inset-0 z-0 pointer-events-none" style={{ 
+            backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.09) 1.65px, transparent 1.65px)', 
+            backgroundSize: '20px 20px',
+            backgroundPosition: 'center'
+        }}></div>
+
+        {/* HEADER (Закрепленный) */}
+        <header className="fixed top-0 left-0 w-full z-50 flex justify-center backdrop-blur-md bg-black/50 border-b border-white/5">
+          <div className="w-full max-w-6xl px-6 py-4 flex justify-between items-center">
+            <span className="font-bold text-xl tracking-widest text-white uppercase">AI NUR</span>
+            <div className="flex gap-4">
+              <Link href="/login" className="hidden sm:flex items-center text-[#8BFDA8] text-sm font-medium hover:opacity-80 transition-opacity">
+                Войти
+              </Link>
+              <Link href="/login" className="bg-[#8BFDA8] text-black px-5 py-2 rounded-full text-sm font-bold hover:scale-105 transition-transform">
+                Регистрация
+              </Link>
+            </div>
           </div>
         </header>
 
-        {/* HERO SECTION */}
-        <div className="mt-16 mb-10 flex flex-col items-center text-center">
-          <h1 className="text-3xl font-bold uppercase tracking-tight leading-snug mb-4">
-            Превращаем сайты <br/>в диалог с клиентами
-          </h1>
-          <p className="text-[15px] text-white/80 font-medium leading-relaxed max-w-[300px]">
-            AI NUR — это современный способ быстро превратить любой сайт в диалог с клиентом
-          </p>
+        {/* MAIN CONTENT CONTAINER */}
+        <main className="relative z-10 w-full max-w-6xl px-4 sm:px-6 pt-32 pb-24 flex flex-col items-center">
+          
+          {/* HERO SECTION */}
+          <div className="text-center max-w-3xl flex flex-col items-center">
+            <h1 className="text-[28px] md:text-[48px] font-bold uppercase leading-tight mb-6 tracking-wide drop-shadow-lg">
+              Превращаем сайты<br />в диалог с клиентами
+            </h1>
+            <p className="text-[16px] md:text-[20px] font-normal leading-relaxed text-white/90 max-w-[500px] md:max-w-xl mb-10">
+              AI NUR это современный способ быстро превратить любой сайт в диалог с клиентом
+            </p>
+            
+            {/* Кнопки */}
+            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto px-4 sm:px-0">
+              <Link href="/login" className="w-full sm:w-[260px] py-4 bg-[#8BFDA8] text-black text-[14px] font-medium rounded-[30px] flex justify-center items-center hover:scale-105 transition-transform shadow-[0_0_20px_rgba(139,253,168,0.2)]">
+                Зарегистрироваться
+              </Link>
+              <Link href="/login" className="w-full sm:w-[260px] py-4 border border-[#8BFDA8] text-[#8BFDA8] text-[14px] font-medium rounded-[30px] flex justify-center items-center hover:bg-[#8BFDA8]/10 transition-colors">
+                Войти
+              </Link>
+            </div>
 
-          <div className="mt-8 flex items-center justify-center gap-4 w-full">
-            <Link href="/login" className="flex-1 bg-[#8BFDA8] text-black font-semibold py-3.5 rounded-full text-sm hover:scale-[1.02] transition-transform flex justify-center items-center">
-              Зарегистрироваться
-            </Link>
-            <Link href="/login" className="flex-1 border border-[#8BFDA8] text-[#8BFDA8] font-semibold py-3.5 rounded-full text-sm hover:bg-[#8BFDA8]/10 transition-colors flex justify-center items-center">
-              Войти
-            </Link>
+            {/* Фишки (Пилюли) */}
+            <div className="flex flex-wrap justify-center gap-2.5 mt-10 max-w-[400px] md:max-w-none">
+              <div className="px-4 py-2 bg-[#8BFDA8] text-black text-[12px] rounded-full font-medium border border-[#8BFDA8]">Чат с ИИ</div>
+              <div className="px-4 py-2 border border-[#8BFDA8] text-white text-[12px] rounded-full font-medium">Stories</div>
+              <div className="px-4 py-2 border border-[#8BFDA8] text-white text-[12px] rounded-full font-medium">Каталог</div>
+              <div className="px-4 py-2 border border-[#8BFDA8] text-white text-[12px] rounded-full font-medium">Заявки</div>
+            </div>
           </div>
-        </div>
 
-        {/* НАВИГАЦИОННЫЕ ПИЛЛЫ */}
-        <div className="flex flex-wrap justify-center gap-2 mb-12">
-          <div className="bg-[#8BFDA8] text-black px-4 py-1.5 rounded-full text-xs font-semibold border border-[#8BFDA8]">Чат с ИИ</div>
-          <div className="border border-[#8BFDA8] text-white px-4 py-1.5 rounded-full text-xs font-medium">Stories</div>
-          <div className="border border-[#8BFDA8] text-white px-4 py-1.5 rounded-full text-xs font-medium">Каталог</div>
-          <div className="border border-[#8BFDA8] text-white px-4 py-1.5 rounded-full text-xs font-medium">Заявки</div>
-        </div>
-
-        {/* ========================================= */}
-        {/* КАРТОЧКА 1: ЧАТ */}
-        {/* ========================================= */}
-        <div className="bg-black rounded-[22px] border border-[#4D4D4D] overflow-hidden mb-6 relative">
-          <div className="h-[220px] relative flex justify-center items-end pb-0 bg-gradient-to-b from-[#181818] to-black border-b border-[#333]">
-            {/* Анимация чата */}
-            <div className="anim-slide-up w-[260px] bg-[#111] rounded-t-[30px] border-t border-l border-r border-[#333] p-4 flex flex-col gap-3 relative z-10 shadow-[0_-10px_30px_rgba(0,0,0,0.8)]">
-               <div className="self-end bg-[#8BFDA8] text-black text-[11px] px-3 py-2 rounded-2xl rounded-br-sm font-semibold max-w-[80%]">
-                 Как быстро настроить?
-               </div>
-               <div className="self-start bg-[#2C2C2E] text-white text-[11px] px-3 py-2 rounded-2xl rounded-bl-sm font-medium leading-relaxed max-w-[90%]">
-                 Всего пара кликов! Я уже готов продавать ваши товары.
-               </div>
-               {/* Имитация инпута */}
-               <div className="w-full bg-[#1A1A1A] rounded-full h-8 border border-[#333] mt-2 flex items-center px-3 gap-2">
-                 <div className="flex-1 h-2 bg-[#333] rounded-full"></div>
-                 <div className="w-5 h-5 bg-[#8BFDA8] rounded-full flex items-center justify-center">
-                    <ArrowRight size={10} color="black" strokeWidth={3} />
+          {/* КАРТОЧКИ (GRID) */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-20 w-full max-w-[1100px]">
+            
+            {/* Карточка 1: Чат */}
+            <div className="bg-black border border-[#4D4D4D] rounded-[22px] overflow-hidden flex flex-col h-[520px]">
+               {/* Иллюстрация (Точная копия из макета) */}
+               <div className="relative h-[260px] flex justify-center">
+                 <div className="anim-float w-[280px] h-[247px] border-[4px] border-[#DEDEDE] rounded-b-[46px] absolute top-0 overflow-hidden bg-black shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
+                    {/* Сообщение клиента */}
+                    <div className="anim-bubble-user absolute top-[70px] left-[12px] w-[250px] bg-[#E9E9EB] rounded-t-[22px] rounded-br-[22px] p-3.5 flex flex-col gap-2">
+                       <div className="flex gap-2"><div className="w-[30px] h-[8px] bg-black rounded-[2px]"></div><div className="w-[40px] h-[8px] bg-black rounded-[2px]"></div><div className="w-[20px] h-[8px] bg-black rounded-[2px]"></div></div>
+                       <div className="flex gap-2"><div className="w-[50px] h-[8px] bg-black rounded-[2px]"></div><div className="w-[35px] h-[8px] bg-black rounded-[2px]"></div></div>
+                    </div>
+                    {/* Сообщение ИИ */}
+                    <div className="anim-bubble-ai absolute top-[135px] left-[18px] w-[250px] bg-gradient-to-r from-[#61D6FB] to-[#8BFDA8] rounded-t-[22px] rounded-bl-[22px] p-3.5 flex flex-col gap-2">
+                       <div className="flex gap-2"><div className="w-[35px] h-[8px] bg-black/80 rounded-[2px]"></div><div className="w-[45px] h-[8px] bg-black/80 rounded-[2px]"></div><div className="w-[25px] h-[8px] bg-black/80 rounded-[2px]"></div></div>
+                       <div className="flex gap-2"><div className="w-[40px] h-[8px] bg-black/80 rounded-[2px]"></div><div className="w-[30px] h-[8px] bg-black/80 rounded-[2px]"></div><div className="w-[50px] h-[8px] bg-black/80 rounded-[2px]"></div></div>
+                    </div>
+                    {/* Поле ввода */}
+                    <div className="absolute top-[195px] left-[20px] w-[237px] h-[39px] bg-white rounded-xl flex items-center p-1.5 justify-between">
+                       <div className="flex gap-1.5 ml-2">
+                          <div className="w-[20px] h-[4px] bg-[#6B6D6C] rounded-[2px]"></div><div className="w-[30px] h-[4px] bg-[#6B6D6C] rounded-[2px]"></div>
+                       </div>
+                       <div className="w-[28px] h-[28px] bg-black rounded-[8px] flex items-center justify-center">
+                          <div className="w-[12px] h-[12px] bg-[#8BFDA8] rounded-[3px]"></div>
+                       </div>
+                    </div>
                  </div>
                </div>
-            </div>
-          </div>
-          <div className="p-6 text-center flex flex-col items-center">
-            <h3 className="text-[20px] font-bold text-white/80 mb-3 leading-tight">Закрепленный чат<br/>внизу экрана</h3>
-            <p className="text-[13px] text-white/60 leading-relaxed">
-              Знакомый интерфейс мессенджера на любом сайте. Искусственный интеллект ответит на любые вопросы клиента.
-            </p>
-          </div>
-        </div>
-
-        {/* ========================================= */}
-        {/* КАРТОЧКА 2: МЕНЮ */}
-        {/* ========================================= */}
-        <div className="bg-black rounded-[22px] border border-[#4D4D4D] overflow-hidden mb-6">
-          <div className="p-6 text-center flex flex-col items-center border-b border-[#333]">
-            <h3 className="text-[20px] font-bold text-white/80 mb-3 leading-tight">Функциональное меню</h3>
-            <p className="text-[13px] text-white/60 leading-relaxed mb-6">
-              В одном меню есть все важные функции, чтобы клиент всегда нашел нужное
-            </p>
-            {/* Меню UI */}
-            <div className="w-full bg-[#111] rounded-2xl border border-[#333] p-2 flex justify-around">
-               <div className="flex flex-col items-center gap-1.5 p-2 bg-[#1A1A1A] rounded-xl border border-[#333] w-[30%]">
-                 <MessageSquare size={18} className="text-[#8BFDA8]" />
-                 <span className="text-[9px] font-semibold text-white/80">Чат</span>
-               </div>
-               <div className="flex flex-col items-center gap-1.5 p-2 w-[30%]">
-                 <ShoppingBag size={18} className="text-white/40" />
-                 <span className="text-[9px] font-semibold text-white/40">Корзина</span>
-               </div>
-               <div className="flex flex-col items-center gap-1.5 p-2 w-[30%]">
-                 <ListOrdered size={18} className="text-white/40" />
-                 <span className="text-[9px] font-semibold text-white/40">Заявка</span>
+               {/* Текст */}
+               <div className="px-6 pb-8 pt-4 flex flex-col items-center text-center mt-auto">
+                 <h3 className="text-[22px] font-bold text-white/60 mb-4">Закрепленный чат<br/>внизу экрана</h3>
+                 <p className="text-[14px] text-white/80 leading-relaxed font-normal">
+                   Знакомый интерфейс мессенджера на любом сайте. Приглашает клиентов начать диалог, а ИИ ответит на любые вопросы.
+                 </p>
                </div>
             </div>
-          </div>
-          <div className="flex justify-between items-center p-5 bg-[#0A0A0A]">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full border border-[#8BFDA8] flex items-center justify-center anim-pulse-glow">
-                <div className="w-1.5 h-1.5 bg-[#8BFDA8] rounded-full"></div>
-              </div>
-              <span className="text-xs font-semibold text-white">Работает 24/7</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="text-xs font-semibold text-white">Конверсия <span className="text-[#8BFDA8]">x2</span></div>
-            </div>
-          </div>
-        </div>
 
-        {/* ========================================= */}
-        {/* КАРТОЧКА 3: STORIES */}
-        {/* ========================================= */}
-        <div className="bg-black rounded-[22px] border border-[#4D4D4D] overflow-hidden mb-6">
-          <div className="h-[200px] flex items-center justify-center relative bg-gradient-to-b from-[#181818] to-[#0A0A0A] border-b border-[#333]">
-             {/* Кружок Stories */}
-             <div className="relative w-20 h-20 flex-shrink-0 z-10 border border-zinc-800 bg-[#1A1A1A] rounded-full flex items-center justify-center shadow-2xl">
-                <svg className="anim-spin-grad absolute inset-0 w-full h-full" viewBox="0 0 60 60">
-                   <defs><linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#8BFDA8"/><stop offset="100%" stopColor="#61D6FB"/></linearGradient></defs>
-                   <circle cx="30" cy="30" r="27" stroke="url(#g1)" strokeWidth="3" fill="none" strokeLinecap="round" strokeDasharray="50 15" />
-                </svg>
-                <PlaySquare size={20} className="text-white/60 ml-0.5" />
-             </div>
-             {/* Тени для красоты */}
-             <div className="absolute w-32 h-32 bg-[#8BFDA8] rounded-full blur-[60px] opacity-10"></div>
-          </div>
-          <div className="p-6 text-center flex flex-col items-center">
-            <h3 className="text-[20px] font-bold text-white mb-3 leading-tight"><span className="text-[#8BFDA8]">Stories</span> в виджете</h3>
-            <p className="text-[13px] text-white/60 leading-relaxed mb-5">
-              Все любят stories и теперь они будут у вас на сайте. Быстро делитесь новостями и акциями.
-            </p>
-          </div>
-        </div>
-
-        {/* ========================================= */}
-        {/* КАРТОЧКА 4: КАТАЛОГ (НОВАЯ) */}
-        {/* ========================================= */}
-        <div className="bg-black rounded-[22px] border border-[#4D4D4D] overflow-hidden mb-12">
-          <div className="h-[220px] flex items-center justify-center relative bg-gradient-to-b from-[#181818] to-black border-b border-[#333] overflow-hidden">
-             {/* Анимация скролла каталога */}
-             <div className="anim-scroll-y w-[220px] flex flex-col gap-3">
-               {[1,2].map((i) => (
-                 <div key={i} className="bg-[#111] border border-[#333] rounded-2xl p-3 flex gap-3 items-center">
-                   <div className="w-14 h-14 bg-[#222] rounded-xl flex-shrink-0 flex items-center justify-center">
-                     <LayoutGrid size={16} className="text-white/20" />
-                   </div>
-                   <div className="flex flex-col gap-1.5 flex-1">
-                     <div className="h-2 w-full bg-[#333] rounded"></div>
-                     <div className="h-2 w-1/2 bg-[#333] rounded"></div>
-                     <div className="mt-1 h-6 w-full bg-[#8BFDA8]/10 border border-[#8BFDA8]/30 rounded-lg flex items-center justify-center">
-                       <span className="text-[9px] text-[#8BFDA8] font-bold">В корзину</span>
-                     </div>
-                   </div>
+            {/* Карточка 2: Меню */}
+            <div className="bg-black border border-[#4D4D4D] rounded-[22px] overflow-hidden flex flex-col h-[520px]">
+               {/* Иллюстрация */}
+               <div className="relative h-[260px] flex justify-center">
+                 <div className="anim-float w-[280px] h-[247px] border-[4px] border-[#DEDEDE] rounded-b-[46px] absolute top-0 overflow-hidden bg-gradient-to-t from-[#272727] to-[#080808] flex flex-col items-center">
+                    <div className="mt-8 bg-white/10 p-3 rounded-2xl border border-white/20 flex gap-4 w-[200px]">
+                       <div className="w-10 h-10 bg-white/20 rounded-xl"></div>
+                       <div className="flex flex-col gap-2 justify-center w-full">
+                         <div className="h-2 w-full bg-white/20 rounded"></div>
+                         <div className="h-2 w-2/3 bg-white/20 rounded"></div>
+                       </div>
+                    </div>
+                    <div className="mt-4 bg-white/10 p-3 rounded-2xl border border-white/20 flex gap-4 w-[200px]">
+                       <div className="w-10 h-10 bg-white/20 rounded-xl"></div>
+                       <div className="flex flex-col gap-2 justify-center w-full">
+                         <div className="h-2 w-full bg-white/20 rounded"></div>
+                         <div className="h-2 w-1/2 bg-white/20 rounded"></div>
+                       </div>
+                    </div>
                  </div>
-               ))}
+               </div>
+               {/* Текст */}
+               <div className="px-6 flex flex-col items-center text-center mt-4">
+                 <h3 className="text-[22px] font-bold text-white/60 mb-4">Функциональное меню</h3>
+                 <p className="text-[14px] text-white/80 leading-relaxed font-normal">
+                   В одном меню есть все важные функции, чтобы клиент всегда нашел нужное.
+                 </p>
+               </div>
+               {/* Преимущества внутри карточки */}
+               <div className="mt-auto px-6 pb-8 flex flex-col gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="anim-pulse-ring w-6 h-6 rounded-full border-[1.5px] border-[#8BFDA8] flex items-center justify-center">
+                      <div className="w-2 h-2 bg-[#8BFDA8] rounded-full"></div>
+                    </div>
+                    <span className="text-[14px] font-medium text-white">Работает 24/7</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-6 h-6 rounded-md border-[1.5px] border-[#8BFDA8] flex items-center justify-center">
+                      <div className="w-3 h-1.5 border-b-[1.5px] border-l-[1.5px] border-[#8BFDA8] -rotate-45 mb-0.5"></div>
+                    </div>
+                    <span className="text-[14px] font-medium text-white">Конверсия <span className="text-[#8BFDA8]">x2</span></span>
+                  </div>
+               </div>
+            </div>
+
+            {/* Карточка 3: Stories */}
+            <div className="bg-black border border-[#4D4D4D] rounded-[22px] overflow-hidden flex flex-col h-[520px]">
+               {/* Иллюстрация */}
+               <div className="relative h-[260px] flex justify-center">
+                 <div className="anim-float w-[280px] h-[247px] border-[4px] border-[#DEDEDE] rounded-b-[46px] absolute top-0 overflow-hidden bg-gradient-to-t from-transparent to-[#080808] flex flex-col items-center pt-10">
+                    <div className="relative w-[70px] h-[70px] rounded-full flex items-center justify-center z-10 mb-4">
+                       <svg className="anim-story-ring absolute inset-0 w-full h-full" viewBox="0 0 60 60">
+                         <defs><linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#8BFDA8"/><stop offset="100%" stopColor="#61D6FB"/></linearGradient></defs>
+                         <circle cx="30" cy="30" r="28" stroke="url(#sg)" strokeWidth="3" fill="none" />
+                       </svg>
+                       <div className="w-[58px] h-[58px] bg-[#111] rounded-full border-2 border-black flex items-center justify-center">
+                         <div className="w-6 h-6 border-2 border-white/50 rounded-sm"></div>
+                       </div>
+                    </div>
+                    <div className="text-[12px] font-bold text-white/60 mb-1">Название компании</div>
+                    <div className="text-[10px] text-white/40">Профиль, каталог, stories</div>
+                 </div>
+               </div>
+               {/* Текст */}
+               <div className="px-6 flex flex-col items-center text-center mt-4">
+                 <h3 className="text-[22px] font-bold text-white mb-4 leading-tight">
+                   <span className="text-[#8BFDA8]">Stories</span><br/>в виджете и на сайте
+                 </h3>
+                 <p className="text-[14px] text-white/80 leading-relaxed font-normal">
+                   Все любят stories и теперь они будут у вас на сайте. Загружайте новинки и акции прямо из телефона.
+                 </p>
+               </div>
+               {/* Иконка снизу */}
+               <div className="mt-auto px-6 pb-8 flex items-center justify-center gap-3">
+                  <div className="w-6 h-6 rounded-md border-[1.5px] border-[#8BFDA8] flex items-center justify-center">
+                     <div className="w-2 h-2 bg-[#8BFDA8] rounded-full"></div>
+                  </div>
+                  <span className="text-[14px] font-medium text-white">Прогревает клиента</span>
+               </div>
+            </div>
+
+          </div>
+
+          {/* ========================================= */}
+          {/* ВЕРТИКАЛЬНАЯ ЛИНИЯ ПРЕИМУЩЕСТВ (TIMELINE) */}
+          {/* ========================================= */}
+          <div className="mt-24 w-full max-w-[600px] mx-auto relative px-4">
+             {/* Линия связи */}
+             <div className="absolute left-[35px] top-6 bottom-6 w-[2px] bg-white/20"></div>
+
+             <div className="flex flex-col gap-12">
+                <div className="relative pl-16 flex flex-col gap-2">
+                   <div className="absolute left-[24px] top-0 w-[24px] h-[24px] bg-black rounded-md border-[2px] border-[#8BFDA8] flex items-center justify-center z-10">
+                      <div className="w-3 h-1.5 border-b-2 border-l-2 border-[#8BFDA8] -rotate-45 mb-0.5"></div>
+                   </div>
+                   <h4 className="text-[18px] font-normal text-white">Увеличивает доверие</h4>
+                   <p className="text-[14px] text-white/60 leading-relaxed max-w-[400px]">
+                      Сторис постепенно раскрывают ценность компании и подводят к покупке без давления.
+                   </p>
+                </div>
+
+                <div className="relative pl-16 flex flex-col gap-2">
+                   <div className="absolute left-[24px] top-0 w-[24px] h-[24px] bg-black rounded-md border-[2px] border-white flex items-center justify-center z-10">
+                      <div className="w-2 h-2 bg-white rounded-full"></div>
+                   </div>
+                   <h4 className="text-[18px] font-normal text-white">Повышает конверсию</h4>
+                   <p className="text-[14px] text-white/60 leading-relaxed max-w-[400px]">
+                      Пользователь вовлекается в контент и чаще переходит к действию — написать или оставить заявку.
+                   </p>
+                </div>
              </div>
           </div>
-          <div className="p-6 text-center flex flex-col items-center">
-            <h3 className="text-[20px] font-bold text-white mb-3 leading-tight"><span className="text-[#8BFDA8]">Каталог</span> товаров</h3>
-            <p className="text-[13px] text-white/60 leading-relaxed">
-              Клиентам не нужно искать товары на сайте. Удобная корзина и оформление прямо в виджете.
-            </p>
-          </div>
-        </div>
 
-        {/* ========================================= */}
-        {/* ВЕРТИКАЛЬНАЯ ЛИНИЯ ПРЕИМУЩЕСТВ */}
-        {/* ========================================= */}
-        <div className="relative pl-8 pb-10">
-           {/* Вертикальная серая линия */}
-           <div className="absolute left-[11px] top-2 bottom-0 w-[1px] bg-white/20"></div>
-
-           <div className="relative mb-10">
-              {/* Кружок на линии */}
-              <div className="absolute -left-[28.5px] top-0 w-[22px] h-[22px] rounded-full border-[1.5px] border-[#8BFDA8] bg-black flex items-center justify-center">
-                <CheckCircle2 size={12} className="text-[#8BFDA8]" />
-              </div>
-              <h4 className="text-[16px] font-bold text-white mb-2 leading-none">Прогревает клиента</h4>
-              <p className="text-[13px] text-white/60 leading-relaxed">
-                Сторис постепенно раскрывают ценность компании и подводят к покупке без давления.
-              </p>
-           </div>
-
-           <div className="relative mb-10">
-              <div className="absolute -left-[28.5px] top-0 w-[22px] h-[22px] rounded-full border-[1.5px] border-[#8BFDA8] bg-black flex items-center justify-center">
-                <CheckCircle2 size={12} className="text-[#8BFDA8]" />
-              </div>
-              <h4 className="text-[16px] font-bold text-white mb-2 leading-none">Увеличивает доверие</h4>
-              <p className="text-[13px] text-white/60 leading-relaxed">
-                Быстрые точные ответы ИИ и визуальный контент формируют надежный образ бренда.
-              </p>
-           </div>
-
-           <div className="relative">
-              <div className="absolute -left-[28.5px] top-0 w-[22px] h-[22px] rounded-full border-[1.5px] border-white bg-black flex items-center justify-center">
-                <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-              </div>
-              <h4 className="text-[16px] font-bold text-white mb-2 leading-none">Повышает конверсию</h4>
-              <p className="text-[13px] text-white/60 leading-relaxed">
-                Пользователь вовлекается в контент и чаще переходит к действию — написать или заказать.
-              </p>
-           </div>
-        </div>
-
+        </main>
       </div>
-    </div>
+    </>
   );
 }
