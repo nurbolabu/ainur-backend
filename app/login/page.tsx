@@ -83,7 +83,7 @@ export default function LoginPage() {
             <div className="w-full bg-[#F2F2F7] rounded-full p-1 flex relative mb-4">
               <div className="absolute top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-full shadow-sm translate-x-0"></div>
               <div className="w-1/2 py-2 text-[14px] font-semibold z-10 text-black flex items-center justify-center cursor-default">Войти</div>
-              <Link href="/register" className="w-1/2 py-2 text-[14px] font-semibold z-10 text-[#8E8E93] hover:text-black transition-colors flex items-center justify-center">Создать</Link>
+              <Link href="/register" className="w-1/2 py-2 text-[14px] font-semibold z-10 text-[#8E8E93] hover:text-black transition-colors flex items-center justify-center">Регистрация</Link>
             </div>
           )}
 
