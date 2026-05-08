@@ -13,9 +13,9 @@ export default function LandingPage() {
   // =========================================================================
 
   const gallery1Images = [
-    "https://static.tildacdn.com/tild3837-6531-4530-b032-303032653437/MacBook_Pro_14__-_4-.png", 
-    "https://static.tildacdn.com/tild3438-3464-4364-b465-343134333566/MacBook_Pro_14__-_5-.png", 
-    "https://static.tildacdn.com/tild3236-3238-4637-a239-336436316362/MacBook_Pro_14__-_6.png", 
+    "https://static.tildacdn.com/tild3537-3738-4236-b337-643831643330/MacBook_Pro_14__-_4.svg", 
+    "https://static.tildacdn.com/tild3938-6237-4364-b531-643630653431/MacBook_Pro_14__-_5.svg", 
+    "https://static.tildacdn.com/tild3764-6637-4333-b462-303363343537/MacBook_Pro_14__-_6.svg", 
   ];
 
   const gallery2Images = [
