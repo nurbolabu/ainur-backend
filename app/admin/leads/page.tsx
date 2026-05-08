@@ -1,10 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { createClient } from '@supabase/supabase-js';
-import { Settings, Calendar, Phone, ShoppingCart, User, Package, ChevronDown, ChevronUp, Check, Loader2 } from 'lucide-react';
-
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
+// Используем единый клиент (как мы договорились ранее)
+import { supabase } from '@/lib/supabase';
+import { Settings, Calendar, Phone, ShoppingCart, User, Package, ChevronDown, ChevronUp, Check, Loader2, MessageSquare, X } from 'lucide-react';
 
 export default function LeadsPage() {
   const [projectId, setProjectId] = useState<string | null>(null);
@@ -14,6 +13,11 @@ export default function LeadsPage() {
   
   // Вкладки: 'new' или 'processed'
   const [activeTab, setActiveTab] = useState<'new' | 'processed'>('new');
+
+  // === НОВЫЕ СОСТОЯНИЯ ДЛЯ ИСТОРИИ ЧАТА ===
+  const [activeChatLead, setActiveChatLead] = useState<any | null>(null);
+  const [chatMessages, setChatMessages] = useState<any[]>([]);
+  const [isChatLoading, setIsChatLoading] = useState(false);
 
   useEffect(() => {
     const id = localStorage.getItem('ainur_admin_project_id');
@@ -33,6 +37,30 @@ export default function LeadsPage() {
     
     if (data) setLeads(data);
     setIsLoading(false);
+  }
+
+  // === ФУНКЦИЯ ЗАГРУЗКИ ЧАТА ПО ЗАЯВКЕ ===
+  async function openChatHistory(lead: any) {
+    if (!lead.conversation_id) {
+      alert("У этой заявки нет связанной истории чата.");
+      return;
+    }
+    
+    setActiveChatLead(lead);
+    setIsChatLoading(true);
+    
+    const { data, error } = await supabase
+      .from('messages')
+      .select('*')
+      .eq('conversation_id', lead.conversation_id)
+      .order('created_at', { ascending: true });
+      
+    if (error) {
+      alert("Ошибка при загрузке сообщений: " + error.message);
+    } else if (data) {
+      setChatMessages(data);
+    }
+    setIsChatLoading(false);
   }
 
   const toggleExpand = (id: string) => {
@@ -58,6 +86,11 @@ export default function LeadsPage() {
     const status = lead.status || 'new';
     return status === activeTab;
   });
+
+  const formatTime = (iso: string) => {
+    const d = new Date(iso);
+    return d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+  };
 
   return (
     <div className="w-full max-w-[690px] mx-auto px-[17px] md:px-0 pt-[100px] animate-in fade-in duration-300 flex flex-col gap-6 pb-[100px]">
@@ -116,12 +149,13 @@ export default function LeadsPage() {
             const isOrder = lead.cart_items && lead.cart_items.length > 0;
             const isExpanded = expandedId === lead.id;
             const status = lead.status || 'new';
+            const hasChat = !!lead.conversation_id; // Проверяем, есть ли привязанный чат
 
             return (
               <div key={lead.id} className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] overflow-hidden flex flex-col transition-colors hover:border-[#8BFDA8]/50">
                 
                 {/* Основная часть карточки */}
-                <div className="p-4 md:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="p-4 md:p-5 flex flex-col md:flex-row md:items-start justify-between gap-4">
                   
                   {/* Иконка и Контакты */}
                   <div className="flex items-center gap-4">
@@ -136,36 +170,43 @@ export default function LeadsPage() {
                           {isOrder ? 'Заказ' : 'Звонок'}
                         </span>
                       </div>
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px] text-[#8E8E93]">
+                      <div className="flex flex-col gap-1 text-[14px] text-[#8E8E93]">
                         <span className="flex items-center gap-1.5 font-medium text-[#000000]"><Phone size={14} strokeWidth={1.5}/> {lead.phone}</span>
                         <span className="flex items-center gap-1.5"><Calendar size={14} strokeWidth={1.5}/> {new Date(lead.created_at).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Кнопки */}
-                  <div className="flex items-center justify-between md:justify-end gap-3 w-full md:w-auto pt-4 md:pt-0 border-t border-[#F2F2F7] md:border-t-0">
+                  {/* Кнопки (Обработать + Открыть чат + Раскрыть заказ) */}
+                  <div className="flex items-center justify-between md:justify-end gap-2 w-full md:w-auto pt-4 md:pt-0 border-t border-[#F2F2F7] md:border-t-0 flex-wrap">
                     
+                    {hasChat && (
+                      <button 
+                        onClick={() => openChatHistory(lead)}
+                        className="h-[40px] px-3 rounded-[12px] bg-[#F2F2F7] flex items-center gap-1.5 text-[14px] font-semibold text-[#000000] active:scale-95 transition-transform"
+                      >
+                        <MessageSquare size={16} strokeWidth={1.5} /> Чат
+                      </button>
+                    )}
+
                     <button 
                       onClick={() => toggleStatus(lead.id, status)}
                       className={`h-[40px] px-4 rounded-[12px] flex items-center gap-1.5 text-[14px] font-semibold active:scale-95 transition-transform ${status === 'new' ? 'bg-[#000000] text-[#FFFFFF]' : 'bg-[#F2F2F7] text-[#8E8E93]'}`}
                     >
                       {status === 'new' ? (
-                        <>Обработать <Check size={16} strokeWidth={2} /></>
+                        <>Готово <Check size={16} strokeWidth={2} /></>
                       ) : (
                         'В новые'
                       )}
                     </button>
 
                     {isOrder && (
-                      <div className="flex items-center gap-3">
-                        <button 
-                          onClick={() => toggleExpand(lead.id)}
-                          className="w-[40px] h-[40px] bg-[#F2F2F7] rounded-[12px] flex items-center justify-center text-[#000000] active:scale-95 transition-transform"
-                        >
-                          {isExpanded ? <ChevronUp size={20} strokeWidth={1.5} /> : <ChevronDown size={20} strokeWidth={1.5} />}
-                        </button>
-                      </div>
+                      <button 
+                        onClick={() => toggleExpand(lead.id)}
+                        className="w-[40px] h-[40px] bg-[#F2F2F7] rounded-[12px] flex items-center justify-center text-[#000000] active:scale-95 transition-transform shrink-0"
+                      >
+                        {isExpanded ? <ChevronUp size={20} strokeWidth={1.5} /> : <ChevronDown size={20} strokeWidth={1.5} />}
+                      </button>
                     )}
                   </div>
 
@@ -203,6 +244,67 @@ export default function LeadsPage() {
           })}
         </div>
       )}
+
+      {/* 4. МОДАЛЬНОЕ ОКНО "ИСТОРИЯ ЧАТА ЗАЯВКИ" */}
+      {activeChatLead && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] flex items-end md:items-center justify-center pt-[10px] px-0 md:px-[10px]">
+          <div className="bg-[#F2F2F7] w-full max-w-[690px] h-[calc(100dvh-10px)] md:h-[600px] md:max-h-[calc(100dvh-20px)] rounded-t-[22px] md:rounded-[22px] flex flex-col overflow-hidden animate-in slide-in-from-bottom-full md:zoom-in-95 duration-300">
+            
+            {/* Хедер модалки */}
+            <div className="h-[70px] bg-[#FFFFFF] flex items-center justify-between px-2.5 border-b border-[#E5E5EA] shrink-0">
+              <button 
+                onClick={() => { setActiveChatLead(null); setChatMessages([]); }} 
+                className="w-[50px] h-[50px] flex items-center justify-center bg-[#F2F2F7] rounded-[11px] text-[#000000] active:scale-95 transition-transform"
+              >
+                <X size={24} strokeWidth={1.5} />
+              </button>
+              
+              <div className="flex flex-col items-center justify-center px-2 truncate">
+                <span className="font-bold text-[18px] text-[#000000] leading-tight">История чата</span>
+                <span className="text-[13px] font-medium text-[#8E8E93] leading-tight">{activeChatLead.name}</span>
+              </div>
+              
+              <div className="w-[50px] h-[50px]"></div>
+            </div>
+
+            {/* Контент модалки (Сообщения) */}
+            <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
+              {isChatLoading ? (
+                <div className="flex-1 flex items-center justify-center">
+                   <Loader2 className="animate-spin text-[#8E8E93]" size={32} strokeWidth={1.5} />
+                </div>
+              ) : chatMessages.length === 0 ? (
+                <div className="flex-1 flex items-center justify-center">
+                  <span className="text-[#8E8E93] text-[15px] font-medium">Сообщений нет</span>
+                </div>
+              ) : (
+                chatMessages.map((msg: any, index: number) => {
+                  const isAI = msg.role === 'assistant';
+                  return (
+                    <div key={index} className={`flex flex-col ${isAI ? 'items-start' : 'items-end'}`}>
+                      <div 
+                        className={`max-w-[85%] px-4 py-3 text-[15px] leading-relaxed shadow-sm ${
+                          isAI 
+                            ? 'bg-[#FFFFFF] text-[#000000] border border-[#E5E5EA] rounded-[18px] rounded-bl-[4px]' 
+                            : 'bg-[#8BFDA8] text-[#000000] rounded-[18px] rounded-br-[4px]'
+                        }`}
+                      >
+                        {msg.content}
+                      </div>
+                      <div className="text-[11px] font-medium text-[#8E8E93] mt-1.5 flex gap-1.5 px-1">
+                        <span>{formatTime(msg.created_at)}</span>
+                        <span>•</span>
+                        <span>{isAI ? 'ИИ Ассистент' : 'Клиент'}</span>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
