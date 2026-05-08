@@ -1,10 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { createClient } from '@supabase/supabase-js';
+// Используем единый клиент
+import { supabase } from '@/lib/supabase';
 import { Settings, ChevronRight, ChevronLeft, Loader2 } from 'lucide-react';
-
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
 
 export default function ChatsPage() {
   const [projectId, setProjectId] = useState<string | null>(null);
@@ -17,60 +16,74 @@ export default function ChatsPage() {
     if (id) {
       setProjectId(id);
       fetchChatsAndLeads(id);
+    } else {
+      setIsLoading(false);
     }
   }, []);
 
   async function fetchChatsAndLeads(id: string) {
     setIsLoading(true);
 
-    // 1. Получаем все заявки, чтобы вытащить имена клиентов
-    const { data: leadsData } = await supabase
-      .from('leads')
-      .select('name, session_id')
-      .eq('project_id', id);
+    try {
+      // 1. Получаем все заявки, чтобы вытащить имена клиентов
+      // ИСХОДНАЯ ОШИБКА: запрашивался session_id, которого нет в таблице leads
+      // ИСПРАВЛЕНИЕ: запрашиваем conversation_id
+      const { data: leadsData, error: leadsError } = await supabase
+        .from('leads')
+        .select('name, conversation_id')
+        .eq('project_id', id);
 
-    const leadsMap: Record<string, string> = {};
-    if (leadsData) {
-      leadsData.forEach(lead => {
-        // Предполагаем, что session_id привязан к conversation_id чата
-        if (lead.session_id) leadsMap[lead.session_id] = lead.name;
-      });
-    }
+      if (leadsError) console.error("Ошибка загрузки leads:", leadsError);
 
-    // 2. Получаем все сообщения
-    const { data: messagesData } = await supabase
-      .from('messages')
-      .select('*')
-      .eq('project_id', id)
-      .order('created_at', { ascending: true });
+      const leadsMap: Record<string, string> = {};
+      if (leadsData) {
+        leadsData.forEach(lead => {
+          // Связываем conversation_id чата с именем клиента из заявки
+          if (lead.conversation_id && lead.name) {
+            leadsMap[lead.conversation_id] = lead.name;
+          }
+        });
+      }
 
-    if (messagesData) {
-      // Группируем сообщения по чатам (conversation_id)
-      const chatsMap = new Map();
-      
-      messagesData.forEach(msg => {
-        const cid = msg.conversation_id;
-        if (!chatsMap.has(cid)) {
-          chatsMap.set(cid, {
-            id: cid,
-            // Если есть имя в заявках - берем его, если нет - генерируем "Чат #XXXX"
-            name: leadsMap[cid] || `Чат #${cid.substring(0, 4).toUpperCase()}`,
-            lastMessageAt: msg.created_at,
-            messages: []
-          });
-        }
+      // 2. Получаем все сообщения
+      const { data: messagesData, error: messagesError } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('project_id', id)
+        .order('created_at', { ascending: true });
+
+      if (messagesError) console.error("Ошибка загрузки messages:", messagesError);
+
+      if (messagesData) {
+        // Группируем сообщения по чатам (conversation_id)
+        const chatsMap = new Map();
         
-        const chat = chatsMap.get(cid);
-        chat.messages.push(msg);
-        chat.lastMessageAt = msg.created_at; // Последнее сообщение обновит время
-      });
+        messagesData.forEach(msg => {
+          const cid = msg.conversation_id;
+          if (!chatsMap.has(cid)) {
+            chatsMap.set(cid, {
+              id: cid,
+              // Если есть имя в заявках - берем его, если нет - генерируем "Чат #XXXX"
+              name: leadsMap[cid] || `Чат #${cid.substring(0, 4).toUpperCase()}`,
+              lastMessageAt: msg.created_at,
+              messages: []
+            });
+          }
+          
+          const chat = chatsMap.get(cid);
+          chat.messages.push(msg);
+          chat.lastMessageAt = msg.created_at; // Последнее сообщение обновит время
+        });
 
-      // Превращаем Map в массив и сортируем: новые чаты сверху
-      const chatsArray = Array.from(chatsMap.values()).sort((a, b) => 
-        new Date(b.lastMessageAt).getTime() - new Date(a.lastMessageAt).getTime()
-      );
-      
-      setChats(chatsArray);
+        // Превращаем Map в массив и сортируем: новые чаты сверху
+        const chatsArray = Array.from(chatsMap.values()).sort((a, b) => 
+          new Date(b.lastMessageAt).getTime() - new Date(a.lastMessageAt).getTime()
+        );
+        
+        setChats(chatsArray);
+      }
+    } catch (error) {
+      console.error("Ошибка при формировании чатов:", error);
     }
     
     setIsLoading(false);
