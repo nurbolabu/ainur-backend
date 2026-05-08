@@ -1,13 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, X } from 'lucide-react';
 
 export default function LandingPage() {
-  const [billingPeriod, setBillingPeriod] = useState<'month' | 'year'>('year');
-
+  
   // Установка виджета AI NUR при загрузке страницы
   useEffect(() => {
     const script = document.createElement('script');
@@ -64,9 +63,9 @@ export default function LandingPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#F2F2F7] font-sans selection:bg-[#8BFDA8] selection:text-black flex flex-col items-center overflow-x-hidden relative pb-[150px]">
+    <div className="min-h-screen bg-[#F2F2F7] font-sans selection:bg-[#8BFDA8] selection:text-black flex flex-col items-center overflow-x-hidden relative pb-[100px]">
       
-      {/* 1. ФИКСИРОВАННЫЙ HEADER (Строго 340px, отступы 10px по краям) */}
+      {/* 1. ФИКСИРОВАННЫЙ HEADER */}
       <div className="fixed top-[10px] w-[340px] md:w-[690px] z-50 bg-[#FFFFFF] rounded-[22px] pl-[20px] pr-[10px] py-[10px] border border-[#E5E5EA] shadow-sm">
         <div className="flex items-center justify-between">
           <Link href="/"><Logo /></Link>
@@ -76,12 +75,12 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* ГЛАВНЫЙ КОНТЕЙНЕР (Строго 340px на мобильных) */}
+      {/* ГЛАВНЫЙ КОНТЕЙНЕР */}
       <main className="w-[340px] md:w-[690px] mx-auto pt-[120px] flex flex-col gap-10">
 
         {/* БЛОК 1: ДИАЛОГ С КЛИЕНТАМИ */}
         <section className="flex flex-col gap-[20px] md:gap-[26px]">
-          <h1 className="text-[20px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
+          <h1 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Превращаем сайты в диалог с клиентами
           </h1>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-[163px]">
@@ -98,12 +97,10 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Галерея 1: Не обрезается справа. Занимает весь экран, но левый край ровно по сетке 340px */}
           <div className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
             <div className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center"></div>
             <div className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center"></div>
             <div className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center"></div>
-            {/* Невидимая распорка, чтобы на телефоне можно было доскроллить до самого конца */}
             <div className="shrink-0 w-[calc((100vw-340px)/2)] h-[1px] md:hidden"></div>
           </div>
         </section>
@@ -111,7 +108,7 @@ export default function LandingPage() {
 
         {/* БЛОК 2: БОЛЬШОЙ ФУНКЦИОНАЛ */}
         <section className="flex flex-col gap-[20px] md:gap-[26px]">
-          <h2 className="text-[20px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
+          <h2 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Большой функционал в одном виджете
           </h2>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-[163px]">
@@ -139,54 +136,80 @@ export default function LandingPage() {
 
         {/* БЛОК 3: ТАРИФЫ (BENTO STYLE) */}
         <section className="flex flex-col gap-[20px] md:gap-[26px]">
-          <h2 className="text-[20px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
-            Простые и прозрачные тарифы
+          <h2 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
+            Начните прямо сейчас
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-             {/* Базовый тариф */}
+             
+             {/* Тариф Бесплатно (Тестовый) */}
              <div className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] p-6 flex flex-col gap-6 transition-all hover:border-[#8BFDA8]/50">
                 <div>
-                   <div className="text-[#8E8E93] text-[14px] md:text-[15px] font-medium mb-1">На 1 месяц</div>
-                   <div className="text-[24px] md:text-[34px] font-bold text-[#000000]">5 000 ₸</div>
+                   <div className="text-[#8E8E93] text-[14px] md:text-[15px] font-medium mb-1">Ознакомительный</div>
+                   <div className="text-[24px] md:text-[34px] font-bold text-[#000000]">Бесплатно</div>
                 </div>
                 <div className="flex flex-col gap-3 flex-1 mt-2">
-                   <div className="flex items-start gap-2.5"><Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> <span className="text-[#000000] text-[14px] md:text-[15px] font-medium leading-snug">ИИ-консультант 24/7</span></div>
-                   <div className="flex items-start gap-2.5"><Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> <span className="text-[#000000] text-[14px] md:text-[15px] font-medium leading-snug">Корзина и заказы</span></div>
-                   <div className="flex items-start gap-2.5"><Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> <span className="text-[#000000] text-[14px] md:text-[15px] font-medium leading-snug">Каталог до 100 товаров</span></div>
-                   <div className="flex items-start gap-2.5"><Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> <span className="text-[#000000] text-[14px] md:text-[15px] font-medium leading-snug">Stories в виджете</span></div>
+                   <div className="flex items-start gap-2.5">
+                     <Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
+                     <span className="text-[#000000] text-[14px] md:text-[15px] font-medium leading-snug">Настройка ИИ под себя</span>
+                   </div>
+                   <div className="flex items-start gap-2.5">
+                     <Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
+                     <span className="text-[#000000] text-[14px] md:text-[15px] font-medium leading-snug">Свой цвет и дизайн</span>
+                   </div>
+                   <div className="flex items-start gap-2.5">
+                     <Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
+                     <span className="text-[#000000] text-[14px] md:text-[15px] font-medium leading-snug">Тестирование в админке</span>
+                   </div>
+                   <div className="flex items-start gap-2.5 opacity-60">
+                     <X size={20} className="text-[#FF3B30] shrink-0 mt-0.5" strokeWidth={3}/> 
+                     <span className="text-[#8E8E93] text-[14px] md:text-[15px] font-medium leading-snug line-through">Установка на сайт</span>
+                   </div>
                 </div>
                 <Link href="/register" className="h-[50px] w-full bg-[#F2F2F7] rounded-[14px] flex items-center justify-center font-bold text-[14px] md:text-[15px] text-[#000000] active:scale-95 transition-all hover:bg-[#E5E5EA]">
-                  Выбрать тариф
+                  Попробовать бесплатно
                 </Link>
              </div>
 
-             {/* Выгодный тариф */}
+             {/* Тариф Платный (PRO) */}
              <div className="bg-[#000000] border border-[#000000] rounded-[22px] p-6 flex flex-col gap-6 relative overflow-hidden transition-all shadow-[0_10px_40px_rgba(0,0,0,0.1)]">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#8BFDA8] opacity-20 blur-[40px] rounded-full pointer-events-none"></div>
                 <div className="relative z-10">
                    <div className="flex items-center justify-between mb-1">
-                      <div className="text-[#8E8E93] text-[14px] md:text-[15px] font-medium">На 1 год (Выгода 25%)</div>
-                      <div className="bg-[#8BFDA8] text-[#000000] text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Хит</div>
+                      <div className="text-[#8E8E93] text-[14px] md:text-[15px] font-medium">Полный доступ</div>
+                      <div className="bg-[#8BFDA8] text-[#000000] text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">PRO</div>
                    </div>
-                   <div className="text-[24px] md:text-[34px] font-bold text-[#FFFFFF]">45 000 ₸ <span className="text-[14px] md:text-[15px] text-[#8E8E93] font-medium">/ год</span></div>
-                   <div className="text-[#8BFDA8] text-[14px] font-bold mt-1 tracking-wide">Всего 3 750 ₸ в месяц</div>
+                   <div className="text-[24px] md:text-[34px] font-bold text-[#FFFFFF]">5 000 ₸ <span className="text-[14px] md:text-[15px] text-[#8E8E93] font-medium">/ мес</span></div>
                 </div>
                 <div className="flex flex-col gap-3 flex-1 mt-2 relative z-10">
-                   <div className="flex items-start gap-2.5"><Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> <span className="text-[#FFFFFF] text-[14px] md:text-[15px] font-medium leading-snug">Всё из тарифа на месяц</span></div>
-                   <div className="flex items-start gap-2.5"><Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> <span className="text-[#FFFFFF] text-[14px] md:text-[15px] font-medium leading-snug">Приоритетная поддержка</span></div>
-                   <div className="flex items-start gap-2.5"><Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> <span className="text-[#FFFFFF] text-[14px] md:text-[15px] font-medium leading-snug">Помощь с промптом для ИИ</span></div>
+                   <div className="flex items-start gap-2.5">
+                     <Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
+                     <span className="text-[#FFFFFF] text-[14px] md:text-[15px] font-medium leading-snug">Установка на любой сайт</span>
+                   </div>
+                   <div className="flex items-start gap-2.5">
+                     <Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
+                     <span className="text-[#FFFFFF] text-[14px] md:text-[15px] font-medium leading-snug">ИИ-консультант 24/7</span>
+                   </div>
+                   <div className="flex items-start gap-2.5">
+                     <Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
+                     <span className="text-[#FFFFFF] text-[14px] md:text-[15px] font-medium leading-snug">Корзина и заказы</span>
+                   </div>
+                   <div className="flex items-start gap-2.5">
+                     <Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
+                     <span className="text-[#FFFFFF] text-[14px] md:text-[15px] font-medium leading-snug">Stories в виджете</span>
+                   </div>
                 </div>
-                <Link href="/register" className="relative z-10 h-[50px] w-full bg-[#8BFDA8] rounded-[14px] flex items-center justify-center font-bold text-[14px] md:text-[15px] text-[#000000] active:scale-95 transition-all shadow-[0_4px_14px_rgba(139,253,168,0.3)]">
-                  Оформить на год
+                <Link href="/register" className="relative z-10 h-[50px] w-full bg-[#8BFDA8] rounded-[14px] flex items-center justify-center font-bold text-[14px] md:text-[15px] text-[#000000] active:scale-95 transition-all shadow-[0_4px_14px_rgba(139,253,168,0.3)] hover:bg-[#72eba3]">
+                  Попробовать бесплатно
                 </Link>
              </div>
+
           </div>
         </section>
 
 
         {/* БЛОК 4: УСТАНОВКА */}
         <section className="flex flex-col gap-[20px] md:gap-[26px]">
-          <h2 className="text-[20px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
+          <h2 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Установка на ваш сайт за 1 минуту
           </h2>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-[163px]">
@@ -213,18 +236,18 @@ export default function LandingPage() {
 
 
         {/* БЛОК 5: МИНИМАЛИСТИЧНЫЙ ЧЕРНЫЙ ФУТЕР (340px / 690px) */}
-        <footer className="w-full bg-[#000000] rounded-[22px] p-6 md:p-8 flex flex-col gap-6 shadow-sm mb-[40px] mt-4">
+        <footer className="w-full bg-[#000000] rounded-[22px] p-6 md:p-8 flex flex-col gap-6 shadow-sm mt-4">
           <div className="flex justify-between items-center">
             <Logo isDark={true} />
             <div className="flex items-center gap-4">
               <a href="#" className="w-[26px] h-[26px] text-white hover:text-[#8BFDA8] transition-colors">
-                 {/* Идеальный SVG WhatsApp */}
+                 {/* Официальный и ровный SVG WhatsApp */}
                  <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
                     <path d="M12.031 0C5.394 0 0 5.394 0 12.031c0 2.115.549 4.184 1.593 6.002L.055 23.633l6.059-1.59c1.761.986 3.765 1.506 5.917 1.506 6.635 0 12.03-5.394 12.03-12.031S18.666 0 12.031 0zm0 21.53c-1.782 0-3.52-.478-5.05-1.385l-.36-.214-3.757.986.998-3.664-.235-.373A9.99 9.99 0 0 1 2.04 12.03c0-5.508 4.48-9.986 9.99-9.986 5.51 0 9.988 4.478 9.988 9.986s-4.478 9.987-9.987 9.987zm5.474-7.466c-.3-.15-1.776-.876-2.052-.976-.275-.1-.476-.15-.676.15-.2.3-.776.975-.951 1.175-.176.2-.351.225-.651.075-1.572-.772-3.04-1.774-4.18-3.096-.301-.35-.05-.529.119-.705.141-.15.3-.35.451-.55.15-.176.2-.3.3-.5.1-.2.05-.376-.025-.526-.075-.15-.676-1.626-.926-2.226-.244-.585-.492-.505-.676-.514l-.576-.011c-.2 0-.526.075-.801.375-.275.3-1.051 1.026-1.051 2.503s1.076 2.903 1.226 3.103c.15.2 2.117 3.23 5.132 4.53 1.258.543 2.155.679 2.923.829.742.146 1.417.123 1.95.074.597-.056 1.838-.75 2.095-1.476.257-.726.257-1.352.182-1.476-.076-.126-.276-.201-.576-.351z"/>
                  </svg>
               </a>
               <a href="#" className="w-[26px] h-[26px] text-white hover:text-[#8BFDA8] transition-colors">
-                {/* Идеальный SVG Instagram */}
+                {/* Официальный и ровный SVG Instagram */}
                 <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
                   <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
                 </svg>
@@ -242,7 +265,6 @@ export default function LandingPage() {
 
       </main>
 
-      {/* Глобальные стили для скрытия скроллбара в галереях */}
       <style dangerouslySetInnerHTML={{ __html: `
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
