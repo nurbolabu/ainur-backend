@@ -1,12 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Check, X } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 
 export default function LandingPage() {
-  
+  // Состояние для открытия картинки на весь экран
+  const [expandedImage, setExpandedImage] = useState<string | null>(null);
+
   // Установка виджета AI NUR при загрузке страницы
   useEffect(() => {
     const script = document.createElement('script');
@@ -45,11 +47,16 @@ export default function LandingPage() {
     return () => { document.body.removeChild(script); };
   }, []);
 
-  const scrollGallery = (id: string, direction: 'left' | 'right') => {
-    const gallery = document.getElementById(id);
-    if (gallery) {
-      const scrollAmount = direction === 'left' ? -233 : 233; 
-      gallery.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  // Функция для открытия картинки
+  const openImageFullscreen = (e: React.MouseEvent<HTMLDivElement>) => {
+    const bg = e.currentTarget.style.backgroundImage;
+    if (bg && bg !== 'none' && bg !== '') {
+      // Вытаскиваем URL из свойства backgroundImage
+      const url = bg.replace(/^url\(["']?/, '').replace(/["']?\)$/, '');
+      setExpandedImage(url);
+    } else {
+      // Если картинки нет, показываем серую заглушку
+      setExpandedImage('placeholder');
     }
   };
 
@@ -65,12 +72,29 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#F2F2F7] font-sans selection:bg-[#8BFDA8] selection:text-black flex flex-col items-center overflow-x-hidden relative pb-[100px]">
       
+      {/* МОДАЛЬНОЕ ОКНО ДЛЯ КАРТИНОК НА ВЕСЬ ЭКРАН */}
+      {expandedImage && (
+        <div 
+          className="fixed inset-0 z-[1000000] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 cursor-zoom-out animate-in fade-in duration-200"
+          onClick={() => setExpandedImage(null)}
+        >
+          <div className="absolute top-6 right-6 w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white backdrop-blur-md hover:bg-white/20 transition-colors cursor-pointer">
+            <X size={24} />
+          </div>
+          {expandedImage === 'placeholder' ? (
+            <div className="w-full max-w-sm aspect-[9/16] bg-[#D9D9D9] rounded-[22px]" />
+          ) : (
+            <img src={expandedImage} alt="Fullscreen" className="max-w-full max-h-[90vh] object-contain rounded-[22px] shadow-2xl" />
+          )}
+        </div>
+      )}
+
       {/* 1. ФИКСИРОВАННЫЙ HEADER */}
       <div className="fixed top-[10px] w-[340px] md:w-[690px] z-50 bg-[#FFFFFF] rounded-[22px] pl-[20px] pr-[10px] py-[10px] border border-[#E5E5EA] shadow-sm">
         <div className="flex items-center justify-between">
           <Link href="/"><Logo /></Link>
-          <Link href="/register" className="h-[50px] px-[13px] bg-[#8BFDA8] rounded-[11px] flex items-center justify-center active:scale-95 transition-transform">
-            <span className="text-[#000000] text-[14px] font-medium leading-none">Регистрация</span>
+          <Link href="/register" className="h-[40px] md:h-[50px] px-[13px] bg-[#8BFDA8] rounded-[11px] flex items-center justify-center active:scale-95 transition-transform">
+            <span className="text-[#000000] text-[13px] md:text-[14px] font-bold leading-none">Регистрация</span>
           </Link>
         </div>
       </div>
@@ -83,24 +107,16 @@ export default function LandingPage() {
           <h1 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Превращаем сайты в диалог с клиентами
           </h1>
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-[163px]">
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-[163px]">
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
               AI NUR это современный способ быстро превратить любой сайт в диалог с клиентом.
             </p>
-            <div className="hidden md:flex items-center gap-[10px] shrink-0">
-              <button onClick={() => scrollGallery('gallery-1', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowLeft size={14} strokeWidth={2.5}/>
-              </button>
-              <button onClick={() => scrollGallery('gallery-1', 'right')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowRight size={14} strokeWidth={2.5}/>
-              </button>
-            </div>
           </div>
 
           <div className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
-            <div className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center"></div>
-            <div className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center"></div>
-            <div className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center"></div>
+            <div onClick={openImageFullscreen} className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm"></div>
+            <div onClick={openImageFullscreen} className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm"></div>
+            <div onClick={openImageFullscreen} className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm"></div>
             <div className="shrink-0 w-[calc((100vw-340px)/2)] h-[1px] md:hidden"></div>
           </div>
         </section>
@@ -111,24 +127,16 @@ export default function LandingPage() {
           <h2 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Большой функционал в одном виджете
           </h2>
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-[163px]">
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-[163px]">
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
               В виджете вы можете делиться stories, чтобы рассказать об акции. Или превратить обычный сайт в интернет магазин
             </p>
-            <div className="hidden md:flex items-center gap-[10px] shrink-0">
-              <button onClick={() => scrollGallery('gallery-2', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowLeft size={14} strokeWidth={2.5}/>
-              </button>
-              <button onClick={() => scrollGallery('gallery-2', 'right')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowRight size={14} strokeWidth={2.5}/>
-              </button>
-            </div>
           </div>
 
           <div className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
-            <div className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center"></div>
-            <div className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center"></div>
-            <div className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center"></div>
+            <div onClick={openImageFullscreen} className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm"></div>
+            <div onClick={openImageFullscreen} className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm"></div>
+            <div onClick={openImageFullscreen} className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm"></div>
             <div className="shrink-0 w-[calc((100vw-340px)/2)] h-[1px] md:hidden"></div>
           </div>
         </section>
@@ -212,30 +220,22 @@ export default function LandingPage() {
           <h2 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Установка на ваш сайт за 1 минуту
           </h2>
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-[163px]">
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-[163px]">
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
               Сделайте 3 простых шага и установите виджет на любой сайт (Tilda, wordpress, самописный)
             </p>
-            <div className="hidden md:flex items-center gap-[10px] shrink-0">
-              <button onClick={() => scrollGallery('gallery-3', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowLeft size={14} strokeWidth={2.5}/>
-              </button>
-              <button onClick={() => scrollGallery('gallery-3', 'right')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowRight size={14} strokeWidth={2.5}/>
-              </button>
-            </div>
           </div>
 
           <div className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
-            <div className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center"></div>
-            <div className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center"></div>
-            <div className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center"></div>
+            <div onClick={openImageFullscreen} className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm"></div>
+            <div onClick={openImageFullscreen} className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm"></div>
+            <div onClick={openImageFullscreen} className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm"></div>
             <div className="shrink-0 w-[calc((100vw-340px)/2)] h-[1px] md:hidden"></div>
           </div>
         </section>
 
 
-        {/* БЛОК 5: МИНИМАЛИСТИЧНЫЙ ЧЕРНЫЙ ФУТЕР (340px / 690px) */}
+        {/* БЛОК 5: МИНИМАЛИСТИЧНЫЙ ЧЕРНЫЙ ФУТЕР */}
         <footer className="w-full bg-[#000000] rounded-[22px] p-6 md:p-8 flex flex-col gap-6 shadow-sm mt-4">
           <div className="flex justify-between items-center">
             <Logo isDark={true} />
