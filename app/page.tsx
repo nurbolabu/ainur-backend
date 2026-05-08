@@ -339,7 +339,7 @@ export default function LandingPage() {
                    </div>
                    <div className="flex items-start gap-2">
                      <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
-                     <span className="text-[#000000] text-[13px] font-medium leading-snug">Аналитика конверсии  </span>
+                     <span className="text-[#000000] text-[13px] font-medium leading-snug">Аналитика конверсии</span>
                    </div>
                    <div className="flex items-start gap-2">
                      <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
@@ -350,7 +350,7 @@ export default function LandingPage() {
                      <span className="text-[#8E8E93] text-[13px] font-medium leading-snug line-through">Установка на сайт</span>
                    </div>
                 </div>
-                <Link href="/register" className="h-[44px] w-full bg-[#F2F2F7] rounded-[12px] flex items-center justify-center font-bold text-[13px] text-[#000000] active:scale-95 transition-all hover:bg-[#E5E5EA]">
+                <Link href="/register" className="h-[44px] w-full bg-[#8BFDA8] rounded-[12px] flex items-center justify-center font-bold text-[13px] text-[#000000] active:scale-95 transition-all shadow-[0_4px_14px_rgba(139,253,168,0.3)] hover:bg-[#72eba3]">
                   Зарегистрироваться
                 </Link>
              </div>
@@ -380,22 +380,22 @@ export default function LandingPage() {
                    </div>
                    <div className="flex items-start gap-2">
                      <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
-                     <span className="text-[#000000] text-[13px] font-medium leading-snug">Свой цвет и дизайн</span>
+                     <span className="text-[#FFFFFF] text-[13px] font-medium leading-snug">Свой цвет и дизайн</span>
                    </div>
                    <div className="flex items-start gap-2">
                      <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
-                     <span className="text-[#000000] text-[13px] font-medium leading-snug">Аналитика конверсии  </span>
+                     <span className="text-[#FFFFFF] text-[13px] font-medium leading-snug">Аналитика конверсии</span>
                    </div>
                    <div className="flex items-start gap-2">
                      <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
-                     <span className="text-[#000000] text-[13px] font-medium leading-snug">История всех чатов  </span>
+                     <span className="text-[#FFFFFF] text-[13px] font-medium leading-snug">История всех чатов</span>
                    </div>
                    <div className="flex items-start gap-2">
                      <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
                      <span className="text-[#FFFFFF] text-[13px] font-medium leading-snug">Stories в виджете</span>
                    </div>
                 </div>
-                <Link href="/register" className="h-[44px] w-full bg-[#2C2C2E] rounded-[12px] flex items-center justify-center font-bold text-[13px] text-[#FFFFFF] active:scale-95 transition-all hover:bg-[#3A3A3C]">
+                <Link href="/register" className="h-[44px] w-full bg-[#8BFDA8] rounded-[12px] flex items-center justify-center font-bold text-[13px] text-[#000000] active:scale-95 transition-all shadow-[0_4px_14px_rgba(139,253,168,0.3)] hover:bg-[#72eba3]">
                   Зарегистрироваться
                 </Link>
              </div>
