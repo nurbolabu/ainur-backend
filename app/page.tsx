@@ -1,800 +1,135 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI NUR - Превращаем сайты в диалог</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: #181818; /* Чтобы края вокруг дизайна не были белыми */
-      display: flex;
-      justify-content: center; /* Центрируем твой макет по горизонтали */
-    }
-  </style>
-</head>
-<body>
+import Link from 'next/link';
+import { Bot, ShoppingCart, PlaySquare, ArrowRight, Zap, Smartphone, CheckCircle2 } from 'lucide-react';
 
-  <div style="width: 393px; height: 3273px; position: relative; background: linear-gradient(0deg, #181818 0%, #181818 100%), black, linear-gradient(180deg, #2B2B2B 0%, black 100%); overflow: hidden">
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: -23.24px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: -23.24px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: -23.24px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: -23.24px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: -23.24px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: -23.24px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: -23.24px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: -23.24px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: -23.24px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: -23.24px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: -23.24px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: -23.24px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: -23.24px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: -23.24px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: -23.24px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: -23.24px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: -3.48px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: -3.48px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: -3.48px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: -3.48px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: -3.48px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: -3.48px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: -3.48px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: -3.48px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: -3.48px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: -3.48px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: -3.48px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: -3.48px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: -3.48px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: -3.48px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: -3.48px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: -3.48px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 16.28px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 16.28px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 16.28px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 16.28px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 16.28px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 16.28px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 16.28px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 16.28px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 16.28px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 16.28px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 16.28px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 16.28px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 16.28px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 16.28px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 16.28px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 16.28px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 36.04px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 36.04px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 36.04px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 36.04px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 36.04px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 36.04px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 36.04px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 36.04px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 36.04px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 36.04px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 36.04px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 36.04px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 36.04px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 36.04px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 36.04px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 36.04px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 55.80px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 55.80px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 55.80px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 55.80px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 55.80px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 55.80px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 55.80px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 55.80px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 55.80px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 55.80px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 55.80px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 55.80px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 55.80px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 55.80px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 55.80px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 55.80px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 75.56px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 75.56px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 75.56px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 75.56px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 75.56px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 75.56px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 75.56px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 75.56px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 75.56px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 75.56px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 75.56px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 75.56px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 75.56px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 75.56px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 75.56px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 75.56px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 95.32px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 95.32px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 95.32px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 95.32px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 95.32px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 95.32px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 95.32px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 95.32px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 95.32px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 95.32px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 95.32px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 95.32px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 95.32px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 95.32px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 95.32px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 95.32px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 115.08px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 115.08px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 115.08px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 115.08px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 115.08px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 115.08px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 115.08px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 115.08px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 115.08px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 115.08px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 115.08px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 115.08px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 115.08px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 115.08px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 115.08px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 115.08px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 134.84px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 134.84px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 134.84px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 134.84px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 134.84px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 134.84px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 134.84px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 134.84px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 134.84px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 134.84px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 134.84px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 134.84px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 134.84px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 134.84px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 134.84px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 134.84px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 154.60px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 154.60px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 154.60px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 154.60px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 154.60px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 154.60px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 154.60px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 154.60px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 154.60px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 154.60px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 154.60px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 154.60px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 154.60px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 154.60px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 154.60px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 154.60px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 174.36px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 174.36px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 174.36px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 174.36px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 174.36px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 174.36px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 174.36px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 174.36px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 174.36px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 174.36px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 174.36px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 174.36px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 174.36px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 174.36px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 174.36px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 174.36px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 194.12px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 194.12px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 194.12px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 194.12px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 194.12px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 194.12px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 194.12px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 194.12px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 194.12px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 194.12px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 194.12px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 194.12px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 194.12px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 194.12px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 194.12px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 194.12px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 213.88px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 213.88px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 213.88px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 213.88px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 213.88px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 213.88px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 213.88px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 213.88px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 213.88px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 213.88px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 213.88px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 213.88px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 213.88px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 213.88px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 213.88px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 213.88px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 233.64px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 233.64px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 233.64px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 233.64px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 233.64px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 233.64px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 233.64px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 233.64px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 233.64px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 233.64px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 233.64px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 233.64px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 233.64px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 233.64px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 233.64px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 233.64px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 253.40px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 253.40px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 253.40px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 253.40px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 253.40px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 253.40px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 253.40px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 253.40px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 253.40px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 253.40px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 253.40px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 253.40px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 253.40px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 253.40px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 253.40px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 253.40px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 273.16px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 273.16px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 273.16px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 273.16px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 273.16px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 273.16px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 273.16px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 273.16px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 273.16px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 273.16px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 273.16px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 273.16px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 273.16px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 273.16px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 273.16px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 273.16px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 292.92px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 292.92px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 292.92px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 292.92px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 292.92px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 292.92px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 292.92px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 292.92px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 292.92px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 292.92px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 292.92px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 292.92px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 292.92px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 292.92px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 292.92px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 292.92px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 312.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 312.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 312.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 312.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 312.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 312.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 312.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 312.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 312.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 312.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 312.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 312.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 312.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 312.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 312.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 312.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 332.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 332.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 332.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 332.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 332.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 332.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 332.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 332.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 332.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 332.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 332.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 332.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 332.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 332.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 332.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 332.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 352.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 352.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 352.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 352.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 352.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 352.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 352.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 352.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 352.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 352.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 352.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 352.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 352.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 352.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 352.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 352.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 371.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 371.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 371.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 371.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 371.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 371.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 371.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 371.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 371.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 371.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 371.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 371.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 371.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 371.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 371.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 371.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 391.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 391.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 391.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 391.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 391.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 391.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 391.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 391.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 391.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 391.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 391.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 391.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 391.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 391.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 391.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 391.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 411.47px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 411.47px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 411.47px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 411.47px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 411.47px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 411.47px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 411.47px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 411.47px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 411.47px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 411.47px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 411.47px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 411.47px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 411.47px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 411.47px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 411.47px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 411.47px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 431.23px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 431.23px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 431.23px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 431.23px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 431.23px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 431.23px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 431.23px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 431.23px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 431.23px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 431.23px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 431.23px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 431.23px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 431.23px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 431.23px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 431.23px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 431.23px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 450.99px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 450.99px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 450.99px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 450.99px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 450.99px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 450.99px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 450.99px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 450.99px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 450.99px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 450.99px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 450.99px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 450.99px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 450.99px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 450.99px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 450.99px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 450.99px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 470.75px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 470.75px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 470.75px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 470.75px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 470.75px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 470.75px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 470.75px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 470.75px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 470.75px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 470.75px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 470.75px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 470.75px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 470.75px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 470.75px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 470.75px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 470.75px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 490.51px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 490.51px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 490.51px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 490.51px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 490.51px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 490.51px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 490.51px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 490.51px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 490.51px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 490.51px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 490.51px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 490.51px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 490.51px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 490.51px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 490.51px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 490.51px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 510.27px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 510.27px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 510.27px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 510.27px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 510.27px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 510.27px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 510.27px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 510.27px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 510.27px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 510.27px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 510.27px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 510.27px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 510.27px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 510.27px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 510.27px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 510.27px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 530.03px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 530.03px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 530.03px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 530.03px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 530.03px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 530.03px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 530.03px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 530.03px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 530.03px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 530.03px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 530.03px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 530.03px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 530.03px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 530.03px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 530.03px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 530.03px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 549.79px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 549.79px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 549.79px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 549.79px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 549.79px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 549.79px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 549.79px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 549.79px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 549.79px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 549.79px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 549.79px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 549.79px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 549.79px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 549.79px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 549.79px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 549.79px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 569.55px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 569.55px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 569.55px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 569.55px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 569.55px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 569.55px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 569.55px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 569.55px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 569.55px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 569.55px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 569.55px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 569.55px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 569.55px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 569.55px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 569.55px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 569.55px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 589.31px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 589.31px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 589.31px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 589.31px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 589.31px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 589.31px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 589.31px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 589.31px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 589.31px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 589.31px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 589.31px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 589.31px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 589.31px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 589.31px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 589.31px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 589.31px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 609.07px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 609.07px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 609.07px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 609.07px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 609.07px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 609.07px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 609.07px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 609.07px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 609.07px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 609.07px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 609.07px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 609.07px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 609.07px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 609.07px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 609.07px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 609.07px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 628.83px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 628.83px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 628.83px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 628.83px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 628.83px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 628.83px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 628.83px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 628.83px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 628.83px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 628.83px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 628.83px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 628.83px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 628.83px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 628.83px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 628.83px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 628.83px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 648.59px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 648.59px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 648.59px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 648.59px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 648.59px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 648.59px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 648.59px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 648.59px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 648.59px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 648.59px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 648.59px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 648.59px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 648.59px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 648.59px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 648.59px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 648.59px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 668.35px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 668.35px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 668.35px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 668.35px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 668.35px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 668.35px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 668.35px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 668.35px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 668.35px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 668.35px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 668.35px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 668.35px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 668.35px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 668.35px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 668.35px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 668.35px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 688.11px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 688.11px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 688.11px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 688.11px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 688.11px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 688.11px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 688.11px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 688.11px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 688.11px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 688.11px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 688.11px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 688.11px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 688.11px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 688.11px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 688.11px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 688.11px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 707.87px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 707.87px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 707.87px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 707.87px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 707.87px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 707.87px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 707.87px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 707.87px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 707.87px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 707.87px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 707.87px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 707.87px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 707.87px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 707.87px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 707.87px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 707.87px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 727.63px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 727.63px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 727.63px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 727.63px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 727.63px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 727.63px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 727.63px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 727.63px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 727.63px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 727.63px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 727.63px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 727.63px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 727.63px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 727.63px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 727.63px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 727.63px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 747.39px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 747.39px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 747.39px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 747.39px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 747.39px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 747.39px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 747.39px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 747.39px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 747.39px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 747.39px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 747.39px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 747.39px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 747.39px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 747.39px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 747.39px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 747.39px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 767.15px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 767.15px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 767.15px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 767.15px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 767.15px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 767.15px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 767.15px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 767.15px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 767.15px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 767.15px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 767.15px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 767.15px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 767.15px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 767.15px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 767.15px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 767.15px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 786.91px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 786.91px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 786.91px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 786.91px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 786.91px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 786.91px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 786.91px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 786.91px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 786.91px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 786.91px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 786.91px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 786.91px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 786.91px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 786.91px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 786.91px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 786.91px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 806.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 806.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 806.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 806.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 806.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 806.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 806.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 806.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 806.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 806.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 806.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 806.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 806.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 806.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 806.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 806.67px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 826.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 826.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 826.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 826.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 826.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 826.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 826.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 826.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 826.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 826.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 826.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 826.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 826.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 826.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 826.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 826.43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 846.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 846.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 846.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 846.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 846.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 846.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 846.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 846.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 846.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 846.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 846.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 846.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 846.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 846.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 846.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 846.19px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 865.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 865.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 865.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 865.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 865.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 865.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 865.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 865.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 865.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 865.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 865.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 865.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 865.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 865.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 865.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 865.95px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -269px; top: 885.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -249.24px; top: 885.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -229.48px; top: 885.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -209.72px; top: 885.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -189.96px; top: 885.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -170.20px; top: 885.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -150.44px; top: 885.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -130.68px; top: 885.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -110.92px; top: 885.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -91.16px; top: 885.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -71.40px; top: 885.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -51.64px; top: 885.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -31.88px; top: 885.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: -12.12px; top: 885.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 7.64px; top: 885.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 27.40px; top: 885.71px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 47.16px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 66.92px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 86.68px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 106.44px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 126.19px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 145.95px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 165.71px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 185.47px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 205.23px; top: -43px; position: absolute; background: rgba(255, 255, 255, 0.09); border-radius: 2px"></div>
-    <div style="width: 3.29px; height: 3.29px; left: 224.99px; top: -43px; position: absolute
+export default function LandingPage() {
+  return (
+    <div className="min-h-screen bg-[#F2F2F7] font-sans selection:bg-[#8BFDA8] selection:text-black flex flex-col relative overflow-hidden">
+      
+      {/* ФОНОВЫЕ ЭЛЕМЕНТЫ (Для красоты и объема) */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#8BFDA8] opacity-[0.15] blur-[100px] rounded-full pointer-events-none"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-[#00B0F2] opacity-[0.1] blur-[100px] rounded-full pointer-events-none"></div>
+
+      {/* 1. ПЛАВАЮЩИЙ HEADER */}
+      <header className="fixed top-[10px] left-1/2 -translate-x-1/2 w-[calc(100%-34px)] max-w-[800px] z-50 bg-[#FFFFFF]/80 backdrop-blur-xl rounded-[22px] flex items-center justify-between px-5 py-3 border border-[#E5E5EA] shadow-sm animate-in slide-in-from-top-4 duration-500">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-[#000000] rounded-[10px] flex items-center justify-center">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8BFDA8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <span className="font-black text-[18px] tracking-tight text-[#000000]">AI NUR</span>
+        </div>
+        <div className="flex items-center gap-1 md:gap-3">
+          <Link href="/login" className="hidden md:flex px-4 py-2 text-[14px] font-bold text-[#8E8E93] hover:text-[#000000] transition-colors">
+            Войти
+          </Link>
+          <Link href="/register" className="px-5 py-2.5 bg-[#8BFDA8] text-[#000000] text-[14px] font-bold rounded-[12px] active:scale-95 transition-transform">
+            Создать виджет
+          </Link>
+        </div>
+      </header>
+
+      {/* 2. ГЛАВНЫЙ ЭКРАН (HERO) */}
+      <section className="pt-[160px] pb-16 px-4 flex flex-col items-center text-center max-w-[800px] mx-auto relative z-10 animate-in fade-in zoom-in-95 duration-700">
+        
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#FFFFFF] border border-[#E5E5EA] rounded-full mb-6 shadow-sm">
+          <Zap size={14} className="text-[#FF9500] fill-[#FF9500]" />
+          <span className="text-[11px] font-bold uppercase tracking-wider text-[#8E8E93]">SaaS платформа для бизнеса</span>
+        </div>
+        
+        <h1 className="text-[42px] md:text-[64px] font-black text-[#000000] leading-[1.1] tracking-tight mb-6">
+          Превращаем сайты в <br/>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#000000] to-[#8E8E93]">
+            диалог с клиентами
+          </span>
+        </h1>
+        
+        <p className="text-[16px] md:text-[18px] font-medium text-[#8E8E93] max-w-[540px] mb-10 leading-relaxed">
+          Умный ИИ-виджет с каталогом, корзиной и Stories. Установите на свой сайт за 1 минуту и удвойте конверсию без участия менеджеров.
+        </p>
+        
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+          <Link href="/register" className="h-[56px] px-8 bg-[#000000] text-[#8BFDA8] rounded-[16px] font-bold text-[16px] flex items-center justify-center gap-2 active:scale-95 transition-transform shadow-[0_8px_20px_rgba(0,0,0,0.15)]">
+            Попробовать бесплатно <ArrowRight size={18} strokeWidth={2.5} />
+          </Link>
+          <a href="#features" className="h-[56px] px-8 bg-[#FFFFFF] border border-[#E5E5EA] text-[#000000] rounded-[16px] font-bold text-[16px] flex items-center justify-center active:scale-95 transition-transform hover:bg-[#F9F9F9]">
+            Узнать больше
+          </a>
+        </div>
+
+        {/* Тестовый мокап виджета */}
+        <div className="mt-16 w-full max-w-[340px] h-[80px] bg-[#FFFFFF] rounded-[40px] border border-[#E5E5EA] shadow-[0_20px_40px_rgba(0,0,0,0.08)] flex items-center justify-between p-2 pr-4 relative">
+            <div className="flex items-center gap-3">
+              <div className="w-16 h-16 bg-[#8BFDA8] rounded-full flex items-center justify-center">
+                 <Bot size={28} strokeWidth={1.5} className="text-[#000000]"/>
+              </div>
+              <div className="flex flex-col text-left">
+                <span className="text-[15px] font-bold text-[#000000]">AI NUR Ассистент</span>
+                <span className="text-[13px] text-[#8E8E93] font-medium">Печатает...</span>
+              </div>
+            </div>
+            <div className="w-8 h-8 bg-[#F2F2F7] rounded-full flex items-center justify-center">
+               <span className="w-1.5 h-1.5 bg-[#8E8E93] rounded-full animate-pulse"></span>
+            </div>
+        </div>
+
+      </section>
+
+      {/* 3. ПРЕИМУЩЕСТВА (FEATURES) */}
+      <section id="features" className="px-4 py-16 max-w-[900px] mx-auto w-full relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          
+          <div className="bg-[#FFFFFF] p-6 rounded-[24px] border border-[#E5E5EA] shadow-sm hover:border-[#8BFDA8] transition-colors group">
+            <div className="w-12 h-12 bg-[#F2F2F7] group-hover:bg-[#8BFDA8]/20 rounded-[14px] flex items-center justify-center mb-5 transition-colors">
+              <Bot size={24} strokeWidth={1.5} className="text-[#000000]" />
+            </div>
+            <h3 className="text-[18px] font-bold text-[#000000] mb-2">ИИ Консультант</h3>
+            <p className="text-[14px] font-medium text-[#8E8E93] leading-relaxed">
+              Обучается на вашей базе знаний за секунды. Отвечает на вопросы 24/7 и продает ваши услуги.
+            </p>
+          </div>
+
+          <div className="bg-[#FFFFFF] p-6 rounded-[24px] border border-[#E5E5EA] shadow-sm hover:border-[#8BFDA8] transition-colors group">
+            <div className="w-12 h-12 bg-[#F2F2F7] group-hover:bg-[#8BFDA8]/20 rounded-[14px] flex items-center justify-center mb-5 transition-colors">
+              <ShoppingCart size={24} strokeWidth={1.5} className="text-[#000000]" />
+            </div>
+            <h3 className="text-[18px] font-bold text-[#000000] mb-2">Встроенный каталог</h3>
+            <p className="text-[14px] font-medium text-[#8E8E93] leading-relaxed">
+              Клиенты могут просматривать товары и оформлять заказы прямо в окне чата, не переходя на другие страницы.
+            </p>
+          </div>
+
+          <div className="bg-[#FFFFFF] p-6 rounded-[24px] border border-[#E5E5EA] shadow-sm hover:border-[#8BFDA8] transition-colors group">
+            <div className="w-12 h-12 bg-[#F2F2F7] group-hover:bg-[#8BFDA8]/20 rounded-[14px] flex items-center justify-center mb-5 transition-colors">
+              <PlaySquare size={24} strokeWidth={1.5} className="text-[#000000]" />
+            </div>
+            <h3 className="text-[18px] font-bold text-[#000000] mb-2">Stories на сайте</h3>
+            <p className="text-[14px] font-medium text-[#8E8E93] leading-relaxed">
+              Привычный формат историй прогревает холодный трафик. Публикуйте акции, отзывы и новинки.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 4. CTA FOOTER */}
+      <section className="px-4 pb-20 mt-auto w-full relative z-10">
+        <div className="max-w-[900px] mx-auto bg-[#000000] rounded-[32px] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 overflow-hidden relative">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#8BFDA8] opacity-20 blur-[80px] rounded-full pointer-events-none"></div>
+          
+          <div className="flex flex-col gap-2 z-10 text-center md:text-left">
+            <h2 className="text-[28px] md:text-[32px] font-black text-[#FFFFFF]">Готовы к росту продаж?</h2>
+            <p className="text-[15px] text-[#8E8E93] font-medium max-w-[300px]">
+              Создайте виджет прямо сейчас. Установка займет меньше минуты.
+            </p>
+          </div>
+          
+          <div className="z-10 w-full md:w-auto">
+            <Link href="/register" className="h-[56px] w-full md:w-auto px-8 bg-[#8BFDA8] text-[#000000] rounded-[16px] font-bold text-[16px] flex items-center justify-center active:scale-95 transition-transform">
+              Создать аккаунт
+            </Link>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  );
+}
