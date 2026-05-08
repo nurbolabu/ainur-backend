@@ -13,21 +13,21 @@ export default function LandingPage() {
   // =========================================================================
 
   const gallery1Images = [
-    "https://static.tildacdn.com/tild6636-3930-4963-a136-643130366535/photo1.svg", 
-    "https://static.tildacdn.com/tild3034-3962-4035-b836-396664646162/photo12.svg", 
-    "", 
+    "https://static.tildacdn.com/tild3837-6531-4530-b032-303032653437/MacBook_Pro_14__-_4-.png", 
+    "https://static.tildacdn.com/tild3438-3464-4364-b465-343134333566/MacBook_Pro_14__-_5-.png", 
+    "https://static.tildacdn.com/tild3236-3238-4637-a239-336436316362/MacBook_Pro_14__-_6.png", 
   ];
 
   const gallery2Images = [
-    "", 
-    "", 
-    "", 
+    "https://static.tildacdn.com/tild3837-6531-4530-b032-303032653437/MacBook_Pro_14__-_4-.png", 
+    "https://static.tildacdn.com/tild3438-3464-4364-b465-343134333566/MacBook_Pro_14__-_5-.png", 
+    "https://static.tildacdn.com/tild3236-3238-4637-a239-336436316362/MacBook_Pro_14__-_6.png",  
   ];
 
   const gallery3Images = [
-    "", 
-    "", 
-    "", 
+    "https://static.tildacdn.com/tild3837-6531-4530-b032-303032653437/MacBook_Pro_14__-_4-.png", 
+    "https://static.tildacdn.com/tild3438-3464-4364-b465-343134333566/MacBook_Pro_14__-_5-.png", 
+    "https://static.tildacdn.com/tild3236-3238-4637-a239-336436316362/MacBook_Pro_14__-_6.png", 
   ];
 
   // =========================================================================
@@ -38,7 +38,7 @@ export default function LandingPage() {
     currentIndex: number;
   } | null>(null);
 
-  // Состояния для определения свайпа
+  // Состояния для свайпа
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const minSwipeDistance = 50;
@@ -120,7 +120,7 @@ export default function LandingPage() {
     }
   };
 
-  // Обработчики свайпов на мобильном устройстве
+  // Обработчики свайпов на телефоне
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
@@ -133,11 +133,8 @@ export default function LandingPage() {
   const onTouchEndEvent = () => {
     if (!touchStart || !touchEnd) return;
     const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-    
-    if (isLeftSwipe) nextFullscreen();
-    if (isRightSwipe) prevFullscreen();
+    if (distance > minSwipeDistance) nextFullscreen();
+    if (distance < -minSwipeDistance) prevFullscreen();
   };
 
   const scrollGallery = (id: string, direction: 'left' | 'right') => {
@@ -175,7 +172,7 @@ export default function LandingPage() {
           </div>
 
           <div className="relative flex items-center justify-center w-full max-w-5xl h-[85vh]">
-             {/* Кнопка Влево */}
+             {/* Кнопка Влево (теперь отображается всегда) */}
              <button 
                 onClick={prevFullscreenImage}
                 className="absolute left-2 md:left-4 p-2 md:p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-colors z-20 flex cursor-pointer"
@@ -202,7 +199,7 @@ export default function LandingPage() {
                 )}
              </div>
 
-             {/* Кнопка Вправо */}
+             {/* Кнопка Вправо (теперь отображается всегда) */}
              <button 
                 onClick={nextFullscreenImage}
                 className="absolute right-2 md:right-4 p-2 md:p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-colors z-20 flex cursor-pointer"
@@ -235,21 +232,29 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* ГЛАВНЫЙ КОНТЕЙНЕР */}
-      <main className="w-[340px] md:w-[690px] mx-auto pt-[120px] flex flex-col gap-10">
+      {/* ГЛАВНЫЙ КОНТЕЙНЕР (С отступом 36px между блоками на мобилке) */}
+      <main className="w-[340px] md:w-[690px] mx-auto pt-[120px] flex flex-col gap-[36px] md:gap-10">
 
-        {/* БЛОК 1: ДИАЛОГ С КЛИЕНТАМИ */}
-        <section className="flex flex-col gap-[20px] md:gap-[26px]">
+        {/* БЛОК 1: ДИАЛОГ С КЛИЕНТАМИ (Отступ 12px внутри на мобилке) */}
+        <section className="flex flex-col gap-[12px] md:gap-[26px]">
           <h1 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Превращаем сайты в диалог с клиентами
           </h1>
-          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-[163px]">
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-[12px] md:gap-[163px]">
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
               AI NUR это современный способ быстро превратить любой сайт в диалог с клиентом.
             </p>
+            <div className="hidden md:flex items-center gap-[10px] shrink-0">
+              <button onClick={() => scrollGallery('gallery-1', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
+                 <ArrowLeft size={14} strokeWidth={2.5}/>
+              </button>
+              <button onClick={() => scrollGallery('gallery-1', 'right')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
+                 <ArrowRight size={14} strokeWidth={2.5}/>
+              </button>
+            </div>
           </div>
 
-          <div className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
+          <div id="gallery-1" className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
             {gallery1Images.map((src, index) => (
               <div 
                 key={index}
@@ -264,17 +269,25 @@ export default function LandingPage() {
 
 
         {/* БЛОК 2: БОЛЬШОЙ ФУНКЦИОНАЛ */}
-        <section className="flex flex-col gap-[20px] md:gap-[26px]">
+        <section className="flex flex-col gap-[12px] md:gap-[26px]">
           <h2 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Большой функционал в одном виджете
           </h2>
-          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-[163px]">
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-[12px] md:gap-[163px]">
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
               В виджете вы можете делиться stories, чтобы рассказать об акции. Или превратить обычный сайт в интернет магазин
             </p>
+            <div className="hidden md:flex items-center gap-[10px] shrink-0">
+              <button onClick={() => scrollGallery('gallery-2', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
+                 <ArrowLeft size={14} strokeWidth={2.5}/>
+              </button>
+              <button onClick={() => scrollGallery('gallery-2', 'right')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
+                 <ArrowRight size={14} strokeWidth={2.5}/>
+              </button>
+            </div>
           </div>
 
-          <div className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
+          <div id="gallery-2" className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
             {gallery2Images.map((src, index) => (
               <div 
                 key={index}
@@ -288,91 +301,140 @@ export default function LandingPage() {
         </section>
 
 
-        {/* БЛОК 3: ТАРИФЫ (BENTO STYLE) */}
-        <section className="flex flex-col gap-[20px] md:gap-[26px]">
+        {/* БЛОК 3: ТАРИФЫ (КАК ГАЛЕРЕЯ) */}
+        <section className="flex flex-col gap-[12px] md:gap-[26px]">
           <h2 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Начните прямо сейчас
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-[12px] md:gap-[163px]">
+            <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
+              Выберите подходящий тариф. Вы можете начать бесплатно и протестировать все возможности прямо сейчас.
+            </p>
+            <div className="hidden md:flex items-center gap-[10px] shrink-0">
+              <button onClick={() => scrollGallery('gallery-pricing', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
+                 <ArrowLeft size={14} strokeWidth={2.5}/>
+              </button>
+              <button onClick={() => scrollGallery('gallery-pricing', 'right')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
+                 <ArrowRight size={14} strokeWidth={2.5}/>
+              </button>
+            </div>
+          </div>
+
+          <div id="gallery-pricing" className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-stretch gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
              
-             {/* Тариф Бесплатно (Тестовый) */}
-             <div className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] p-6 flex flex-col gap-6 transition-all hover:border-[#8BFDA8]/50">
-                <div>
-                   <div className="text-[#8E8E93] text-[14px] md:text-[15px] font-medium mb-1">Ознакомительный</div>
-                   <div className="text-[24px] md:text-[34px] font-bold text-[#000000]">Бесплатно</div>
+             {/* Тариф 1: Бесплатно */}
+             <div className="w-[223px] h-[396px] bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] p-5 flex flex-col shrink-0 snap-center shadow-sm">
+                <div className="mb-4">
+                   <div className="text-[#8E8E93] text-[13px] font-medium mb-1">Ознакомительный</div>
+                   <div className="text-[24px] font-bold text-[#000000] leading-none">Бесплатно</div>
                 </div>
-                <div className="flex flex-col gap-3 flex-1 mt-2">
-                   <div className="flex items-start gap-2.5">
-                     <Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
-                     <span className="text-[#000000] text-[14px] md:text-[15px] font-medium leading-snug">Настройка ИИ под себя</span>
+                <div className="flex flex-col gap-3 flex-1">
+                   <div className="flex items-start gap-2">
+                     <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
+                     <span className="text-[#000000] text-[13px] font-medium leading-snug">Настройка ИИ под себя</span>
                    </div>
-                   <div className="flex items-start gap-2.5">
-                     <Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
-                     <span className="text-[#000000] text-[14px] md:text-[15px] font-medium leading-snug">Свой цвет и дизайн</span>
+                   <div className="flex items-start gap-2">
+                     <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
+                     <span className="text-[#000000] text-[13px] font-medium leading-snug">Свой цвет и дизайн</span>
                    </div>
-                   <div className="flex items-start gap-2.5">
-                     <Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
-                     <span className="text-[#000000] text-[14px] md:text-[15px] font-medium leading-snug">Тестирование в админке</span>
+                   <div className="flex items-start gap-2">
+                     <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
+                     <span className="text-[#000000] text-[13px] font-medium leading-snug">Тест в админке</span>
                    </div>
-                   <div className="flex items-start gap-2.5 opacity-60">
-                     <X size={20} className="text-[#FF3B30] shrink-0 mt-0.5" strokeWidth={3}/> 
-                     <span className="text-[#8E8E93] text-[14px] md:text-[15px] font-medium leading-snug line-through">Установка на сайт</span>
+                   <div className="flex items-start gap-2 opacity-50 mt-auto mb-2">
+                     <X size={16} className="text-[#FF3B30] shrink-0 mt-0.5" strokeWidth={3}/> 
+                     <span className="text-[#8E8E93] text-[13px] font-medium leading-snug line-through">Установка на сайт</span>
                    </div>
                 </div>
-                <Link href="/register" className="h-[50px] w-full bg-[#F2F2F7] rounded-[14px] flex items-center justify-center font-bold text-[14px] md:text-[15px] text-[#000000] active:scale-95 transition-all hover:bg-[#E5E5EA]">
+                <Link href="/register" className="h-[44px] w-full bg-[#F2F2F7] rounded-[12px] flex items-center justify-center font-bold text-[13px] text-[#000000] active:scale-95 transition-all hover:bg-[#E5E5EA]">
                   Попробовать бесплатно
                 </Link>
              </div>
 
-             {/* Тариф Платный (PRO) */}
-             <div className="bg-[#000000] border border-[#000000] rounded-[22px] p-6 flex flex-col gap-6 relative overflow-hidden transition-all shadow-[0_10px_40px_rgba(0,0,0,0.1)]">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[#8BFDA8] opacity-20 blur-[40px] rounded-full pointer-events-none"></div>
-                <div className="relative z-10">
+             {/* Тариф 2: PRO Месяц */}
+             <div className="w-[223px] h-[396px] bg-[#000000] border border-[#000000] rounded-[22px] p-5 flex flex-col shrink-0 snap-center shadow-sm">
+                <div className="mb-4">
+                   <div className="text-[#8E8E93] text-[13px] font-medium mb-1">PRO</div>
+                   <div className="text-[24px] font-bold text-[#FFFFFF] leading-none">5 000 ₸ <span className="text-[13px] text-[#8E8E93] font-medium">/ мес</span></div>
+                </div>
+                <div className="flex flex-col gap-3 flex-1">
+                   <div className="flex items-start gap-2">
+                     <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
+                     <span className="text-[#FFFFFF] text-[13px] font-medium leading-snug">Установка на сайт</span>
+                   </div>
+                   <div className="flex items-start gap-2">
+                     <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
+                     <span className="text-[#FFFFFF] text-[13px] font-medium leading-snug">ИИ-консультант 24/7</span>
+                   </div>
+                   <div className="flex items-start gap-2">
+                     <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
+                     <span className="text-[#FFFFFF] text-[13px] font-medium leading-snug">Корзина и заказы</span>
+                   </div>
+                   <div className="flex items-start gap-2">
+                     <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
+                     <span className="text-[#FFFFFF] text-[13px] font-medium leading-snug">Stories в виджете</span>
+                   </div>
+                </div>
+                <Link href="/register" className="h-[44px] w-full bg-[#2C2C2E] rounded-[12px] flex items-center justify-center font-bold text-[13px] text-[#FFFFFF] active:scale-95 transition-all hover:bg-[#3A3A3C]">
+                  Попробовать бесплатно
+                </Link>
+             </div>
+
+             {/* Тариф 3: PRO Год */}
+             <div className="w-[223px] h-[396px] bg-[#000000] border border-[#000000] rounded-[22px] p-5 flex flex-col shrink-0 snap-center shadow-sm relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-[#8BFDA8] opacity-20 blur-[30px] rounded-full pointer-events-none"></div>
+                <div className="relative z-10 mb-4">
                    <div className="flex items-center justify-between mb-1">
-                      <div className="text-[#8E8E93] text-[14px] md:text-[15px] font-medium">Полный доступ</div>
-                      <div className="bg-[#8BFDA8] text-[#000000] text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">PRO</div>
+                      <div className="text-[#8E8E93] text-[13px] font-medium">PRO на год</div>
+                      <div className="bg-[#8BFDA8] text-[#000000] text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider">Хит</div>
                    </div>
-                   <div className="text-[24px] md:text-[34px] font-bold text-[#FFFFFF]">5 000 ₸ <span className="text-[14px] md:text-[15px] text-[#8E8E93] font-medium">/ мес</span></div>
+                   <div className="text-[24px] font-bold text-[#FFFFFF] leading-none mb-1">3 750 ₸ <span className="text-[13px] text-[#8E8E93] font-medium">/ мес</span></div>
+                   <div className="text-[#8BFDA8] text-[10px] font-semibold tracking-wide">45 000 ₸ при оплате за год</div>
                 </div>
-                <div className="flex flex-col gap-3 flex-1 mt-2 relative z-10">
-                   <div className="flex items-start gap-2.5">
-                     <Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
-                     <span className="text-[#FFFFFF] text-[14px] md:text-[15px] font-medium leading-snug">Установка на любой сайт</span>
+                <div className="flex flex-col gap-3 flex-1 relative z-10">
+                   <div className="flex items-start gap-2">
+                     <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
+                     <span className="text-[#FFFFFF] text-[13px] font-medium leading-snug">Всё из тарифа на месяц</span>
                    </div>
-                   <div className="flex items-start gap-2.5">
-                     <Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
-                     <span className="text-[#FFFFFF] text-[14px] md:text-[15px] font-medium leading-snug">ИИ-консультант 24/7</span>
+                   <div className="flex items-start gap-2">
+                     <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
+                     <span className="text-[#FFFFFF] text-[13px] font-medium leading-snug">Приоритетная поддержка</span>
                    </div>
-                   <div className="flex items-start gap-2.5">
-                     <Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
-                     <span className="text-[#FFFFFF] text-[14px] md:text-[15px] font-medium leading-snug">Корзина и заказы</span>
-                   </div>
-                   <div className="flex items-start gap-2.5">
-                     <Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
-                     <span className="text-[#FFFFFF] text-[14px] md:text-[15px] font-medium leading-snug">Stories в виджете</span>
+                   <div className="flex items-start gap-2">
+                     <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
+                     <span className="text-[#FFFFFF] text-[13px] font-medium leading-snug">Помощь с промптом</span>
                    </div>
                 </div>
-                <Link href="/register" className="relative z-10 h-[50px] w-full bg-[#8BFDA8] rounded-[14px] flex items-center justify-center font-bold text-[14px] md:text-[15px] text-[#000000] active:scale-95 transition-all shadow-[0_4px_14px_rgba(139,253,168,0.3)] hover:bg-[#72eba3]">
+                <Link href="/register" className="relative z-10 h-[44px] w-full bg-[#8BFDA8] rounded-[12px] flex items-center justify-center font-bold text-[13px] text-[#000000] active:scale-95 transition-all shadow-[0_4px_14px_rgba(139,253,168,0.3)] hover:bg-[#72eba3]">
                   Попробовать бесплатно
                 </Link>
              </div>
 
+             <div className="shrink-0 w-[calc((100vw-340px)/2)] h-[1px] md:hidden"></div>
           </div>
         </section>
 
 
         {/* БЛОК 4: УСТАНОВКА */}
-        <section className="flex flex-col gap-[20px] md:gap-[26px]">
+        <section className="flex flex-col gap-[12px] md:gap-[26px]">
           <h2 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Установка на ваш сайт за 1 минуту
           </h2>
-          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-[163px]">
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-[12px] md:gap-[163px]">
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
               Сделайте 3 простых шага и установите виджет на любой сайт (Tilda, wordpress, самописный)
             </p>
+            <div className="hidden md:flex items-center gap-[10px] shrink-0">
+              <button onClick={() => scrollGallery('gallery-3', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
+                 <ArrowLeft size={14} strokeWidth={2.5}/>
+              </button>
+              <button onClick={() => scrollGallery('gallery-3', 'right')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
+                 <ArrowRight size={14} strokeWidth={2.5}/>
+              </button>
+            </div>
           </div>
 
-          <div className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
+          <div id="gallery-3" className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
             {gallery3Images.map((src, index) => (
               <div 
                 key={index}
@@ -387,7 +449,7 @@ export default function LandingPage() {
 
 
         {/* БЛОК 5: МИНИМАЛИСТИЧНЫЙ ЧЕРНЫЙ ФУТЕР */}
-        <footer className="w-full bg-[#000000] rounded-[22px] p-6 md:p-8 flex flex-col gap-6 shadow-sm mt-4">
+        <footer className="w-full bg-[#000000] rounded-[22px] p-6 md:p-8 flex flex-col gap-6 shadow-sm mb-[40px]">
           <div className="flex justify-between items-center">
             <Logo isDark={true} />
             <div className="flex items-center gap-4">
