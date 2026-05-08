@@ -376,15 +376,11 @@ export default function LandingPage() {
                    </div>
                    <div className="flex items-start gap-2">
                      <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
-                     <span className="text-[#FFFFFF] text-[13px] font-medium leading-snug">Корзина и формы заявок</span>
+                     <span className="text-[#FFFFFF] text-[13px] font-medium leading-snug">Встроенная корзина</span>
                    </div>
                    <div className="flex items-start gap-2">
                      <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
                      <span className="text-[#FFFFFF] text-[13px] font-medium leading-snug">Свой цвет и дизайн</span>
-                   </div>
-                   <div className="flex items-start gap-2">
-                     <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
-                     <span className="text-[#FFFFFF] text-[13px] font-medium leading-snug">Аналитика конверсии</span>
                    </div>
                    <div className="flex items-start gap-2">
                      <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
