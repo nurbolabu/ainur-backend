@@ -40,7 +40,7 @@
 
         #ainur-bottom-bar { 
             display: flex; align-items: center; width: 340px; height: 60px;
-            background: #ffffff; border-radius: 30px; box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1); 
+            background: #ffffff; border-radius: 30px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12); 
             padding: 5px; box-sizing: border-box; transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1), background 0.5s;
             overflow: hidden; justify-content: center; position: relative; z-index: 999; 
         }
@@ -65,7 +65,7 @@
         #ainur-menu-window {
             display: none; width: 340px; height: fit-content; max-height: calc(100vh - 120px); overflow-y: auto;
             background: var(--ainur-bg-menu-blur); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: var(--ainur-radius-window); box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+            border-radius: var(--ainur-radius-window); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
             padding: 10px 0; box-sizing: border-box; flex-direction: column;
             transform-origin: bottom center; animation: ainurPopUpMenu 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
             
@@ -78,7 +78,7 @@
 
         #ainur-chat-window {
             display: none; width: 340px; height: 500px;
-            background: var(--ainur-bg-chat); border-radius: var(--ainur-radius-window); box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+            background: var(--ainur-bg-chat); border-radius: var(--ainur-radius-window); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
             flex-direction: column; overflow: hidden; transform-origin: bottom center;
             animation: ainurPopUpMenu 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; position: relative;
         }
