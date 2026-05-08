@@ -3,14 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase';
 import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
-
-// Инициализация клиента Supabase (рекомендуется вынести в @/lib/supabase.ts)
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -47,16 +41,20 @@ export default function RegisterPage() {
 
       // 2. Создание записи проекта, если регистрация успешна и есть сессия
       if (authData.user && authData.session) {
-        const { error: dbError } = await supabase.from('projects').insert([{ 
+        const { data: newProject, error: dbError } = await supabase.from('projects').insert([{ 
             user_id: authData.user.id, 
             company_name: companyName,
             theme_color: "#8BFDA8", // Акцентный неоновый из техпаспорта
             system_prompt: `Ты — лучший в мире ИИ-менеджер по продажам для компании ${companyName}. Твоя задача — помогать клиентам и продавать услуги.`,
             welcome_message: "Здравствуйте! Я ИИ-ассистент. Чем могу вам помочь?",
             is_paid: false // По умолчанию статус не оплачен
-        }]);
+        }]).select().single();
           
         if (dbError) throw new Error('Ошибка базы данных: ' + dbError.message);
+
+        if (newProject) {
+            localStorage.setItem('ainur_admin_project_id', newProject.id);
+        }
 
         // 3. Мгновенный переход в админ-панель
         router.push('/admin');

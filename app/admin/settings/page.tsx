@@ -1,15 +1,15 @@
 'use client';
+
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@supabase/supabase-js';
+// Используем единый клиент вместо локального createClient
+import { supabase } from '@/lib/supabase';
 import { 
   Bot, Database, Palette, Link2, Mail, Lock, CreditCard, LogOut, 
   ChevronRight, ChevronLeft, Building2, Loader2, X, Check, UploadCloud, User, Pencil, Code, Copy, ExternalLink,
   Bell, Send
 } from 'lucide-react';
-
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
 
 function getContrastColor(hexcolor: string) {
   const hex = hexcolor.replace('#', '');
@@ -45,16 +45,38 @@ export default function SettingsPage() {
   useEffect(() => {
     const fetchUserAndProject = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (user) setUserEmail(user.email || '');
+      if (!user) {
+        router.push('/login');
+        return;
+      }
+      setUserEmail(user.email || '');
 
-      const id = localStorage.getItem('ainur_admin_project_id');
+      let id = localStorage.getItem('ainur_admin_project_id');
+      
+      // Ищем проект в базе, если его нет в localStorage
+      if (!id) {
+        const { data: userProject } = await supabase
+          .from('projects')
+          .select('id')
+          .eq('user_id', user.id)
+          .maybeSingle();
+        
+        if (userProject) {
+          id = userProject.id;
+          localStorage.setItem('ainur_admin_project_id', id);
+        }
+      }
+
       if (id) {
         setProjectId(id);
         fetchProjectData(id);
+      } else {
+        // Если проекта нет, выключаем лоадер, чтобы страница не висела
+        setIsLoading(false);
       }
     };
     fetchUserAndProject();
-  }, []);
+  }, [router]);
 
   async function fetchProjectData(id: string) {
     setIsLoading(true);
@@ -76,6 +98,7 @@ export default function SettingsPage() {
         theme_text_color: textColor,
         system_prompt: data.system_prompt || '', 
         knowledge_base: data.knowledge_base || '',
+        welcome_message: data.welcome_message || '', // Добавлено получение
         address: data.contacts_address || '', 
         whatsapp: links.whatsapp || '', 
         instagram: links.instagram || '', 
@@ -135,6 +158,7 @@ export default function SettingsPage() {
       theme_text_color: editForm.theme_text_color,
       system_prompt: editForm.system_prompt, 
       knowledge_base: editForm.knowledge_base, 
+      welcome_message: editForm.welcome_message, // Добавлено сохранение
       contacts_address: editForm.address,
       social_links: { 
         whatsapp: editForm.whatsapp, instagram: editForm.instagram, telegram: editForm.telegram, 
@@ -467,10 +491,28 @@ export default function SettingsPage() {
                 </div>
               )}
 
+              {/* ДОБАВЛЕНО ПОЛЕ welcome_message */}
               {activeModal === 'prompt' && (
-                <div className="flex flex-col gap-2 h-full">
-                  <label className="text-[14px] font-semibold text-[#8E8E93] uppercase">Роль ассистента</label>
-                  <textarea className="w-full h-[300px] bg-[#FFFFFF] border border-[#E5E5EA] rounded-[16px] p-4 text-[16px] outline-none resize-none focus:border-[#8BFDA8]" value={editForm.system_prompt} onChange={e => setEditForm({...editForm, system_prompt: e.target.value})} placeholder="Опишите, как ИИ должен общаться..." />
+                <div className="flex flex-col gap-6 h-full">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[14px] font-semibold text-[#8E8E93] uppercase">Первое сообщение (Приветствие)</label>
+                    <textarea 
+                      className="w-full bg-[#FFFFFF] border border-[#E5E5EA] rounded-[16px] p-4 text-[16px] outline-none resize-none focus:border-[#8BFDA8] min-h-[100px]" 
+                      value={editForm.welcome_message} 
+                      onChange={e => setEditForm({...editForm, welcome_message: e.target.value})} 
+                      placeholder="Здравствуйте! Я ИИ-ассистент..." 
+                    />
+                  </div>
+                  
+                  <div className="flex flex-col gap-2 flex-1">
+                    <label className="text-[14px] font-semibold text-[#8E8E93] uppercase">Роль ассистента (Промпт)</label>
+                    <textarea 
+                      className="w-full h-full min-h-[250px] bg-[#FFFFFF] border border-[#E5E5EA] rounded-[16px] p-4 text-[16px] outline-none resize-none focus:border-[#8BFDA8]" 
+                      value={editForm.system_prompt} 
+                      onChange={e => setEditForm({...editForm, system_prompt: e.target.value})} 
+                      placeholder="Опишите, как ИИ должен общаться..." 
+                    />
+                  </div>
                 </div>
               )}
 
@@ -509,7 +551,6 @@ export default function SettingsPage() {
                 </div>
               )}
 
-              {/* ОБНОВЛЕННОЕ ОКНО УВЕДОМЛЕНИЙ */}
               {activeModal === 'notifications' && (
                 <div className="flex flex-col gap-6">
                   <div className="bg-[#F2F2F7] rounded-[16px] p-5 text-[14px] text-[#000000] leading-relaxed border border-[#E5E5EA]">

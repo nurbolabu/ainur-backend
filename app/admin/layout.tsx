@@ -3,14 +3,8 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase';
 import { MessageSquare, Box, LayoutList, LayoutGrid, PlaySquare, Loader2 } from 'lucide-react';
-
-// Инициализация Supabase
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

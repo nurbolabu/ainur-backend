@@ -3,13 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase';
 import { Loader2, ArrowLeft, CheckCircle2, AlertCircle } from 'lucide-react';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 type Mode = 'login' | 'forgot' | 'update';
 
