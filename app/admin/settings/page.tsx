@@ -649,11 +649,11 @@ export default function SettingsPage() {
                           
                           <h3 className="text-[20px] font-bold text-[#000000] mb-2">Оплата через Kaspi</h3>
                           <p className="text-[15px] text-[#8E8E93] mb-6">
-                              Сделайте перевод на сумму <b>{selectedPlan.price} ₸</b> по номеру ниже. В сообщении к переводу укажите ваш Email.
+                              Сделайте перевод на сумму <b>{selectedPlan.price} ₸</b> по номеру ниже, на имя Нұрбол Ә. В сообщении к переводу укажите ваш Email.
                           </p>
 
                           <div className="bg-[#F9F9F9] border border-[#E5E5EA] w-full p-4 rounded-[14px] flex items-center justify-between mb-6">
-                              <span className="font-mono text-[18px] font-bold text-[#000000]">+7 (777) 123-45-67</span>
+                              <span className="font-mono text-[18px] font-bold text-[#000000]">+7 (707) 717-58-18</span>
                               <button 
                                 onClick={() => navigator.clipboard.writeText('+77771234567')}
                                 className="text-[#8BFDA8] bg-[#000000] px-4 py-2 rounded-[8px] text-[13px] font-bold active:scale-95 transition-transform"
@@ -664,7 +664,7 @@ export default function SettingsPage() {
 
                           <p className="text-[14px] text-[#8E8E93] mb-4">После перевода отправьте чек нам в WhatsApp для быстрой активации.</p>
 
-                          <a href="https://wa.me/77771234567" target="_blank" className="w-full bg-[#25D366] text-[#FFFFFF] font-semibold text-[16px] h-[50px] rounded-[12px] flex items-center justify-center gap-2 active:scale-95 transition-transform mb-4">
+                          <a href="https://wa.me/77077175818" target="_blank" className="w-full bg-[#25D366] text-[#FFFFFF] font-semibold text-[16px] h-[50px] rounded-[12px] flex items-center justify-center gap-2 active:scale-95 transition-transform mb-4">
                               Написать в WhatsApp
                           </a>
                           
