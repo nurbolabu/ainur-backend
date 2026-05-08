@@ -43,6 +43,7 @@ export default function RegisterPage() {
       if (authData.user && authData.session) {
         const { data: newProject, error: dbError } = await supabase.from('projects').insert([{ 
             user_id: authData.user.id, 
+            email: email,
             company_name: companyName,
             theme_color: "#8BFDA8", // Акцентный неоновый из техпаспорта
             system_prompt: `Ты — лучший в мире ИИ-менеджер по продажам для компании ${companyName}. Твоя задача — помогать клиентам и продавать услуги.`,
