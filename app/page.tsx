@@ -6,6 +6,32 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Check, X } from 'lucide-react';
 
 export default function LandingPage() {
+  
+  // =========================================================================
+  // 🖼️ МЕСТО ДЛЯ ВАШИХ КАРТИНОК В ГАЛЕРЕЯХ
+  // Вставляйте ссылки между кавычками. Если оставить "", будет серая заглушка.
+  // =========================================================================
+
+  const gallery1Images = [
+    "https://static.tildacdn.com/tild6636-3930-4963-a136-643130366535/photo1.svg", // Картинка 1
+    "https://static.tildacdn.com/tild3034-3962-4035-b836-396664646162/photo12.svg", // Картинка 2
+    "", // Вставьте ссылку на картинку 3 сюда
+  ];
+
+  const gallery2Images = [
+    "", // Блок "Большой функционал", картинка 1
+    "", // Блок "Большой функционал", картинка 2
+    "", // Блок "Большой функционал", картинка 3
+  ];
+
+  const gallery3Images = [
+    "", // Блок "Установка за 1 минуту", картинка 1
+    "", // Блок "Установка за 1 минуту", картинка 2
+    "", // Блок "Установка за 1 минуту", картинка 3
+  ];
+
+  // =========================================================================
+
   // Состояние для открытия картинки на весь экран
   const [expandedImage, setExpandedImage] = useState<string | null>(null);
 
@@ -130,26 +156,14 @@ export default function LandingPage() {
           </div>
 
           <div className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
-            {/* Изображение 1 */}
-            <div 
-              onClick={openImageFullscreen} 
-              className="w-[223px] h-[396px] bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] shrink-0 snap-center bg-cover bg-no-repeat bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm"
-              style={{ backgroundImage: "url('https://static.tildacdn.com/tild6636-3930-4963-a136-643130366535/photo1.svg')" }}
-            ></div>
-            
-            {/* Изображение 2 */}
-            <div 
-              onClick={openImageFullscreen} 
-              className="w-[223px] h-[396px] bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] shrink-0 snap-center bg-cover bg-no-repeat bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm"
-              style={{ backgroundImage: "url('https://static.tildacdn.com/tild3034-3962-4035-b836-396664646162/photo12.svg')" }}
-            ></div>
-            
-            {/* Пустая карточка (заглушка для третьего слайда) */}
-            <div 
-              onClick={openImageFullscreen} 
-              className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm"
-            ></div>
-            
+            {gallery1Images.map((src, index) => (
+              <div 
+                key={index}
+                onClick={openImageFullscreen} 
+                className={`w-[223px] h-[396px] ${src ? 'bg-[#FFFFFF] border border-[#E5E5EA]' : 'bg-[#D9D9D9]'} rounded-[22px] shrink-0 snap-center bg-cover bg-no-repeat bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm`}
+                style={src ? { backgroundImage: `url('${src}')` } : {}}
+              ></div>
+            ))}
             <div className="shrink-0 w-[calc((100vw-340px)/2)] h-[1px] md:hidden"></div>
           </div>
         </section>
@@ -175,9 +189,14 @@ export default function LandingPage() {
           </div>
 
           <div className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
-            <div onClick={openImageFullscreen} className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm"></div>
-            <div onClick={openImageFullscreen} className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm"></div>
-            <div onClick={openImageFullscreen} className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm"></div>
+            {gallery2Images.map((src, index) => (
+              <div 
+                key={index}
+                onClick={openImageFullscreen} 
+                className={`w-[223px] h-[396px] ${src ? 'bg-[#FFFFFF] border border-[#E5E5EA]' : 'bg-[#D9D9D9]'} rounded-[22px] shrink-0 snap-center bg-cover bg-no-repeat bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm`}
+                style={src ? { backgroundImage: `url('${src}')` } : {}}
+              ></div>
+            ))}
             <div className="shrink-0 w-[calc((100vw-340px)/2)] h-[1px] md:hidden"></div>
           </div>
         </section>
@@ -276,9 +295,14 @@ export default function LandingPage() {
           </div>
 
           <div className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
-            <div onClick={openImageFullscreen} className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm"></div>
-            <div onClick={openImageFullscreen} className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm"></div>
-            <div onClick={openImageFullscreen} className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm"></div>
+            {gallery3Images.map((src, index) => (
+              <div 
+                key={index}
+                onClick={openImageFullscreen} 
+                className={`w-[223px] h-[396px] ${src ? 'bg-[#FFFFFF] border border-[#E5E5EA]' : 'bg-[#D9D9D9]'} rounded-[22px] shrink-0 snap-center bg-cover bg-no-repeat bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm`}
+                style={src ? { backgroundImage: `url('${src}')` } : {}}
+              ></div>
+            ))}
             <div className="shrink-0 w-[calc((100vw-340px)/2)] h-[1px] md:hidden"></div>
           </div>
         </section>
