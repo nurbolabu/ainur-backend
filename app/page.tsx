@@ -13,9 +13,9 @@ export default function LandingPage() {
   // =========================================================================
 
   const gallery1Images = [
-    "https://static.tildacdn.com/tild6636-3930-4963-a136-643130366535/photo1.svg", 
-    "https://static.tildacdn.com/tild3034-3962-4035-b836-396664646162/photo12.svg", 
-    "", 
+    "https://static.tildacdn.com/tild3032-3635-4237-a166-316130616535/MacBook_Pro_14__-_4-.png", 
+    "https://static.tildacdn.com/tild3438-3464-4364-b465-343134333566/MacBook_Pro_14__-_5-.png", 
+    "https://static.tildacdn.com/tild3438-3464-4364-b465-343134333566/MacBook_Pro_14__-_5-.png", 
   ];
 
   const gallery2Images = [
@@ -37,6 +37,11 @@ export default function LandingPage() {
     images: string[];
     currentIndex: number;
   } | null>(null);
+
+  // Состояния для свайпа
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const minSwipeDistance = 50;
 
   // Установка виджета AI NUR при загрузке страницы
   useEffect(() => {
@@ -76,13 +81,12 @@ export default function LandingPage() {
     return () => { document.body.removeChild(script); };
   }, []);
 
-  // Функция для открытия картинки в полноэкранном режиме с учетом галереи
+  // Функция для открытия картинки в полноэкранном режиме
   const openImageFullscreen = (imagesArray: string[], index: number) => {
     setFullscreenData({ images: imagesArray, currentIndex: index });
   };
 
-  const nextFullscreenImage = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const nextFullscreen = () => {
     if (fullscreenData) {
       setFullscreenData({
         ...fullscreenData,
@@ -91,8 +95,7 @@ export default function LandingPage() {
     }
   };
 
-  const prevFullscreenImage = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const prevFullscreen = () => {
     if (fullscreenData) {
       setFullscreenData({
         ...fullscreenData,
@@ -101,11 +104,37 @@ export default function LandingPage() {
     }
   };
 
-  // Закрытие по клику на фон
+  const nextFullscreenImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    nextFullscreen();
+  };
+
+  const prevFullscreenImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    prevFullscreen();
+  };
+
   const closeFullscreen = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       setFullscreenData(null);
     }
+  };
+
+  // Обработчики свайпов на телефоне
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEndEvent = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    if (distance > minSwipeDistance) nextFullscreen();
+    if (distance < -minSwipeDistance) prevFullscreen();
   };
 
   const scrollGallery = (id: string, direction: 'left' | 'right') => {
@@ -128,7 +157,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#F2F2F7] font-sans selection:bg-[#8BFDA8] selection:text-black flex flex-col items-center overflow-x-hidden relative pb-[100px]">
       
-      {/* МОДАЛЬНОЕ ОКНО ДЛЯ КАРТИНОК НА ВЕСЬ ЭКРАН (С ГАЛЕРЕЕЙ) */}
+      {/* МОДАЛЬНОЕ ОКНО ДЛЯ КАРТИНОК НА ВЕСЬ ЭКРАН (С ГАЛЕРЕЕЙ И СВАЙПАМИ) */}
       {fullscreenData && (
         <div 
           className="fixed inset-0 z-[1000000] bg-black/90 backdrop-blur-sm flex flex-col items-center justify-center p-4 cursor-zoom-out animate-in fade-in duration-200"
@@ -136,45 +165,51 @@ export default function LandingPage() {
         >
           {/* Кнопка закрыть */}
           <div 
-            className="absolute top-6 right-6 w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white backdrop-blur-md hover:bg-white/20 transition-colors cursor-pointer z-10"
+            className="absolute top-6 right-6 w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white backdrop-blur-md hover:bg-white/20 transition-colors cursor-pointer z-20"
             onClick={() => setFullscreenData(null)}
           >
             <X size={24} />
           </div>
 
           <div className="relative flex items-center justify-center w-full max-w-5xl h-[85vh]">
-             {/* Кнопка Влево */}
+             {/* Кнопка Влево (теперь отображается всегда) */}
              <button 
                 onClick={prevFullscreenImage}
-                className="absolute left-0 md:left-4 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-colors z-10 hidden sm:flex cursor-pointer"
+                className="absolute left-2 md:left-4 p-2 md:p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-colors z-20 flex cursor-pointer"
              >
-                <ChevronLeft size={32} />
+                <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
              </button>
 
-             {/* Картинка */}
-             <div className="relative h-full flex items-center justify-center w-full" onClick={(e) => e.stopPropagation()}>
+             {/* Область картинки со свайпами */}
+             <div 
+               className="relative h-full flex items-center justify-center w-full z-10" 
+               onClick={(e) => e.stopPropagation()}
+               onTouchStart={onTouchStart}
+               onTouchMove={onTouchMove}
+               onTouchEnd={onTouchEndEvent}
+             >
                 {fullscreenData.images[fullscreenData.currentIndex] ? (
                   <img 
                     src={fullscreenData.images[fullscreenData.currentIndex]} 
                     alt={`Fullscreen image ${fullscreenData.currentIndex + 1}`} 
-                    className="max-w-full max-h-full object-contain rounded-[22px] shadow-2xl cursor-default" 
+                    className="max-w-full max-h-full object-contain rounded-[22px] shadow-2xl cursor-default select-none pointer-events-none" 
                   />
                 ) : (
                   <div className="w-full max-w-sm aspect-[9/16] bg-[#D9D9D9] rounded-[22px] shadow-2xl cursor-default" />
                 )}
              </div>
 
-             {/* Кнопка Вправо */}
+             {/* Кнопка Вправо (теперь отображается всегда) */}
              <button 
                 onClick={nextFullscreenImage}
-                className="absolute right-0 md:right-4 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-colors z-10 hidden sm:flex cursor-pointer"
+                className="absolute right-2 md:right-4 p-2 md:p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-colors z-20 flex cursor-pointer"
              >
-                <ChevronRight size={32} />
+                <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
              </button>
           </div>
 
           {/* Индикаторы (Точки внизу) */}
-          <div className="absolute bottom-10 flex gap-2" onClick={(e) => e.stopPropagation()}>
+          <div className="absolute bottom-10 flex gap-2 z-20" onClick={(e) => e.stopPropagation()}>
             {fullscreenData.images.map((_, idx) => (
               <button 
                 key={idx}
@@ -184,10 +219,6 @@ export default function LandingPage() {
               />
             ))}
           </div>
-
-          {/* Невидимые зоны для мобильного свайпа кликами (удобно если нет физического свайпа) */}
-          <div className="absolute left-0 top-0 w-1/3 h-full sm:hidden z-0" onClick={prevFullscreenImage}></div>
-          <div className="absolute right-0 top-0 w-1/3 h-full sm:hidden z-0" onClick={nextFullscreenImage}></div>
         </div>
       )}
 
@@ -201,18 +232,26 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* ГЛАВНЫЙ КОНТЕЙНЕР */}
-      <main className="w-[340px] md:w-[690px] mx-auto pt-[120px] flex flex-col gap-10">
+      {/* ГЛАВНЫЙ КОНТЕЙНЕР (С отступом 36px между блоками на мобилке) */}
+      <main className="w-[340px] md:w-[690px] mx-auto pt-[120px] flex flex-col gap-[36px] md:gap-10">
 
-        {/* БЛОК 1: ДИАЛОГ С КЛИЕНТАМИ */}
-        <section className="flex flex-col gap-[20px] md:gap-[26px]">
+        {/* БЛОК 1: ДИАЛОГ С КЛИЕНТАМИ (Отступ 12px внутри на мобилке) */}
+        <section className="flex flex-col gap-[12px] md:gap-[26px]">
           <h1 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Превращаем сайты в диалог с клиентами
           </h1>
-          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-[163px]">
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-[12px] md:gap-[163px]">
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
               AI NUR это современный способ быстро превратить любой сайт в диалог с клиентом.
             </p>
+            <div className="hidden md:flex items-center gap-[10px] shrink-0">
+              <button onClick={() => scrollGallery('gallery-1', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
+                 <ArrowLeft size={14} strokeWidth={2.5}/>
+              </button>
+              <button onClick={() => scrollGallery('gallery-1', 'right')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
+                 <ArrowRight size={14} strokeWidth={2.5}/>
+              </button>
+            </div>
           </div>
 
           <div id="gallery-1" className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
@@ -230,14 +269,22 @@ export default function LandingPage() {
 
 
         {/* БЛОК 2: БОЛЬШОЙ ФУНКЦИОНАЛ */}
-        <section className="flex flex-col gap-[20px] md:gap-[26px]">
+        <section className="flex flex-col gap-[12px] md:gap-[26px]">
           <h2 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Большой функционал в одном виджете
           </h2>
-          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-[163px]">
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-[12px] md:gap-[163px]">
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
               В виджете вы можете делиться stories, чтобы рассказать об акции. Или превратить обычный сайт в интернет магазин
             </p>
+            <div className="hidden md:flex items-center gap-[10px] shrink-0">
+              <button onClick={() => scrollGallery('gallery-2', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
+                 <ArrowLeft size={14} strokeWidth={2.5}/>
+              </button>
+              <button onClick={() => scrollGallery('gallery-2', 'right')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
+                 <ArrowRight size={14} strokeWidth={2.5}/>
+              </button>
+            </div>
           </div>
 
           <div id="gallery-2" className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
@@ -255,7 +302,7 @@ export default function LandingPage() {
 
 
         {/* БЛОК 3: ТАРИФЫ (BENTO STYLE) */}
-        <section className="flex flex-col gap-[20px] md:gap-[26px]">
+        <section className="flex flex-col gap-[12px] md:gap-[26px]">
           <h2 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Начните прямо сейчас
           </h2>
@@ -328,14 +375,22 @@ export default function LandingPage() {
 
 
         {/* БЛОК 4: УСТАНОВКА */}
-        <section className="flex flex-col gap-[20px] md:gap-[26px]">
+        <section className="flex flex-col gap-[12px] md:gap-[26px]">
           <h2 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Установка на ваш сайт за 1 минуту
           </h2>
-          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-[163px]">
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-[12px] md:gap-[163px]">
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
               Сделайте 3 простых шага и установите виджет на любой сайт (Tilda, wordpress, самописный)
             </p>
+            <div className="hidden md:flex items-center gap-[10px] shrink-0">
+              <button onClick={() => scrollGallery('gallery-3', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
+                 <ArrowLeft size={14} strokeWidth={2.5}/>
+              </button>
+              <button onClick={() => scrollGallery('gallery-3', 'right')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
+                 <ArrowRight size={14} strokeWidth={2.5}/>
+              </button>
+            </div>
           </div>
 
           <div id="gallery-3" className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
@@ -353,7 +408,7 @@ export default function LandingPage() {
 
 
         {/* БЛОК 5: МИНИМАЛИСТИЧНЫЙ ЧЕРНЫЙ ФУТЕР */}
-        <footer className="w-full bg-[#000000] rounded-[22px] p-6 md:p-8 flex flex-col gap-6 shadow-sm mt-4">
+        <footer className="w-full bg-[#000000] rounded-[22px] p-6 md:p-8 flex flex-col gap-6 shadow-sm mb-[40px]">
           <div className="flex justify-between items-center">
             <Logo isDark={true} />
             <div className="flex items-center gap-4">
