@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Check, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function LandingPage() {
   
@@ -13,27 +13,30 @@ export default function LandingPage() {
   // =========================================================================
 
   const gallery1Images = [
-    "https://static.tildacdn.com/tild6636-3930-4963-a136-643130366535/photo1.svg", // Картинка 1
-    "https://static.tildacdn.com/tild3034-3962-4035-b836-396664646162/photo12.svg", // Картинка 2
-    "", // Вставьте ссылку на картинку 3 сюда
+    "https://static.tildacdn.com/tild6636-3930-4963-a136-643130366535/photo1.svg", 
+    "https://static.tildacdn.com/tild3034-3962-4035-b836-396664646162/photo12.svg", 
+    "", 
   ];
 
   const gallery2Images = [
-    "", // Блок "Большой функционал", картинка 1
-    "", // Блок "Большой функционал", картинка 2
-    "", // Блок "Большой функционал", картинка 3
+    "", 
+    "", 
+    "", 
   ];
 
   const gallery3Images = [
-    "", // Блок "Установка за 1 минуту", картинка 1
-    "", // Блок "Установка за 1 минуту", картинка 2
-    "", // Блок "Установка за 1 минуту", картинка 3
+    "", 
+    "", 
+    "", 
   ];
 
   // =========================================================================
 
-  // Состояние для открытия картинки на весь экран
-  const [expandedImage, setExpandedImage] = useState<string | null>(null);
+  // Состояния для полноэкранной галереи
+  const [fullscreenData, setFullscreenData] = useState<{
+    images: string[];
+    currentIndex: number;
+  } | null>(null);
 
   // Установка виджета AI NUR при загрузке страницы
   useEffect(() => {
@@ -73,16 +76,35 @@ export default function LandingPage() {
     return () => { document.body.removeChild(script); };
   }, []);
 
-  // Функция для открытия картинки
-  const openImageFullscreen = (e: React.MouseEvent<HTMLDivElement>) => {
-    const bg = e.currentTarget.style.backgroundImage;
-    if (bg && bg !== 'none' && bg !== '') {
-      // Вытаскиваем URL из свойства backgroundImage
-      const url = bg.replace(/^url\(["']?/, '').replace(/["']?\)$/, '');
-      setExpandedImage(url);
-    } else {
-      // Если картинки нет, показываем серую заглушку
-      setExpandedImage('placeholder');
+  // Функция для открытия картинки в полноэкранном режиме с учетом галереи
+  const openImageFullscreen = (imagesArray: string[], index: number) => {
+    setFullscreenData({ images: imagesArray, currentIndex: index });
+  };
+
+  const nextFullscreenImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (fullscreenData) {
+      setFullscreenData({
+        ...fullscreenData,
+        currentIndex: (fullscreenData.currentIndex + 1) % fullscreenData.images.length
+      });
+    }
+  };
+
+  const prevFullscreenImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (fullscreenData) {
+      setFullscreenData({
+        ...fullscreenData,
+        currentIndex: (fullscreenData.currentIndex - 1 + fullscreenData.images.length) % fullscreenData.images.length
+      });
+    }
+  };
+
+  // Закрытие по клику на фон
+  const closeFullscreen = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      setFullscreenData(null);
     }
   };
 
@@ -106,20 +128,66 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#F2F2F7] font-sans selection:bg-[#8BFDA8] selection:text-black flex flex-col items-center overflow-x-hidden relative pb-[100px]">
       
-      {/* МОДАЛЬНОЕ ОКНО ДЛЯ КАРТИНОК НА ВЕСЬ ЭКРАН */}
-      {expandedImage && (
+      {/* МОДАЛЬНОЕ ОКНО ДЛЯ КАРТИНОК НА ВЕСЬ ЭКРАН (С ГАЛЕРЕЕЙ) */}
+      {fullscreenData && (
         <div 
-          className="fixed inset-0 z-[1000000] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 cursor-zoom-out animate-in fade-in duration-200"
-          onClick={() => setExpandedImage(null)}
+          className="fixed inset-0 z-[1000000] bg-black/90 backdrop-blur-sm flex flex-col items-center justify-center p-4 cursor-zoom-out animate-in fade-in duration-200"
+          onClick={closeFullscreen}
         >
-          <div className="absolute top-6 right-6 w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white backdrop-blur-md hover:bg-white/20 transition-colors cursor-pointer">
+          {/* Кнопка закрыть */}
+          <div 
+            className="absolute top-6 right-6 w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white backdrop-blur-md hover:bg-white/20 transition-colors cursor-pointer z-10"
+            onClick={() => setFullscreenData(null)}
+          >
             <X size={24} />
           </div>
-          {expandedImage === 'placeholder' ? (
-            <div className="w-full max-w-sm aspect-[9/16] bg-[#D9D9D9] rounded-[22px]" />
-          ) : (
-            <img src={expandedImage} alt="Fullscreen" className="max-w-full max-h-[90vh] object-contain rounded-[22px] shadow-2xl" />
-          )}
+
+          <div className="relative flex items-center justify-center w-full max-w-5xl h-[85vh]">
+             {/* Кнопка Влево */}
+             <button 
+                onClick={prevFullscreenImage}
+                className="absolute left-0 md:left-4 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-colors z-10 hidden sm:flex cursor-pointer"
+             >
+                <ChevronLeft size={32} />
+             </button>
+
+             {/* Картинка */}
+             <div className="relative h-full flex items-center justify-center w-full" onClick={(e) => e.stopPropagation()}>
+                {fullscreenData.images[fullscreenData.currentIndex] ? (
+                  <img 
+                    src={fullscreenData.images[fullscreenData.currentIndex]} 
+                    alt={`Fullscreen image ${fullscreenData.currentIndex + 1}`} 
+                    className="max-w-full max-h-full object-contain rounded-[22px] shadow-2xl cursor-default" 
+                  />
+                ) : (
+                  <div className="w-full max-w-sm aspect-[9/16] bg-[#D9D9D9] rounded-[22px] shadow-2xl cursor-default" />
+                )}
+             </div>
+
+             {/* Кнопка Вправо */}
+             <button 
+                onClick={nextFullscreenImage}
+                className="absolute right-0 md:right-4 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-colors z-10 hidden sm:flex cursor-pointer"
+             >
+                <ChevronRight size={32} />
+             </button>
+          </div>
+
+          {/* Индикаторы (Точки внизу) */}
+          <div className="absolute bottom-10 flex gap-2" onClick={(e) => e.stopPropagation()}>
+            {fullscreenData.images.map((_, idx) => (
+              <button 
+                key={idx}
+                onClick={() => setFullscreenData({ ...fullscreenData, currentIndex: idx })}
+                className={`w-2 h-2 rounded-full transition-all ${idx === fullscreenData.currentIndex ? 'bg-[#8BFDA8] w-6' : 'bg-white/50'}`}
+                aria-label={`Go to slide ${idx + 1}`}
+              />
+            ))}
+          </div>
+
+          {/* Невидимые зоны для мобильного свайпа кликами (удобно если нет физического свайпа) */}
+          <div className="absolute left-0 top-0 w-1/3 h-full sm:hidden z-0" onClick={prevFullscreenImage}></div>
+          <div className="absolute right-0 top-0 w-1/3 h-full sm:hidden z-0" onClick={nextFullscreenImage}></div>
         </div>
       )}
 
@@ -145,21 +213,13 @@ export default function LandingPage() {
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
               AI NUR это современный способ быстро превратить любой сайт в диалог с клиентом.
             </p>
-            <div className="hidden md:flex items-center gap-[10px] shrink-0">
-              <button onClick={() => scrollGallery('gallery-1', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowLeft size={14} strokeWidth={2.5}/>
-              </button>
-              <button onClick={() => scrollGallery('gallery-1', 'right')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowRight size={14} strokeWidth={2.5}/>
-              </button>
-            </div>
           </div>
 
-          <div className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
+          <div id="gallery-1" className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
             {gallery1Images.map((src, index) => (
               <div 
                 key={index}
-                onClick={openImageFullscreen} 
+                onClick={() => openImageFullscreen(gallery1Images, index)} 
                 className={`w-[223px] h-[396px] ${src ? 'bg-[#FFFFFF] border border-[#E5E5EA]' : 'bg-[#D9D9D9]'} rounded-[22px] shrink-0 snap-center bg-cover bg-no-repeat bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm`}
                 style={src ? { backgroundImage: `url('${src}')` } : {}}
               ></div>
@@ -178,21 +238,13 @@ export default function LandingPage() {
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
               В виджете вы можете делиться stories, чтобы рассказать об акции. Или превратить обычный сайт в интернет магазин
             </p>
-            <div className="hidden md:flex items-center gap-[10px] shrink-0">
-              <button onClick={() => scrollGallery('gallery-2', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowLeft size={14} strokeWidth={2.5}/>
-              </button>
-              <button onClick={() => scrollGallery('gallery-2', 'right')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowRight size={14} strokeWidth={2.5}/>
-              </button>
-            </div>
           </div>
 
-          <div className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
+          <div id="gallery-2" className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
             {gallery2Images.map((src, index) => (
               <div 
                 key={index}
-                onClick={openImageFullscreen} 
+                onClick={() => openImageFullscreen(gallery2Images, index)} 
                 className={`w-[223px] h-[396px] ${src ? 'bg-[#FFFFFF] border border-[#E5E5EA]' : 'bg-[#D9D9D9]'} rounded-[22px] shrink-0 snap-center bg-cover bg-no-repeat bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm`}
                 style={src ? { backgroundImage: `url('${src}')` } : {}}
               ></div>
@@ -284,21 +336,13 @@ export default function LandingPage() {
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
               Сделайте 3 простых шага и установите виджет на любой сайт (Tilda, wordpress, самописный)
             </p>
-            <div className="hidden md:flex items-center gap-[10px] shrink-0">
-              <button onClick={() => scrollGallery('gallery-3', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowLeft size={14} strokeWidth={2.5}/>
-              </button>
-              <button onClick={() => scrollGallery('gallery-3', 'right')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowRight size={14} strokeWidth={2.5}/>
-              </button>
-            </div>
           </div>
 
-          <div className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
+          <div id="gallery-3" className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
             {gallery3Images.map((src, index) => (
               <div 
                 key={index}
-                onClick={openImageFullscreen} 
+                onClick={() => openImageFullscreen(gallery3Images, index)} 
                 className={`w-[223px] h-[396px] ${src ? 'bg-[#FFFFFF] border border-[#E5E5EA]' : 'bg-[#D9D9D9]'} rounded-[22px] shrink-0 snap-center bg-cover bg-no-repeat bg-center cursor-zoom-in active:scale-[0.98] transition-transform shadow-sm`}
                 style={src ? { backgroundImage: `url('${src}')` } : {}}
               ></div>
