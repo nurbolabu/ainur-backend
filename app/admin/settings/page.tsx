@@ -340,7 +340,7 @@ export default function SettingsPage() {
             <span className="px-4 text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider">Интеллект</span>
             <div className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] overflow-hidden flex flex-col">
               <SettingsRow icon={Bot} color="#007AFF" title="Промпт и поведение" onClick={() => openModal('prompt')} />
-              <SettingsRow icon={Database} color="#5856D6" title="База знаний (Файлы)" isLast={true} onClick={() => openModal('knowledge')} />
+              <SettingsRow icon={Database} color="#5856D6" title="База знаний для ИИ" isLast={true} onClick={() => openModal('knowledge')} />
             </div>
           </div>
 
