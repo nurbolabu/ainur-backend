@@ -2,21 +2,42 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { ShieldAlert, Users, CreditCard, Search, Loader2, Check, X } from 'lucide-react';
 
+// Укажите здесь почту главного администратора
+const SUPER_ADMIN_EMAIL = 'ainurcorp@gmail.com';
+
 export default function SuperAdminPage() {
+  const router = useRouter();
   const [projects, setProjects] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
-    fetchProjects();
+    checkAccessAndFetch();
   }, []);
 
-  async function fetchProjects() {
+  async function checkAccessAndFetch() {
     setIsLoading(true);
-    // Получаем все проекты, сортируем от новых к старым
+    
+    // 1. Проверяем текущего пользователя
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    // 2. Блокируем доступ всем, кроме Супер Админа
+    if (authError || !user || user.email !== SUPER_ADMIN_EMAIL) {
+      router.push('/admin'); // Выкидываем обычных юзеров в их админку
+      return;
+    }
+
+    // 3. Если проверка пройдена, разрешаем рендер и грузим данные
+    setIsAuthorized(true);
+    await fetchProjects();
+  }
+
+  async function fetchProjects() {
     const { data, error } = await supabase
       .from('projects')
       .select('*')
@@ -30,11 +51,10 @@ export default function SuperAdminPage() {
     setIsLoading(false);
   }
 
-  // Функция включения/выключения тарифа PRO
   async function togglePaidStatus(id: string, currentStatus: boolean) {
     const newStatus = !currentStatus;
     
-    // Оптимистичное обновление (чтобы интерфейс отреагировал мгновенно)
+    // Оптимистичное обновление
     setProjects(projects.map(p => p.id === id ? { ...p, is_paid: newStatus } : p));
 
     const { error } = await supabase
@@ -46,6 +66,15 @@ export default function SuperAdminPage() {
       alert('Ошибка при обновлении: ' + error.message);
       fetchProjects(); // Откатываем назад при ошибке
     }
+  }
+
+  // Пока идет проверка прав, показываем лоадер на весь экран
+  if (!isAuthorized) {
+    return (
+      <div className="min-h-screen bg-[#F2F2F7] flex items-center justify-center">
+        <Loader2 className="animate-spin text-[#8E8E93]" size={40} />
+      </div>
+    );
   }
 
   const filteredProjects = projects.filter(p => 
