@@ -402,7 +402,7 @@ export default function LandingPage() {
                 <div className="relative z-10 mb-4">
                    <div className="flex items-center justify-between mb-1">
                       <div className="text-[#8E8E93] text-[13px] font-medium">PRO на год</div>
-                      <div className="bg-[#8BFDA8] text-[#000000] text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider">Хит</div>
+                      <div className="bg-[#8BFDA8] text-[#000000] text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider">-25%</div>
                    </div>
                    <div className="text-[24px] font-bold text-[#FFFFFF] leading-none mb-1">3 750 ₸ <span className="text-[13px] text-[#8E8E93] font-medium">/ мес</span></div>
                    <div className="text-[#8BFDA8] text-[10px] font-semibold tracking-wide">45 000 ₸ при оплате за год</div>
@@ -410,7 +410,7 @@ export default function LandingPage() {
                 <div className="flex flex-col gap-3 flex-1 relative z-10">
                    <div className="flex items-start gap-2">
                      <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
-                     <span className="text-[#FFFFFF] text-[13px] font-medium leading-snug">Всё из тарифа на месяц</span>
+                     <span className="text-[#FFFFFF] text-[13px] font-medium leading-snug">Всё из тарифа PRO</span>
                    </div>
                    <div className="flex items-start gap-2">
                      <Check size={16} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> 
