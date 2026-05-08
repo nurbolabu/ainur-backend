@@ -19,15 +19,15 @@ export default function LandingPage() {
   ];
 
   const gallery2Images = [
-    "", 
-    "", 
-    "", 
+    "https://static.tildacdn.com/tild3837-6531-4530-b032-303032653437/MacBook_Pro_14__-_4-.png", 
+    "https://static.tildacdn.com/tild3438-3464-4364-b465-343134333566/MacBook_Pro_14__-_5-.png", 
+    "https://static.tildacdn.com/tild3236-3238-4637-a239-336436316362/MacBook_Pro_14__-_6.png",  
   ];
 
   const gallery3Images = [
-    "", 
-    "", 
-    "", 
+    "https://static.tildacdn.com/tild3837-6531-4530-b032-303032653437/MacBook_Pro_14__-_4-.png", 
+    "https://static.tildacdn.com/tild3438-3464-4364-b465-343134333566/MacBook_Pro_14__-_5-.png", 
+    "https://static.tildacdn.com/tild3236-3238-4637-a239-336436316362/MacBook_Pro_14__-_6.png", 
   ];
 
   // =========================================================================
