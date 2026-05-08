@@ -13,21 +13,21 @@ export default function LandingPage() {
   // =========================================================================
 
   const gallery1Images = [
-    "https://static.tildacdn.com/tild3837-6531-4530-b032-303032653437/MacBook_Pro_14__-_4-.png", 
-    "https://static.tildacdn.com/tild3438-3464-4364-b465-343134333566/MacBook_Pro_14__-_5-.png", 
-    "https://static.tildacdn.com/tild3236-3238-4637-a239-336436316362/MacBook_Pro_14__-_6.png", 
+    "https://static.tildacdn.com/tild6636-3930-4963-a136-643130366535/photo1.svg", 
+    "https://static.tildacdn.com/tild3034-3962-4035-b836-396664646162/photo12.svg", 
+    "", 
   ];
 
   const gallery2Images = [
-    "https://static.tildacdn.com/tild3837-6531-4530-b032-303032653437/MacBook_Pro_14__-_4-.png", 
-    "https://static.tildacdn.com/tild3438-3464-4364-b465-343134333566/MacBook_Pro_14__-_5-.png", 
-    "https://static.tildacdn.com/tild3236-3238-4637-a239-336436316362/MacBook_Pro_14__-_6.png",  
+    "", 
+    "", 
+    "", 
   ];
 
   const gallery3Images = [
-    "https://static.tildacdn.com/tild3837-6531-4530-b032-303032653437/MacBook_Pro_14__-_4-.png", 
-    "https://static.tildacdn.com/tild3438-3464-4364-b465-343134333566/MacBook_Pro_14__-_5-.png", 
-    "https://static.tildacdn.com/tild3236-3238-4637-a239-336436316362/MacBook_Pro_14__-_6.png", 
+    "", 
+    "", 
+    "", 
   ];
 
   // =========================================================================
@@ -38,7 +38,7 @@ export default function LandingPage() {
     currentIndex: number;
   } | null>(null);
 
-  // Состояния для свайпа
+  // Состояния для определения свайпа
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const minSwipeDistance = 50;
@@ -120,7 +120,7 @@ export default function LandingPage() {
     }
   };
 
-  // Обработчики свайпов на телефоне
+  // Обработчики свайпов на мобильном устройстве
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
@@ -133,8 +133,11 @@ export default function LandingPage() {
   const onTouchEndEvent = () => {
     if (!touchStart || !touchEnd) return;
     const distance = touchStart - touchEnd;
-    if (distance > minSwipeDistance) nextFullscreen();
-    if (distance < -minSwipeDistance) prevFullscreen();
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    
+    if (isLeftSwipe) nextFullscreen();
+    if (isRightSwipe) prevFullscreen();
   };
 
   const scrollGallery = (id: string, direction: 'left' | 'right') => {
@@ -172,7 +175,7 @@ export default function LandingPage() {
           </div>
 
           <div className="relative flex items-center justify-center w-full max-w-5xl h-[85vh]">
-             {/* Кнопка Влево (теперь отображается всегда) */}
+             {/* Кнопка Влево */}
              <button 
                 onClick={prevFullscreenImage}
                 className="absolute left-2 md:left-4 p-2 md:p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-colors z-20 flex cursor-pointer"
@@ -199,7 +202,7 @@ export default function LandingPage() {
                 )}
              </div>
 
-             {/* Кнопка Вправо (теперь отображается всегда) */}
+             {/* Кнопка Вправо */}
              <button 
                 onClick={nextFullscreenImage}
                 className="absolute right-2 md:right-4 p-2 md:p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-colors z-20 flex cursor-pointer"
@@ -232,29 +235,21 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* ГЛАВНЫЙ КОНТЕЙНЕР (С отступом 36px между блоками на мобилке) */}
-      <main className="w-[340px] md:w-[690px] mx-auto pt-[120px] flex flex-col gap-[36px] md:gap-10">
+      {/* ГЛАВНЫЙ КОНТЕЙНЕР */}
+      <main className="w-[340px] md:w-[690px] mx-auto pt-[120px] flex flex-col gap-10">
 
-        {/* БЛОК 1: ДИАЛОГ С КЛИЕНТАМИ (Отступ 12px внутри на мобилке) */}
-        <section className="flex flex-col gap-[12px] md:gap-[26px]">
+        {/* БЛОК 1: ДИАЛОГ С КЛИЕНТАМИ */}
+        <section className="flex flex-col gap-[20px] md:gap-[26px]">
           <h1 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Превращаем сайты в диалог с клиентами
           </h1>
-          <div className="flex flex-col md:flex-row md:items-start justify-between gap-[12px] md:gap-[163px]">
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-[163px]">
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
               AI NUR это современный способ быстро превратить любой сайт в диалог с клиентом.
             </p>
-            <div className="hidden md:flex items-center gap-[10px] shrink-0">
-              <button onClick={() => scrollGallery('gallery-1', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowLeft size={14} strokeWidth={2.5}/>
-              </button>
-              <button onClick={() => scrollGallery('gallery-1', 'right')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowRight size={14} strokeWidth={2.5}/>
-              </button>
-            </div>
           </div>
 
-          <div id="gallery-1" className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
+          <div className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
             {gallery1Images.map((src, index) => (
               <div 
                 key={index}
@@ -269,25 +264,17 @@ export default function LandingPage() {
 
 
         {/* БЛОК 2: БОЛЬШОЙ ФУНКЦИОНАЛ */}
-        <section className="flex flex-col gap-[12px] md:gap-[26px]">
+        <section className="flex flex-col gap-[20px] md:gap-[26px]">
           <h2 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Большой функционал в одном виджете
           </h2>
-          <div className="flex flex-col md:flex-row md:items-start justify-between gap-[12px] md:gap-[163px]">
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-[163px]">
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
               В виджете вы можете делиться stories, чтобы рассказать об акции. Или превратить обычный сайт в интернет магазин
             </p>
-            <div className="hidden md:flex items-center gap-[10px] shrink-0">
-              <button onClick={() => scrollGallery('gallery-2', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowLeft size={14} strokeWidth={2.5}/>
-              </button>
-              <button onClick={() => scrollGallery('gallery-2', 'right')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowRight size={14} strokeWidth={2.5}/>
-              </button>
-            </div>
           </div>
 
-          <div id="gallery-2" className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
+          <div className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
             {gallery2Images.map((src, index) => (
               <div 
                 key={index}
@@ -302,7 +289,7 @@ export default function LandingPage() {
 
 
         {/* БЛОК 3: ТАРИФЫ (BENTO STYLE) */}
-        <section className="flex flex-col gap-[12px] md:gap-[26px]">
+        <section className="flex flex-col gap-[20px] md:gap-[26px]">
           <h2 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Начните прямо сейчас
           </h2>
@@ -375,25 +362,17 @@ export default function LandingPage() {
 
 
         {/* БЛОК 4: УСТАНОВКА */}
-        <section className="flex flex-col gap-[12px] md:gap-[26px]">
+        <section className="flex flex-col gap-[20px] md:gap-[26px]">
           <h2 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Установка на ваш сайт за 1 минуту
           </h2>
-          <div className="flex flex-col md:flex-row md:items-start justify-between gap-[12px] md:gap-[163px]">
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-[163px]">
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
               Сделайте 3 простых шага и установите виджет на любой сайт (Tilda, wordpress, самописный)
             </p>
-            <div className="hidden md:flex items-center gap-[10px] shrink-0">
-              <button onClick={() => scrollGallery('gallery-3', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowLeft size={14} strokeWidth={2.5}/>
-              </button>
-              <button onClick={() => scrollGallery('gallery-3', 'right')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowRight size={14} strokeWidth={2.5}/>
-              </button>
-            </div>
           </div>
 
-          <div id="gallery-3" className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
+          <div className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
             {gallery3Images.map((src, index) => (
               <div 
                 key={index}
@@ -408,7 +387,7 @@ export default function LandingPage() {
 
 
         {/* БЛОК 5: МИНИМАЛИСТИЧНЫЙ ЧЕРНЫЙ ФУТЕР */}
-        <footer className="w-full bg-[#000000] rounded-[22px] p-6 md:p-8 flex flex-col gap-6 shadow-sm mb-[40px]">
+        <footer className="w-full bg-[#000000] rounded-[22px] p-6 md:p-8 flex flex-col gap-6 shadow-sm mt-4">
           <div className="flex justify-between items-center">
             <Logo isDark={true} />
             <div className="flex items-center gap-4">
