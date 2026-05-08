@@ -1,13 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 
 export default function LandingPage() {
-  const [billingPeriod, setBillingPeriod] = useState<'month' | 'year'>('year');
-
+  
   // Установка виджета AI NUR при загрузке страницы
   useEffect(() => {
     const script = document.createElement('script');
@@ -46,16 +45,16 @@ export default function LandingPage() {
     return () => { document.body.removeChild(script); };
   }, []);
 
-  // Функция для прокрутки галерей по клику на стрелки
+  // Функция для прокрутки галерей по клику на стрелки (для ПК)
   const scrollGallery = (id: string, direction: 'left' | 'right') => {
     const gallery = document.getElementById(id);
     if (gallery) {
-      const scrollAmount = direction === 'left' ? -233 : 233; // 223px карточка + 10px gap
+      const scrollAmount = direction === 'left' ? -233 : 233; 
       gallery.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
 
-  // Логотип в SVG формате
+  // Логотип проекта
   const Logo = ({ isDark = false }: { isDark?: boolean }) => (
     <svg width="141" height="20" viewBox="0 0 141 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-[20px] w-auto">
       <path d="M140.125 19.6816H132.108L127.795 14.5587H118.591V19.6816H112.6V9.78305H129.445C130.371 9.78305 131.153 9.5901 131.79 9.20418C132.426 8.81827 132.745 8.28765 132.745 7.61231C132.745 6.85978 132.455 6.30021 131.876 5.9336C131.298 5.54769 130.487 5.35473 129.445 5.35473H112.6V0.318604H128.953C130.053 0.318604 131.191 0.424729 132.368 0.636979C133.545 0.829935 134.616 1.1869 135.581 1.70788C136.546 2.22886 137.337 2.93315 137.954 3.82074C138.591 4.70833 138.91 5.84677 138.91 7.23604C138.91 7.98857 138.794 8.7025 138.562 9.37784C138.331 10.0532 137.993 10.661 137.549 11.2013C137.125 11.7415 136.594 12.2046 135.957 12.5905C135.34 12.9572 134.636 13.2177 133.845 13.372C134.173 13.6229 134.539 13.9412 134.944 14.3271C135.35 14.7131 135.89 15.2437 136.565 15.919L140.125 19.6816Z" fill={isDark ? "white" : "black"}/>
@@ -69,7 +68,6 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[#F2F2F7] font-sans selection:bg-[#8BFDA8] selection:text-black flex flex-col items-center overflow-x-hidden relative pb-[150px]">
       
       {/* 1. ФИКСИРОВАННЫЙ HEADER */}
-      {/* На десктопе ширина 690px, на мобилке ширина 100% с отступами */}
       <div className="fixed top-[10px] w-[calc(100%-20px)] md:w-[690px] z-50 bg-[#FFFFFF] rounded-[22px] px-5 py-2.5 border border-[#E5E5EA] shadow-sm">
         <div className="flex items-center justify-between">
           <Link href="/"><Logo /></Link>
@@ -79,7 +77,7 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* ГЛАВНЫЙ КОНТЕЙНЕР ДЛЯ ВСЕХ БЛОКОВ */}
+      {/* ГЛАВНЫЙ КОНТЕЙНЕР */}
       <main className="w-full md:w-[691px] px-4 md:px-0 pt-[120px] flex flex-col gap-10">
 
         {/* БЛОК 1: ДИАЛОГ С КЛИЕНТАМИ */}
@@ -91,7 +89,6 @@ export default function LandingPage() {
             <p className="text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
               AI NUR это современный способ быстро превратить любой сайт в диалог с клиентом.
             </p>
-            {/* Кнопки навигации (скрыты на мобильных, так как там свайп) */}
             <div className="hidden md:flex items-center gap-[10px] shrink-0">
               <button onClick={() => scrollGallery('gallery-1', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
                  <ArrowLeft size={14} strokeWidth={2.5}/>
@@ -102,13 +99,14 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Галерея 1 */}
-          {/* Скролл с прилипанием (snap) для телефонов, скрытый скроллбар */}
-          <div id="gallery-1" className="flex items-center gap-[10px] w-full overflow-x-auto snap-x snap-mandatory pb-4 -mb-4 scrollbar-hide">
+          {/* Галерея 1: Скрытый скроллбар, обрезка с краев экрана на мобильных отключена (-mx-4 px-4) */}
+          <div id="gallery-1" className="flex items-center gap-[10px] w-full overflow-x-auto snap-x snap-mandatory pb-4 -mb-4 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
             <div className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center"></div>
             <div className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center"></div>
             <div className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center"></div>
-            {/* Добавьте еще пустых div'ов, если картинок будет больше 3 */}
+            {/* Для загрузки своих картинок потом просто сделайте: 
+                style={{ backgroundImage: "url('/ваша-картинка.jpg')" }}
+            */}
           </div>
         </section>
 
@@ -132,7 +130,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div id="gallery-2" className="flex items-center gap-[10px] w-full overflow-x-auto snap-x snap-mandatory pb-4 -mb-4 scrollbar-hide">
+          <div id="gallery-2" className="flex items-center gap-[10px] w-full overflow-x-auto snap-x snap-mandatory pb-4 -mb-4 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
             <div className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center"></div>
             <div className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center"></div>
             <div className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center"></div>
@@ -140,31 +138,50 @@ export default function LandingPage() {
         </section>
 
 
-        {/* БЛОК 3: ЦЕНА (Переключатель) */}
-        <section className="w-full bg-[#000000] rounded-[22px] py-[25px] px-6 md:px-[22px] md:pl-[38px] flex flex-col md:flex-row md:items-center justify-between gap-6">
-           <div className="flex flex-col md:flex-row md:items-center gap-2">
-             <span className="text-[#FFFFFF] text-[28px] md:text-[34px] font-bold leading-none">Всего за</span>
-             <div className="flex items-baseline gap-2">
-                <span className="text-[#8BFDA8] text-[34px] font-bold leading-none">
-                  {billingPeriod === 'year' ? '3 750' : '5 000'}
-                </span>
-                <span className="text-[#FFFFFF] text-[28px] md:text-[34px] font-bold leading-none">тг/мес</span>
+        {/* БЛОК 3: ТАРИФЫ (BENTO STYLE) */}
+        <section className="flex flex-col gap-[26px]">
+          <h2 className="text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
+            Простые и прозрачные тарифы
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+             {/* Базовый тариф */}
+             <div className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] p-6 flex flex-col gap-6 transition-all hover:border-[#8BFDA8]/50">
+                <div>
+                   <div className="text-[#8E8E93] text-[15px] font-medium mb-1">На 1 месяц</div>
+                   <div className="text-[34px] font-bold text-[#000000]">5 000 ₸</div>
+                </div>
+                <div className="flex flex-col gap-3 flex-1 mt-2">
+                   <div className="flex items-start gap-2.5"><Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> <span className="text-[#000000] text-[15px] font-medium leading-snug">ИИ-консультант 24/7</span></div>
+                   <div className="flex items-start gap-2.5"><Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> <span className="text-[#000000] text-[15px] font-medium leading-snug">Корзина и заказы</span></div>
+                   <div className="flex items-start gap-2.5"><Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> <span className="text-[#000000] text-[15px] font-medium leading-snug">Каталог до 100 товаров</span></div>
+                   <div className="flex items-start gap-2.5"><Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> <span className="text-[#000000] text-[15px] font-medium leading-snug">Stories в виджете</span></div>
+                </div>
+                <Link href="/register" className="h-[50px] w-full bg-[#F2F2F7] rounded-[14px] flex items-center justify-center font-bold text-[15px] text-[#000000] active:scale-95 transition-all hover:bg-[#E5E5EA]">
+                  Выбрать тариф
+                </Link>
              </div>
-           </div>
 
-           {/* iOS Toggle */}
-           <div className="w-[180px] h-[50px] bg-[#313131] rounded-[11px] p-[8px] flex items-center shrink-0 relative cursor-pointer" onClick={() => setBillingPeriod(billingPeriod === 'year' ? 'month' : 'year')}>
-              <div 
-                className={`absolute w-[84px] h-[34px] bg-[#FFFFFF] rounded-[6px] transition-all duration-300 ease-out shadow-sm`}
-                style={{ left: billingPeriod === 'year' ? '88px' : '8px' }}
-              ></div>
-              <div className="w-1/2 flex items-center justify-center z-10 text-[15px] font-medium transition-colors" style={{ color: billingPeriod === 'month' ? '#000000' : '#C4C4C4'}}>
-                месяц
-              </div>
-              <div className="w-1/2 flex items-center justify-center z-10 text-[15px] font-medium transition-colors" style={{ color: billingPeriod === 'year' ? '#000000' : '#C4C4C4'}}>
-                в год
-              </div>
-           </div>
+             {/* Выгодный тариф */}
+             <div className="bg-[#000000] border border-[#000000] rounded-[22px] p-6 flex flex-col gap-6 relative overflow-hidden transition-all shadow-[0_10px_40px_rgba(0,0,0,0.1)]">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#8BFDA8] opacity-20 blur-[40px] rounded-full pointer-events-none"></div>
+                <div className="relative z-10">
+                   <div className="flex items-center justify-between mb-1">
+                      <div className="text-[#8E8E93] text-[15px] font-medium">На 1 год (Выгода 25%)</div>
+                      <div className="bg-[#8BFDA8] text-[#000000] text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Хит</div>
+                   </div>
+                   <div className="text-[34px] font-bold text-[#FFFFFF]">45 000 ₸ <span className="text-[15px] text-[#8E8E93] font-medium">/ год</span></div>
+                   <div className="text-[#8BFDA8] text-[14px] font-bold mt-1 tracking-wide">Всего 3 750 ₸ в месяц</div>
+                </div>
+                <div className="flex flex-col gap-3 flex-1 mt-2 relative z-10">
+                   <div className="flex items-start gap-2.5"><Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> <span className="text-[#FFFFFF] text-[15px] font-medium leading-snug">Всё из тарифа на месяц</span></div>
+                   <div className="flex items-start gap-2.5"><Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> <span className="text-[#FFFFFF] text-[15px] font-medium leading-snug">Приоритетная поддержка</span></div>
+                   <div className="flex items-start gap-2.5"><Check size={20} className="text-[#8BFDA8] shrink-0 mt-0.5" strokeWidth={3}/> <span className="text-[#FFFFFF] text-[15px] font-medium leading-snug">Помощь с промптом для ИИ</span></div>
+                </div>
+                <Link href="/register" className="relative z-10 h-[50px] w-full bg-[#8BFDA8] rounded-[14px] flex items-center justify-center font-bold text-[15px] text-[#000000] active:scale-95 transition-all shadow-[0_4px_14px_rgba(139,253,168,0.3)]">
+                  Оформить на год
+                </Link>
+             </div>
+          </div>
         </section>
 
 
@@ -187,7 +204,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div id="gallery-3" className="flex items-center gap-[10px] w-full overflow-x-auto snap-x snap-mandatory pb-4 -mb-4 scrollbar-hide">
+          <div id="gallery-3" className="flex items-center gap-[10px] w-full overflow-x-auto snap-x snap-mandatory pb-4 -mb-4 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
             <div className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center"></div>
             <div className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center"></div>
             <div className="w-[223px] h-[396px] bg-[#D9D9D9] rounded-[22px] shrink-0 snap-center bg-cover bg-center"></div>
@@ -211,15 +228,15 @@ export default function LandingPage() {
 
            <div className="flex items-center gap-[20px] md:pr-4">
               <a href="#" className="w-[26px] h-[27px] hover:opacity-80 transition-opacity">
-                {/* SVG Instagram */}
-                <svg viewBox="0 0 26 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M13 2.894C16.48 2.894 16.892 2.907 18.264 2.97C21.785 3.13 23.431 4.805 23.591 8.303C23.654 9.675 23.667 10.086 23.667 13.56C23.667 17.034 23.654 17.445 23.591 18.817C23.43 22.316 21.787 23.99 18.264 24.15C16.892 24.213 16.481 24.226 13 24.226C9.519 24.226 9.108 24.213 7.736 24.15C4.205 23.99 2.568 22.314 2.409 18.817C2.346 17.445 2.333 17.034 2.333 13.56C2.333 10.086 2.346 9.675 2.409 8.303C2.57 4.803 4.215 3.13 7.736 2.97C9.108 2.907 9.519 2.894 13 2.894ZM13 0.55C9.467 0.55 9.025 0.565 7.638 0.628C2.915 0.845 0.292 3.468 0.076 8.192C0.012 9.578 0 10.02 0 13.56C0 17.1 0.012 17.542 0.076 18.928C0.291 23.653 2.915 26.275 7.638 26.491C9.025 26.554 9.467 26.569 13 26.569C16.533 26.569 16.975 26.554 18.362 26.491C23.084 26.275 25.707 23.652 25.923 18.928C25.987 17.542 26 17.1 26 13.56C26 10.02 25.987 9.578 25.923 8.192C25.708 3.468 23.085 0.845 18.362 0.628C16.975 0.565 16.533 0.55 13 0.55ZM13 6.877C9.309 6.877 6.314 9.872 6.314 13.568C6.314 17.264 9.309 20.259 13 20.259C16.691 20.259 19.686 17.264 19.686 13.568C19.686 9.872 16.691 6.877 13 6.877ZM13 17.915C10.603 17.915 8.658 15.971 8.658 13.568C8.658 11.165 10.603 9.221 13 9.221C15.397 9.221 17.342 11.165 17.342 13.568C17.342 15.971 15.397 17.915 13 17.915ZM20.089 4.673C19.229 4.673 18.525 5.377 18.525 6.237C18.525 7.097 19.229 7.801 20.089 7.801C20.949 7.801 21.653 7.097 21.653 6.237C21.653 5.377 20.949 4.673 20.089 4.673Z" fill="white"/>
+                {/* Исправленный идеальный SVG Instagram */}
+                <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="text-white w-full h-full">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
                 </svg>
               </a>
               <a href="#" className="w-[26px] h-[27px] hover:opacity-80 transition-opacity">
-                 {/* SVG WhatsApp */}
-                 <svg viewBox="0 0 26 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-                   <path d="M12.981 0C5.816 0 0 5.816 0 12.98C0 15.267 0.597 17.498 1.733 19.458L0.063 26.938L7.701 25.265C9.575 26.299 11.724 26.843 12.98 26.843C20.145 26.843 25.961 21.027 25.961 13.862C25.961 6.697 20.145 0.881 12.981 0.881V0ZM12.981 2.155C19.444 2.155 24.693 7.404 24.693 13.867C24.693 20.33 19.444 25.579 12.981 25.579C10.999 25.579 9.096 25.075 7.409 24.137L7.027 23.903L3.067 24.776L3.929 20.923L3.674 20.518C2.658 18.905 2.115 16.994 2.115 15.008C2.115 8.545 7.364 3.296 13.827 3.296H12.981V2.155ZM8.566 7.21C8.286 7.21 7.822 7.315 7.449 7.721C7.075 8.127 5.955 9.176 5.955 11.319C5.955 13.462 7.495 15.534 7.704 15.814C7.914 16.094 10.74 20.479 15.08 22.357C16.113 22.805 16.924 23.067 17.558 23.267C18.598 23.597 19.54 23.548 20.278 23.411C21.1 23.259 22.802 22.316 23.153 21.267C23.502 20.218 23.502 19.32 23.385 19.133C23.268 18.946 22.988 18.841 22.568 18.631C22.148 18.421 20.095 17.407 19.721 17.267C19.348 17.127 19.068 17.057 18.788 17.477C18.508 17.897 17.761 18.841 17.528 19.121C17.295 19.401 17.062 19.436 16.642 19.226C16.222 19.016 14.873 18.575 13.277 17.151C12.036 16.043 11.203 14.678 10.97 14.258C10.737 13.838 10.945 13.618 11.155 13.409C11.344 13.22 11.577 12.917 11.787 12.684C11.997 12.451 12.067 12.276 12.207 11.996C12.347 11.716 12.277 11.483 12.172 11.273C12.067 11.063 11.248 9.034 10.906 8.21C10.575 7.412 10.242 7.52 9.986 7.509C9.753 7.498 9.473 7.498 9.193 7.498C8.913 7.498 8.846 7.21 8.566 7.21Z" fill="white"/>
+                 {/* Исправленный идеальный SVG WhatsApp */}
+                 <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="text-white w-full h-full">
+                    <path d="M12.031 0C5.394 0 0 5.394 0 12.031c0 2.115.549 4.184 1.593 6.002L.055 23.633l6.059-1.59c1.761.986 3.765 1.506 5.917 1.506 6.635 0 12.03-5.394 12.03-12.031S18.666 0 12.031 0zm0 21.53c-1.782 0-3.52-.478-5.05-1.385l-.36-.214-3.757.986.998-3.664-.235-.373A9.99 9.99 0 0 1 2.04 12.03c0-5.508 4.48-9.986 9.99-9.986 5.51 0 9.988 4.478 9.988 9.986s-4.478 9.987-9.987 9.987zm5.474-7.466c-.3-.15-1.776-.876-2.052-.976-.275-.1-.476-.15-.676.15-.2.3-.776.975-.951 1.175-.176.2-.351.225-.651.075-1.572-.772-3.04-1.774-4.18-3.096-.301-.35-.05-.529.119-.705.141-.15.3-.35.451-.55.15-.176.2-.3.3-.5.1-.2.05-.376-.025-.526-.075-.15-.676-1.626-.926-2.226-.244-.585-.492-.505-.676-.514l-.576-.011c-.2 0-.526.075-.801.375-.275.3-1.051 1.026-1.051 2.503s1.076 2.903 1.226 3.103c.15.2 2.117 3.23 5.132 4.53 1.258.543 2.155.679 2.923.829.742.146 1.417.123 1.95.074.597-.056 1.838-.75 2.095-1.476.257-.726.257-1.352.182-1.476-.076-.126-.276-.201-.576-.351z"/>
                  </svg>
               </a>
            </div>
