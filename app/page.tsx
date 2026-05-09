@@ -43,6 +43,33 @@ export default function LandingPage() {
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const minSwipeDistance = 50;
 
+  // SEO: Установка Title и Description + Анимация появления блоков при скролле
+  useEffect(() => {
+    // 1. Установка SEO Title и Description
+    document.title = "AI NUR | Умный виджет на ваш сайт";
+    let metaDescription = document.querySelector('meta[name="description"]');
+    if (!metaDescription) {
+      metaDescription = document.createElement('meta');
+      metaDescription.setAttribute('name', 'description');
+      document.head.appendChild(metaDescription);
+    }
+    metaDescription.setAttribute('content', 'ИИ ассистент, каталог товаров, публикация stories и все это на вашем сайте.');
+
+    // 2. Анимация появления блоков (Intersection Observer)
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target); // Анимируем только один раз при первом появлении
+        }
+      });
+    }, { threshold: 0.1 }); // Срабатывает, когда 10% блока появляется на экране
+
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
   // Установка виджета AI NUR при загрузке страницы
   useEffect(() => {
     const script = document.createElement('script');
@@ -235,8 +262,8 @@ export default function LandingPage() {
       {/* ГЛАВНЫЙ КОНТЕЙНЕР (С отступом 36px между блоками на мобилке) */}
       <main className="w-[340px] md:w-[690px] mx-auto pt-[120px] flex flex-col gap-[36px] md:gap-10">
 
-        {/* БЛОК 1: ДИАЛОГ С КЛИЕНТАМИ (Отступ 12px внутри на мобилке) */}
-        <section className="flex flex-col gap-[12px] md:gap-[26px]">
+        {/* БЛОК 1: ДИАЛОГ С КЛИЕНТАМИ */}
+        <section className="flex flex-col gap-[12px] md:gap-[26px] reveal">
           <h1 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Превращаем сайты в диалог с клиентами
           </h1>
@@ -269,7 +296,7 @@ export default function LandingPage() {
 
 
         {/* БЛОК 2: БОЛЬШОЙ ФУНКЦИОНАЛ */}
-        <section className="flex flex-col gap-[12px] md:gap-[26px]">
+        <section className="flex flex-col gap-[12px] md:gap-[26px] reveal">
           <h2 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Полный контроль в удобной админке 
           </h2>
@@ -302,7 +329,7 @@ export default function LandingPage() {
 
 
         {/* БЛОК 3: ТАРИФЫ (КАК ГАЛЕРЕЯ) */}
-        <section className="flex flex-col gap-[12px] md:gap-[26px]">
+        <section className="flex flex-col gap-[12px] md:gap-[26px] reveal">
           <h2 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Начните прямо сейчас
           </h2>
@@ -432,7 +459,7 @@ export default function LandingPage() {
 
 
         {/* БЛОК 4: УСТАНОВКА */}
-        <section className="flex flex-col gap-[12px] md:gap-[26px]">
+        <section className="flex flex-col gap-[12px] md:gap-[26px] reveal">
           <h2 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
             Гибко настраивайте виджет под себя
           </h2>
@@ -465,7 +492,7 @@ export default function LandingPage() {
 
 
         {/* БЛОК 5: МИНИМАЛИСТИЧНЫЙ ЧЕРНЫЙ ФУТЕР */}
-        <footer className="w-full bg-[#000000] rounded-[22px] p-6 md:p-8 flex flex-col gap-6 shadow-sm mb-[40px]">
+        <footer className="w-full bg-[#000000] rounded-[22px] p-6 md:p-8 flex flex-col gap-6 shadow-sm mb-[40px] reveal">
           <div className="flex justify-between items-center">
             <Logo isDark={true} />
             <div className="flex items-center gap-4">
@@ -492,9 +519,20 @@ export default function LandingPage() {
 
       </main>
 
+      {/* Стили для скроллбара и анимации появления */}
       <style dangerouslySetInnerHTML={{ __html: `
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .reveal {
+          opacity: 0;
+          transform: translateY(40px);
+          transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.revealed {
+          opacity: 1;
+          transform: translateY(0);
+        }
       `}} />
 
     </div>
