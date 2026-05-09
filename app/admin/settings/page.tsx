@@ -8,7 +8,7 @@ import { supabase } from '@/lib/supabase';
 import { 
   Bot, Database, Palette, Link2, Mail, Lock, CreditCard, LogOut, 
   ChevronRight, ChevronLeft, Building2, Loader2, X, Check, UploadCloud, User, Pencil, Code, Copy, ExternalLink,
-  Bell, Send
+  Bell, Send, Info, FileText, ShoppingBag, Youtube, HelpCircle
 } from 'lucide-react';
 
 function getContrastColor(hexcolor: string) {
@@ -143,8 +143,15 @@ export default function SettingsPage() {
   }
 
   const handleColorChange = (hex: string) => {
-    const suggestedTextColor = getContrastColor(hex);
-    setEditForm({ ...editForm, theme_color: hex, theme_text_color: suggestedTextColor });
+    // Простейшая проверка, что ввели валидный HEX (если вводят руками)
+    const validHex = /^#[0-9A-F]{6}$/i.test(hex) ? hex : editForm.theme_color;
+    
+    // Если пользователь печатает и пока ввел неполный цвет (например #FF), мы даем ему печатать, 
+    // но если это готовый цвет, то меняем контраст
+    if(/^#[0-9A-F]{0,6}$/i.test(hex)) {
+        const suggestedTextColor = getContrastColor(hex);
+        setEditForm({ ...editForm, theme_color: hex, theme_text_color: suggestedTextColor });
+    }
   };
 
   async function handleSaveProject() {
@@ -368,7 +375,21 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          {/* 6. НАСТРОЙКИ: Аккаунт и безопасность */}
+          {/* 6. СПРАВОЧНЫЙ ЦЕНТР */}
+          <div className="flex flex-col gap-2">
+            <span className="px-4 text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider">Справочный центр</span>
+            <div className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] overflow-hidden flex flex-col">
+              <a href="#" className="text-decoration-none"><SettingsRow icon={Bot} color="#8E8E93" title="Как обучить ИИ ассистента" rightIcon={ExternalLink} /></a>
+              <a href="#" className="text-decoration-none"><SettingsRow icon={Code} color="#8E8E93" title="Как установить виджет на сайт" rightIcon={ExternalLink} /></a>
+              <a href="#" className="text-decoration-none"><SettingsRow icon={ShoppingBag} color="#8E8E93" title="Как добавить товары в каталог" rightIcon={ExternalLink} /></a>
+              <a href="#" className="text-decoration-none"><SettingsRow icon={Youtube} color="#8E8E93" title="Как опубликовать stories" rightIcon={ExternalLink} /></a>
+              <a href="#" className="text-decoration-none"><SettingsRow icon={Bell} color="#8E8E93" title="Как получать уведомления о заявках" rightIcon={ExternalLink} /></a>
+              <a href="#" className="text-decoration-none"><SettingsRow icon={Palette} color="#8E8E93" title="Как изменить внешний вид виджета" rightIcon={ExternalLink} /></a>
+              <a href="https://wa.me/77077175818" target="_blank" className="text-decoration-none"><SettingsRow icon={HelpCircle} color="#000000" title="Написать в поддержку" isLast={true} rightIcon={ExternalLink} /></a>
+            </div>
+          </div>
+
+          {/* 7. НАСТРОЙКИ: Аккаунт и безопасность */}
           <div className="flex flex-col gap-2">
             <span className="px-4 text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider">Аккаунт и безопасность</span>
             <div className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] overflow-hidden flex flex-col">
@@ -378,7 +399,7 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          {/* 7. КНОПКА ВЫХОДА */}
+          {/* 8. КНОПКА ВЫХОДА */}
           <div className="mt-4">
             <div 
               onClick={handleSignOut}
@@ -528,10 +549,20 @@ export default function SettingsPage() {
                   <div className="flex flex-col gap-2">
                     <label className="text-[14px] font-semibold text-[#8E8E93] uppercase">Главный цвет бренда (Фон)</label>
                     <div className="flex items-center gap-4 bg-[#F5F5F7] p-4 rounded-[14px] border border-[#E5E5EA]">
-                      <div className="w-10 h-10 rounded-full border border-[#E5E5EA] overflow-hidden shrink-0 shadow-sm">
-                        <input type="color" className="w-[150%] h-[150%] -translate-x-1/4 -translate-y-1/4 cursor-pointer" value={editForm.theme_color} onChange={e => handleColorChange(e.target.value)} />
+                      
+                      <div className="w-10 h-10 rounded-full border border-[#E5E5EA] overflow-hidden shrink-0 shadow-sm relative">
+                        <input type="color" className="absolute top-[-5px] left-[-5px] w-[50px] h-[50px] cursor-pointer" value={editForm.theme_color} onChange={e => handleColorChange(e.target.value)} />
                       </div>
-                      <span className="font-mono font-bold uppercase tracking-wider">{editForm.theme_color}</span>
+                      
+                      <input 
+                        type="text" 
+                        value={editForm.theme_color} 
+                        onChange={e => handleColorChange(e.target.value)}
+                        className="flex-1 bg-[#FFFFFF] border border-[#E5E5EA] rounded-[10px] px-3 py-2 text-[15px] font-mono font-bold uppercase tracking-wider outline-none focus:border-[#8BFDA8]"
+                        placeholder="#8BFDA8"
+                        maxLength={7}
+                      />
+
                     </div>
                   </div>
                   <div className="flex flex-col gap-2">
