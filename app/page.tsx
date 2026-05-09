@@ -70,43 +70,7 @@ export default function LandingPage() {
     return () => observer.disconnect();
   }, []);
 
-  // Установка виджета AI NUR при загрузке страницы
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.innerHTML = `
-      (function(){
-          var iframe = document.createElement('iframe');
-          iframe.src = "https://ainur-backend-eta.vercel.app/widget.html?id=bd4295ee-5a49-4e4b-b90b-c4388121b208";
-          iframe.style.position = "fixed";
-          iframe.style.bottom = "0";
-          iframe.style.left = "50%";
-          iframe.style.transform = "translateX(-50%)";
-          iframe.style.width = "100%";
-          iframe.style.maxWidth = "400px";
-          iframe.style.height = "120px";
-          iframe.style.border = "none";
-          iframe.style.zIndex = "999999";
-          iframe.style.background = "transparent";
-          iframe.style.transition = "height 0.3s ease, max-width 0.3s ease";
-          document.body.appendChild(iframe);
-
-          window.addEventListener('message', function(e) {
-              if(e.data === 'ainur_opened') {
-                  iframe.style.height = "750px";
-                  iframe.style.maxWidth = "400px";
-              } else if(e.data === 'ainur_closed') {
-                  iframe.style.height = "120px";
-                  iframe.style.maxWidth = "400px";
-              } else if(e.data === 'ainur_fullscreen') {
-                  iframe.style.height = "100vh";
-                  iframe.style.maxWidth = "100vw";
-              }
-          });
-      })();
-    `;
-    document.body.appendChild(script);
-    return () => { document.body.removeChild(script); };
-  }, []);
+  
 
   // Функция для открытия картинки в полноэкранном режиме
   const openImageFullscreen = (imagesArray: string[], index: number) => {
