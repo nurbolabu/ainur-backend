@@ -592,16 +592,6 @@ export default function SettingsPage() {
 
               {activeModal === 'prompt' && (
                 <div className="flex flex-col gap-6 h-full">
-                  <div className="flex flex-col gap-2">
-                    <label className="text-[14px] font-semibold text-[#8E8E93] uppercase">Первое сообщение (Приветствие)</label>
-                    <textarea 
-                      className="w-full bg-[#FFFFFF] border border-[#E5E5EA] rounded-[16px] p-4 text-[16px] outline-none resize-none focus:border-[#8BFDA8] min-h-[100px]" 
-                      value={editForm.welcome_message} 
-                      onChange={e => setEditForm({...editForm, welcome_message: e.target.value})} 
-                      placeholder="Здравствуйте! Я ИИ-ассистент..." 
-                    />
-                  </div>
-                  
                   <div className="flex flex-col gap-2 flex-1">
                     <label className="text-[14px] font-semibold text-[#8E8E93] uppercase">Роль ассистента (Промпт)</label>
                     <textarea 
