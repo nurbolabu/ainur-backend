@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight, Check, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Check, X, ChevronLeft, ChevronRight } from 'lucide-react'; // Убрал ArrowLeft и ArrowRight, так как они больше не используются
 
 export default function LandingPage() {
   
@@ -271,14 +271,6 @@ export default function LandingPage() {
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
               ИИ ассистент, публикация Stories, каталог товаров и это все на вашем сайте.
             </p>
-            <div className="hidden md:flex items-center gap-[10px] shrink-0">
-              <button onClick={() => scrollGallery('gallery-1', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowLeft size={14} strokeWidth={2.5}/>
-              </button>
-              <button onClick={() => scrollGallery('gallery-1', 'right')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowRight size={14} strokeWidth={2.5}/>
-              </button>
-            </div>
           </div>
 
           <div id="gallery-1" className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
@@ -304,14 +296,6 @@ export default function LandingPage() {
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
               Легко добавляйте товары и Stories, следите за аналитикой продаж и читайте историю диалогов в удобном интерфейсе
             </p>
-            <div className="hidden md:flex items-center gap-[10px] shrink-0">
-              <button onClick={() => scrollGallery('gallery-2', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowLeft size={14} strokeWidth={2.5}/>
-              </button>
-              <button onClick={() => scrollGallery('gallery-2', 'right')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowRight size={14} strokeWidth={2.5}/>
-              </button>
-            </div>
           </div>
 
           <div id="gallery-2" className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
@@ -337,14 +321,6 @@ export default function LandingPage() {
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
               Выберите подходящий тариф. Вы можете начать бесплатно и протестировать все возможности прямо сейчас.
             </p>
-            <div className="hidden md:flex items-center gap-[10px] shrink-0">
-              <button onClick={() => scrollGallery('gallery-pricing', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowLeft size={14} strokeWidth={2.5}/>
-              </button>
-              <button onClick={() => scrollGallery('gallery-pricing', 'right')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowRight size={14} strokeWidth={2.5}/>
-              </button>
-            </div>
           </div>
 
           <div id="gallery-pricing" className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-stretch gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
@@ -467,14 +443,6 @@ export default function LandingPage() {
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
               Расскажите ИИ ассистенту о компании и он готов сразу продавать. Установите на любой сайт за 60 секунд
             </p>
-            <div className="hidden md:flex items-center gap-[10px] shrink-0">
-              <button onClick={() => scrollGallery('gallery-3', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowLeft size={14} strokeWidth={2.5}/>
-              </button>
-              <button onClick={() => scrollGallery('gallery-3', 'right')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
-                 <ArrowRight size={14} strokeWidth={2.5}/>
-              </button>
-            </div>
           </div>
 
           <div id="gallery-3" className="w-[100vw] md:w-full -ml-[calc((100vw-340px)/2)] md:ml-0 pl-[calc((100vw-340px)/2)] md:pl-0 flex items-center gap-[10px] overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide">
