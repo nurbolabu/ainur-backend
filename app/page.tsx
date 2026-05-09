@@ -13,15 +13,15 @@ export default function LandingPage() {
   // =========================================================================
 
   const gallery1Images = [
-    "https://static.tildacdn.com/tild6335-6637-4734-a563-626562343333/MacBook_Pro_14__-_8.png", 
-    "https://static.tildacdn.com/tild6636-3561-4235-b638-313831386332/MacBook_Pro_14__-_11.png", 
-    "https://static.tildacdn.com/tild6362-3737-4937-a633-383865346436/MacBook_Pro_14__-_12.png", 
+    "https://static.tildacdn.com/tild6138-6165-4734-a463-663662323638/MacBook_Pro_14__-_8.png", 
+    "https://static.tildacdn.com/tild6635-6130-4364-a638-326239353134/MacBook_Pro_14__-_11.png", 
+    "https://static.tildacdn.com/tild6137-3535-4438-a238-663631643634/MacBook_Pro_14__-_12.png", 
   ];
 
   const gallery2Images = [
-    "https://static.tildacdn.com/tild3837-6531-4530-b032-303032653437/MacBook_Pro_14__-_4-.png", 
-    "https://static.tildacdn.com/tild3438-3464-4364-b465-343134333566/MacBook_Pro_14__-_5-.png", 
-    "https://static.tildacdn.com/tild3236-3238-4637-a239-336436316362/MacBook_Pro_14__-_6.png",  
+    "https://static.tildacdn.com/tild3165-3962-4566-a666-323032663732/MacBook_Pro_14__-_13.png", 
+    "https://static.tildacdn.com/tild3939-3137-4239-a265-643434396666/MacBook_Pro_14__-_16.png", 
+    "https://static.tildacdn.com/tild6139-3261-4162-a430-656130326563/MacBook_Pro_14__-_17.png",  
   ];
 
   const gallery3Images = [
@@ -242,7 +242,7 @@ export default function LandingPage() {
           </h1>
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-[12px] md:gap-[163px]">
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
-              AI NUR это современный способ быстро превратить любой сайт в диалог с клиентом.
+              AI NUR это бытрый способ превратить любой сайт в диалог с клиентом, чтобы увеличить продажи.
             </p>
             <div className="hidden md:flex items-center gap-[10px] shrink-0">
               <button onClick={() => scrollGallery('gallery-1', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
@@ -271,11 +271,11 @@ export default function LandingPage() {
         {/* БЛОК 2: БОЛЬШОЙ ФУНКЦИОНАЛ */}
         <section className="flex flex-col gap-[12px] md:gap-[26px]">
           <h2 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
-            Большой функционал в одном виджете
+            Полный контроль в удобной админке 
           </h2>
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-[12px] md:gap-[163px]">
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
-              В виджете вы можете делиться stories, чтобы рассказать об акции. Или превратить обычный сайт в интернет магазин
+              Легко добавляйте товары и Stories, следите за аналитикой продаж и читайте историю диалогов в удобном интерфейсе
             </p>
             <div className="hidden md:flex items-center gap-[10px] shrink-0">
               <button onClick={() => scrollGallery('gallery-2', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
