@@ -25,9 +25,9 @@ export default function LandingPage() {
   ];
 
   const gallery3Images = [
-    "https://static.tildacdn.com/tild3837-6531-4530-b032-303032653437/MacBook_Pro_14__-_4-.png", 
-    "https://static.tildacdn.com/tild3438-3464-4364-b465-343134333566/MacBook_Pro_14__-_5-.png", 
-    "https://static.tildacdn.com/tild3236-3238-4637-a239-336436316362/MacBook_Pro_14__-_6.png", 
+    "https://static.tildacdn.com/tild3739-3338-4636-b434-636534373364/MacBook_Pro_14__-_18.png", 
+    "https://static.tildacdn.com/tild6539-3661-4231-a166-333165653537/MacBook_Pro_14__-_19.png", 
+    "https://static.tildacdn.com/tild3332-6638-4833-a137-656565633334/MacBook_Pro_14__-_20.png", 
   ];
 
   // =========================================================================
@@ -434,11 +434,11 @@ export default function LandingPage() {
         {/* БЛОК 4: УСТАНОВКА */}
         <section className="flex flex-col gap-[12px] md:gap-[26px]">
           <h2 className="text-[22px] md:text-[34px] font-bold text-[#000000] leading-tight md:max-w-[456px]">
-            Установка на ваш сайт за 1 минуту
+            Гибко настраивайте виджет под себя
           </h2>
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-[12px] md:gap-[163px]">
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
-              Сделайте 3 простых шага и установите виджет на любой сайт (Tilda, wordpress, самописный)
+              Расскажите ИИ ассистенту о компании и он готов сразу продавать. Установите на любой сайт за 60 секунд
             </p>
             <div className="hidden md:flex items-center gap-[10px] shrink-0">
               <button onClick={() => scrollGallery('gallery-3', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
