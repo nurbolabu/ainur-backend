@@ -260,7 +260,7 @@ export default function LandingPage() {
       </div>
 
       {/* ГЛАВНЫЙ КОНТЕЙНЕР (С отступом 36px между блоками на мобилке) */}
-      <main className="w-[340px] md:w-[690px] mx-auto pt-[120px] flex flex-col gap-[26px] md:gap-10">
+      <main className="w-[340px] md:w-[690px] mx-auto pt-[100px] flex flex-col gap-[26px] md:gap-10">
 
         {/* БЛОК 1: ДИАЛОГ С КЛИЕНТАМИ */}
         <section className="flex flex-col gap-[12px] md:gap-[26px] reveal">
