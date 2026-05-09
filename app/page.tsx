@@ -269,7 +269,7 @@ export default function LandingPage() {
           </h1>
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-[12px] md:gap-[163px]">
             <p className="text-[14px] md:text-[16px] text-[#000000] font-normal md:w-[457px] leading-relaxed">
-              AI NUR это бытрый способ превратить любой сайт в диалог с клиентом, чтобы увеличить продажи.
+              ИИ ассистент, публикация Stories, каталог товаров и это все на вашем сайте.
             </p>
             <div className="hidden md:flex items-center gap-[10px] shrink-0">
               <button onClick={() => scrollGallery('gallery-1', 'left')} className="w-6 h-6 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center hover:bg-[#E5E5EA] transition-colors active:scale-90">
