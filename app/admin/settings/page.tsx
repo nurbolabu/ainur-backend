@@ -3,12 +3,12 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-// Используем единый клиент вместо локального createClient
 import { supabase } from '@/lib/supabase';
+// Заменили Youtube на PlaySquare и HelpCircle на CircleHelp
 import { 
   Bot, Database, Palette, Link2, Mail, Lock, CreditCard, LogOut, 
   ChevronRight, ChevronLeft, Building2, Loader2, X, Check, UploadCloud, User, Pencil, Code, Copy, ExternalLink,
-  Bell, Send, HelpCircle, ShoppingBag, Youtube
+  Bell, Send, CircleHelp, ShoppingBag, PlaySquare
 } from 'lucide-react';
 
 function getContrastColor(hexcolor: string) {
@@ -39,7 +39,6 @@ export default function SettingsPage() {
   const [newPassword, setNewPassword] = useState('');
   const [isYearly, setIsYearly] = useState(false);
   
-  // Состояние для оплаты
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
 
   useEffect(() => {
@@ -53,7 +52,6 @@ export default function SettingsPage() {
 
       let id = localStorage.getItem('ainur_admin_project_id');
       
-      // Ищем проект в базе, если его нет в localStorage
       if (!id) {
         const { data: userProject } = await supabase
           .from('projects')
@@ -71,7 +69,6 @@ export default function SettingsPage() {
         setProjectId(id);
         fetchProjectData(id);
       } else {
-        // Если проекта нет, выключаем лоадер, чтобы страница не висела
         setIsLoading(false);
       }
     };
@@ -98,7 +95,7 @@ export default function SettingsPage() {
         theme_text_color: textColor,
         system_prompt: data.system_prompt || '', 
         knowledge_base: data.knowledge_base || '',
-        welcome_message: data.welcome_message || '', // Добавлено получение
+        welcome_message: data.welcome_message || '',
         address: data.contacts_address || '', 
         whatsapp: links.whatsapp || '', 
         instagram: links.instagram || '', 
@@ -143,7 +140,6 @@ export default function SettingsPage() {
   }
 
   const handleColorChange = (hex: string) => {
-    const validHex = /^#[0-9A-F]{6}$/i.test(hex) ? hex : editForm.theme_color;
     if(/^#[0-9A-F]{0,6}$/i.test(hex)) {
         const suggestedTextColor = getContrastColor(hex);
         setEditForm({ ...editForm, theme_color: hex, theme_text_color: suggestedTextColor });
@@ -161,7 +157,7 @@ export default function SettingsPage() {
       theme_text_color: editForm.theme_text_color,
       system_prompt: editForm.system_prompt, 
       knowledge_base: editForm.knowledge_base, 
-      welcome_message: editForm.welcome_message, // Добавлено сохранение
+      welcome_message: editForm.welcome_message,
       contacts_address: editForm.address,
       social_links: { 
         whatsapp: editForm.whatsapp, instagram: editForm.instagram, telegram: editForm.telegram, 
@@ -354,7 +350,6 @@ export default function SettingsPage() {
               <SettingsRow icon={Palette} color="#FF9500" title="Внешний вид и цвета" onClick={() => openModal('appearance')} />
               <SettingsRow icon={Link2} color="#34C759" title="Контакты и соцсети" onClick={() => openModal('contacts')} />
               
-              {/* Прототип открывается в новой вкладке (на странице самого виджета) */}
               <a href={`/widget.html?id=${projectId}`} target="_blank" className="text-decoration-none">
                  <SettingsRow icon={ExternalLink} color="#8E8E93" title="Прототип виджета" rightIcon={ExternalLink} />
               </a>
@@ -378,11 +373,11 @@ export default function SettingsPage() {
               <SettingsRow icon={Bot} color="#8E8E93" title="Как обучить ИИ ассистента" onClick={() => openModal('help_train_ai')} />
               <SettingsRow icon={Code} color="#8E8E93" title="Как установить виджет на сайт" onClick={() => openModal('help_install')} />
               <SettingsRow icon={ShoppingBag} color="#8E8E93" title="Как добавить товары в каталог" onClick={() => openModal('help_catalog')} />
-              <SettingsRow icon={Youtube} color="#8E8E93" title="Как опубликовать stories" onClick={() => openModal('help_stories')} />
+              <SettingsRow icon={PlaySquare} color="#8E8E93" title="Как опубликовать stories" onClick={() => openModal('help_stories')} />
               <SettingsRow icon={Bell} color="#8E8E93" title="Как получать уведомления" onClick={() => openModal('help_notifications')} />
               <SettingsRow icon={Palette} color="#8E8E93" title="Как изменить внешний вид" onClick={() => openModal('help_appearance')} />
               <a href="https://wa.me/77077175818" target="_blank" className="text-decoration-none">
-                 <SettingsRow icon={HelpCircle} color="#000000" title="Написать в поддержку" isLast={true} rightIcon={ExternalLink} />
+                 <SettingsRow icon={CircleHelp} color="#000000" title="Написать в поддержку" isLast={true} rightIcon={ExternalLink} />
               </a>
             </div>
           </div>
@@ -444,7 +439,6 @@ export default function SettingsPage() {
                 {activeModal === 'help_appearance' && 'Внешний вид'}
               </span>
               
-              {/* Скрываем галочку сохранения для информационных окон */}
               {['email', 'password', 'plans', 'integration', 'help_train_ai', 'help_install', 'help_catalog', 'help_stories', 'help_notifications', 'help_appearance'].includes(activeModal) ? (
                  <div className="w-[50px] h-[50px]"></div>
               ) : (
@@ -527,7 +521,7 @@ export default function SettingsPage() {
                   <div className="bg-[#F2F2F7] rounded-[16px] p-5 text-[15px] text-[#000000] leading-relaxed border border-[#E5E5EA]">
                     <b>Как изменить внешний вид виджета?</b><br/><br/>
                     <span className="text-[#8E8E93] font-bold">Шаг 1.</span> Перейдите в раздел «Виджет» → «Внешний вид и цвета».<br/><br/>
-                    <span className="text-[#8E8E93] font-bold">Шаг 2.</span> Нажмите на цветовую палитру и выберите цвет, который соответствует вашему бренду. Или введите точный HEX-код (например, #FF0000 для красного) в поле рядом.<br/><br/>
+                    <span className="text-[#8E8E93] font-bold">Шаг 2.</span> Нажмите на цветовой кружок и выберите цвет, который соответствует вашему бренду. Или введите точный HEX-код (например, #FF0000 для красного) в поле рядом.<br/><br/>
                     <span className="text-[#8E8E93] font-bold">Шаг 3.</span> Ниже выберите цвет текста на кнопках (Черный или Белый), чтобы он легко читался на выбранном фоне.<br/><br/>
                     <i>Все изменения применяются мгновенно. Вы можете посмотреть результат, нажав на кнопку «Прототип виджета».</i>
                   </div>
