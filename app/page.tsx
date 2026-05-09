@@ -70,7 +70,49 @@ export default function LandingPage() {
     return () => observer.disconnect();
   }, []);
 
-  
+  'use client';
+
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+// ... импорты ...
+
+export default function LandingPage() {
+  // ... состояния ...
+
+  // =========================================================================
+  // 👇 ВОТ ЗДЕСЬ УСТАНАВЛИВАЕТСЯ ВИДЖЕТ (ОН БУДЕТ ТОЛЬКО НА ЭТОЙ СТРАНИЦЕ) 👇
+  // =========================================================================
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.innerHTML = `
+      (function(){
+          var iframe = document.createElement('iframe');
+          iframe.src = "https://ainur-backend-eta.vercel.app/widget.html?id=bd4295ee-5a49-4e4b-b90b-c4388121b208";
+          iframe.style.position = "fixed";
+          iframe.style.bottom = "0";
+          iframe.style.left = "50%";
+          iframe.style.transform = "translateX(-50%)";
+          iframe.style.width = "100%";
+          iframe.style.maxWidth = "400px";
+          iframe.style.height = "120px";
+          iframe.style.border = "none";
+          iframe.style.zIndex = "999999";
+          iframe.style.background = "transparent";
+          iframe.style.transition = "height 0.3s ease, max-width 0.3s ease";
+          document.body.appendChild(iframe);
+
+          window.addEventListener('message', function(e) {
+              // ... логика изменения размеров ...
+          });
+      })();
+    `;
+    document.body.appendChild(script);
+    return () => { document.body.removeChild(script); };
+  }, []);
+  // =========================================================================
+
+  // ... остальной код LandingPage ...
+}
 
   // Функция для открытия картинки в полноэкранном режиме
   const openImageFullscreen = (imagesArray: string[], index: number) => {
