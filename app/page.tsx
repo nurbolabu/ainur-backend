@@ -253,9 +253,9 @@ export default function LandingPage() {
       <div className="fixed top-[10px] w-[340px] md:w-[690px] z-50 bg-[#FFFFFF] rounded-[22px] pl-[20px] pr-[10px] py-[10px] border border-[#E5E5EA] shadow-sm">
         <div className="flex items-center justify-between">
           <Link href="/"><Logo /></Link>
-          <Link href="/register" className="h-[40px] md:h-[50px] px-[13px] bg-[#8BFDA8] rounded-[11px] flex items-center justify-center active:scale-95 transition-transform">
+          <a href="/register" className="h-[40px] md:h-[50px] px-[13px] bg-[#8BFDA8] rounded-[11px] flex items-center justify-center active:scale-95 transition-transform text-decoration-none">
             <span className="text-[#000000] text-[13px] md:text-[14px] font-bold leading-none">Регистрация</span>
-          </Link>
+          </a>
         </div>
       </div>
 
@@ -377,9 +377,9 @@ export default function LandingPage() {
                      <span className="text-[#8E8E93] text-[13px] font-medium leading-snug line-through">Установка на сайт</span>
                    </div>
                 </div>
-                <Link href="/register" className="h-[44px] w-full bg-[#8BFDA8] rounded-[12px] flex items-center justify-center font-bold text-[13px] text-[#000000] active:scale-95 transition-all shadow-[0_4px_14px_rgba(139,253,168,0.3)] hover:bg-[#72eba3]">
+                <a href="/register" className="h-[44px] w-full bg-[#8BFDA8] rounded-[12px] flex items-center justify-center font-bold text-[13px] text-[#000000] active:scale-95 transition-all shadow-[0_4px_14px_rgba(139,253,168,0.3)] hover:bg-[#72eba3] text-decoration-none">
                   Зарегистрироваться
-                </Link>
+                </a>
              </div>
 
              {/* Тариф 2: PRO Месяц */}
@@ -418,9 +418,9 @@ export default function LandingPage() {
                      <span className="text-[#FFFFFF] text-[13px] font-medium leading-snug">Stories в виджете</span>
                    </div>
                 </div>
-                <Link href="/register" className="h-[44px] w-full bg-[#8BFDA8] rounded-[12px] flex items-center justify-center font-bold text-[13px] text-[#000000] active:scale-95 transition-all shadow-[0_4px_14px_rgba(139,253,168,0.3)] hover:bg-[#72eba3]">
+                <a href="/register" className="h-[44px] w-full bg-[#8BFDA8] rounded-[12px] flex items-center justify-center font-bold text-[13px] text-[#000000] active:scale-95 transition-all shadow-[0_4px_14px_rgba(139,253,168,0.3)] hover:bg-[#72eba3] text-decoration-none">
                   Зарегистрироваться
-                </Link>
+                </a>
              </div>
 
              {/* Тариф 3: PRO Год */}
@@ -448,9 +448,9 @@ export default function LandingPage() {
                      <span className="text-[#FFFFFF] text-[13px] font-medium leading-snug">Помощь с промптом</span>
                    </div>
                 </div>
-                <Link href="/register" className="relative z-10 h-[44px] w-full bg-[#8BFDA8] rounded-[12px] flex items-center justify-center font-bold text-[13px] text-[#000000] active:scale-95 transition-all shadow-[0_4px_14px_rgba(139,253,168,0.3)] hover:bg-[#72eba3]">
+                <a href="/register" className="relative z-10 h-[44px] w-full bg-[#8BFDA8] rounded-[12px] flex items-center justify-center font-bold text-[13px] text-[#000000] active:scale-95 transition-all shadow-[0_4px_14px_rgba(139,253,168,0.3)] hover:bg-[#72eba3] text-decoration-none">
                   Зарегистрироваться
-                </Link>
+                </a>
              </div>
 
              <div className="shrink-0 w-[calc((100vw-340px)/2)] h-[1px] md:hidden"></div>
@@ -511,9 +511,9 @@ export default function LandingPage() {
           <div className="w-full h-px bg-[#3A3A3C]/50"></div>
           <div className="flex justify-between items-center text-[12px] md:text-[13px] text-[#8E8E93] font-medium">
             <span>© 2026 AI NUR</span>
-            <Link href="/register" className="text-[#FFFFFF] hover:text-[#8BFDA8] transition-colors">
+            <a href="/register" className="text-[#FFFFFF] hover:text-[#8BFDA8] transition-colors text-decoration-none">
               Создать виджет
-            </Link>
+            </a>
           </div>
         </footer>
 
@@ -523,6 +523,8 @@ export default function LandingPage() {
       <style dangerouslySetInnerHTML={{ __html: `
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .text-decoration-none { text-decoration: none; }
 
         .reveal {
           opacity: 0;
