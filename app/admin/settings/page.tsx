@@ -4,11 +4,11 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-// Заменили Youtube на PlaySquare и HelpCircle на CircleHelp
+// Исправлены иконки: заменили PlaySquare на Video, так как PlaySquare удален в новых версиях
 import { 
   Bot, Database, Palette, Link2, Mail, Lock, CreditCard, LogOut, 
   ChevronRight, ChevronLeft, Building2, Loader2, X, Check, UploadCloud, User, Pencil, Code, Copy, ExternalLink,
-  Bell, Send, CircleHelp, ShoppingBag, PlaySquare
+  Bell, Send, CircleHelp, ShoppingBag, Video
 } from 'lucide-react';
 
 function getContrastColor(hexcolor: string) {
@@ -373,7 +373,7 @@ export default function SettingsPage() {
               <SettingsRow icon={Bot} color="#8E8E93" title="Как обучить ИИ ассистента" onClick={() => openModal('help_train_ai')} />
               <SettingsRow icon={Code} color="#8E8E93" title="Как установить виджет на сайт" onClick={() => openModal('help_install')} />
               <SettingsRow icon={ShoppingBag} color="#8E8E93" title="Как добавить товары в каталог" onClick={() => openModal('help_catalog')} />
-              <SettingsRow icon={PlaySquare} color="#8E8E93" title="Как опубликовать stories" onClick={() => openModal('help_stories')} />
+              <SettingsRow icon={Video} color="#8E8E93" title="Как опубликовать stories" onClick={() => openModal('help_stories')} />
               <SettingsRow icon={Bell} color="#8E8E93" title="Как получать уведомления" onClick={() => openModal('help_notifications')} />
               <SettingsRow icon={Palette} color="#8E8E93" title="Как изменить внешний вид" onClick={() => openModal('help_appearance')} />
               <a href="https://wa.me/77077175818" target="_blank" className="text-decoration-none">
@@ -439,6 +439,7 @@ export default function SettingsPage() {
                 {activeModal === 'help_appearance' && 'Внешний вид'}
               </span>
               
+              {/* Скрываем галочку сохранения для информационных окон */}
               {['email', 'password', 'plans', 'integration', 'help_train_ai', 'help_install', 'help_catalog', 'help_stories', 'help_notifications', 'help_appearance'].includes(activeModal) ? (
                  <div className="w-[50px] h-[50px]"></div>
               ) : (
@@ -483,12 +484,11 @@ export default function SettingsPage() {
                 <div className="flex flex-col gap-6">
                   <div className="bg-[#F2F2F7] rounded-[16px] p-5 text-[15px] text-[#000000] leading-relaxed border border-[#E5E5EA]">
                     <b>Как добавить товары в каталог?</b><br/><br/>
-                    Функция самостоятельного управления каталогом через админ-панель находится в разработке и скоро будет доступна.<br/><br/>
-                    В данный момент вы можете отправить список ваших товаров нашей службе поддержки. Подготовьте <b>названия, цены, описания и фотографии</b>, и мы оперативно и бесплатно загрузим их в ваш виджет!
+                    <span className="text-[#8E8E93] font-bold">Шаг 1.</span> Перейдите в раздел "Каталог" в нижнем меню.<br/><br/>
+                    <span className="text-[#8E8E93] font-bold">Шаг 2.</span> Нажмите на кнопку "Добавить товар".<br/><br/>
+                    <span className="text-[#8E8E93] font-bold">Шаг 3.</span> В открывшемся окне загрузите картинку товара, введите название, описание и укажите цену. Затем нажмите "Сохранить".<br/><br/>
+                    Товар автоматически появится в вашем виджете! В будущем вы сможете редактировать описание, менять картинку или удалить товар в этом же разделе.
                   </div>
-                  <a href="https://wa.me/77077175818" target="_blank" className="h-[50px] bg-[#8BFDA8] text-[#000000] rounded-[12px] font-bold flex items-center justify-center transition-transform active:scale-95">
-                    Отправить товары в WhatsApp
-                  </a>
                 </div>
               )}
 
@@ -496,12 +496,10 @@ export default function SettingsPage() {
                 <div className="flex flex-col gap-6">
                   <div className="bg-[#F2F2F7] rounded-[16px] p-5 text-[15px] text-[#000000] leading-relaxed border border-[#E5E5EA]">
                     <b>Как опубликовать Stories?</b><br/><br/>
-                    Stories — это отличный способ рассказать клиентам об акциях или показать отзывы.<br/><br/>
-                    Модуль самостоятельной загрузки Stories скоро появится в админке. Пока что для публикации историй подготовьте <b>вертикальные фото или видео (формат 9:16)</b> и отправьте их нашему менеджеру в WhatsApp. Мы добавим их на ваш сайт в тот же день.
+                    <span className="text-[#8E8E93] font-bold">Шаг 1.</span> Перейдите в раздел "Stories" в нижнем меню или нажмите "Добавить Stories" на главном экране.<br/><br/>
+                    <span className="text-[#8E8E93] font-bold">Шаг 2.</span> Выберите изображение или видео из вашей галереи. Оптимальный формат файла — вертикальный (9:16), а длительность видео не должна превышать 15 секунд.<br/><br/>
+                    Внимание: ваши Stories <b>не удаляются автоматически</b> спустя 24 часа. Чтобы убрать неактуальную историю, откройте её и нажмите на иконку "Удалить" в правом углу.
                   </div>
-                  <a href="https://wa.me/77077175818" target="_blank" className="h-[50px] bg-[#8BFDA8] text-[#000000] rounded-[12px] font-bold flex items-center justify-center transition-transform active:scale-95">
-                    Отправить материалы в WhatsApp
-                  </a>
                 </div>
               )}
 
