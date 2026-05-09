@@ -70,18 +70,7 @@ export default function LandingPage() {
     return () => observer.disconnect();
   }, []);
 
-  'use client';
-
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-// ... импорты ...
-
-export default function LandingPage() {
-  // ... состояния ...
-
-  // =========================================================================
-  // 👇 ВОТ ЗДЕСЬ УСТАНАВЛИВАЕТСЯ ВИДЖЕТ (ОН БУДЕТ ТОЛЬКО НА ЭТОЙ СТРАНИЦЕ) 👇
-  // =========================================================================
+  // Установка виджета AI NUR при загрузке страницы
   useEffect(() => {
     const script = document.createElement('script');
     script.innerHTML = `
@@ -102,17 +91,22 @@ export default function LandingPage() {
           document.body.appendChild(iframe);
 
           window.addEventListener('message', function(e) {
-              // ... логика изменения размеров ...
+              if(e.data === 'ainur_opened') {
+                  iframe.style.height = "750px";
+                  iframe.style.maxWidth = "400px";
+              } else if(e.data === 'ainur_closed') {
+                  iframe.style.height = "120px";
+                  iframe.style.maxWidth = "400px";
+              } else if(e.data === 'ainur_fullscreen') {
+                  iframe.style.height = "100vh";
+                  iframe.style.maxWidth = "100vw";
+              }
           });
       })();
     `;
     document.body.appendChild(script);
     return () => { document.body.removeChild(script); };
   }, []);
-  // =========================================================================
-
-  // ... остальной код LandingPage ...
-}
 
   // Функция для открытия картинки в полноэкранном режиме
   const openImageFullscreen = (imagesArray: string[], index: number) => {
