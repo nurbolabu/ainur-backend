@@ -8,7 +8,7 @@ import { supabase } from '@/lib/supabase';
 import { 
   Bot, Database, Palette, Link2, Mail, Lock, CreditCard, LogOut, 
   ChevronRight, ChevronLeft, Building2, Loader2, X, Check, UploadCloud, User, Pencil, Code, Copy, ExternalLink,
-  Bell, Send, Info, FileText, ShoppingBag, Youtube, HelpCircle
+  Bell, Send, HelpCircle, ShoppingBag, Youtube
 } from 'lucide-react';
 
 function getContrastColor(hexcolor: string) {
@@ -143,11 +143,7 @@ export default function SettingsPage() {
   }
 
   const handleColorChange = (hex: string) => {
-    // Простейшая проверка, что ввели валидный HEX (если вводят руками)
     const validHex = /^#[0-9A-F]{6}$/i.test(hex) ? hex : editForm.theme_color;
-    
-    // Если пользователь печатает и пока ввел неполный цвет (например #FF), мы даем ему печатать, 
-    // но если это готовый цвет, то меняем контраст
     if(/^#[0-9A-F]{0,6}$/i.test(hex)) {
         const suggestedTextColor = getContrastColor(hex);
         setEditForm({ ...editForm, theme_color: hex, theme_text_color: suggestedTextColor });
@@ -379,13 +375,15 @@ export default function SettingsPage() {
           <div className="flex flex-col gap-2">
             <span className="px-4 text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider">Справочный центр</span>
             <div className="bg-[#FFFFFF] border border-[#E5E5EA] rounded-[22px] overflow-hidden flex flex-col">
-              <a href="#" className="text-decoration-none"><SettingsRow icon={Bot} color="#8E8E93" title="Как обучить ИИ ассистента" rightIcon={ExternalLink} /></a>
-              <a href="#" className="text-decoration-none"><SettingsRow icon={Code} color="#8E8E93" title="Как установить виджет на сайт" rightIcon={ExternalLink} /></a>
-              <a href="#" className="text-decoration-none"><SettingsRow icon={ShoppingBag} color="#8E8E93" title="Как добавить товары в каталог" rightIcon={ExternalLink} /></a>
-              <a href="#" className="text-decoration-none"><SettingsRow icon={Youtube} color="#8E8E93" title="Как опубликовать stories" rightIcon={ExternalLink} /></a>
-              <a href="#" className="text-decoration-none"><SettingsRow icon={Bell} color="#8E8E93" title="Как получать уведомления о заявках" rightIcon={ExternalLink} /></a>
-              <a href="#" className="text-decoration-none"><SettingsRow icon={Palette} color="#8E8E93" title="Как изменить внешний вид виджета" rightIcon={ExternalLink} /></a>
-              <a href="https://wa.me/77077175818" target="_blank" className="text-decoration-none"><SettingsRow icon={HelpCircle} color="#000000" title="Написать в поддержку" isLast={true} rightIcon={ExternalLink} /></a>
+              <SettingsRow icon={Bot} color="#8E8E93" title="Как обучить ИИ ассистента" onClick={() => openModal('help_train_ai')} />
+              <SettingsRow icon={Code} color="#8E8E93" title="Как установить виджет на сайт" onClick={() => openModal('help_install')} />
+              <SettingsRow icon={ShoppingBag} color="#8E8E93" title="Как добавить товары в каталог" onClick={() => openModal('help_catalog')} />
+              <SettingsRow icon={Youtube} color="#8E8E93" title="Как опубликовать stories" onClick={() => openModal('help_stories')} />
+              <SettingsRow icon={Bell} color="#8E8E93" title="Как получать уведомления" onClick={() => openModal('help_notifications')} />
+              <SettingsRow icon={Palette} color="#8E8E93" title="Как изменить внешний вид" onClick={() => openModal('help_appearance')} />
+              <a href="https://wa.me/77077175818" target="_blank" className="text-decoration-none">
+                 <SettingsRow icon={HelpCircle} color="#000000" title="Написать в поддержку" isLast={true} rightIcon={ExternalLink} />
+              </a>
             </div>
           </div>
 
@@ -436,9 +434,18 @@ export default function SettingsPage() {
                 {activeModal === 'email' && 'Сменить Email'}
                 {activeModal === 'password' && 'Сменить пароль'}
                 {activeModal === 'plans' && 'Моя подписка'}
+                
+                {/* Заголовки для справочного центра */}
+                {activeModal === 'help_train_ai' && 'Обучение ИИ'}
+                {activeModal === 'help_install' && 'Установка на сайт'}
+                {activeModal === 'help_catalog' && 'Добавление товаров'}
+                {activeModal === 'help_stories' && 'Публикация Stories'}
+                {activeModal === 'help_notifications' && 'Уведомления'}
+                {activeModal === 'help_appearance' && 'Внешний вид'}
               </span>
               
-              {['email', 'password', 'plans', 'integration'].includes(activeModal) ? (
+              {/* Скрываем галочку сохранения для информационных окон */}
+              {['email', 'password', 'plans', 'integration', 'help_train_ai', 'help_install', 'help_catalog', 'help_stories', 'help_notifications', 'help_appearance'].includes(activeModal) ? (
                  <div className="w-[50px] h-[50px]"></div>
               ) : (
                 <button onClick={handleSaveProject} disabled={isSaving} className="w-[50px] h-[50px] shrink-0 bg-[#8BFDA8] rounded-[11px] flex items-center justify-center text-[#000000] active:scale-95 disabled:opacity-50 transition-transform">
@@ -450,6 +457,85 @@ export default function SettingsPage() {
             {/* Контент модалки */}
             <div className="flex-1 overflow-y-auto p-5 pb-10">
               
+              {/* ================= ИНСТРУКЦИИ (СПРАВОЧНЫЙ ЦЕНТР) ================= */}
+              
+              {activeModal === 'help_train_ai' && (
+                <div className="flex flex-col gap-6">
+                  <div className="bg-[#F2F2F7] rounded-[16px] p-5 text-[15px] text-[#000000] leading-relaxed border border-[#E5E5EA]">
+                    <b>Как обучить ИИ ассистента?</b><br/><br/>
+                    <span className="text-[#8E8E93] font-bold">Шаг 1.</span> Перейдите в раздел «Интеллект» → «База знаний для ИИ».<br/><br/>
+                    <span className="text-[#8E8E93] font-bold">Шаг 2.</span> Напишите или вставьте всю важную информацию о вашей компании: чем вы занимаетесь, какие у вас цены, условия доставки, график работы и ответы на частые вопросы клиентов. Чем подробнее текст, тем точнее ответы ИИ.<br/><br/>
+                    <span className="text-[#8E8E93] font-bold">Шаг 3.</span> Перейдите в раздел «Промпт и поведение» и задайте роль ассистенту (например: "Ты дружелюбный менеджер по продажам"), а также укажите приветственное сообщение, которое клиент увидит при открытии чата.
+                  </div>
+                </div>
+              )}
+
+              {activeModal === 'help_install' && (
+                <div className="flex flex-col gap-6">
+                  <div className="bg-[#F2F2F7] rounded-[16px] p-5 text-[15px] text-[#000000] leading-relaxed border border-[#E5E5EA]">
+                    <b>Как установить виджет на сайт?</b><br/><br/>
+                    <span className="text-[#8E8E93] font-bold">Шаг 1.</span> Перейдите в раздел «Виджет» → «Код для вставки на сайт». <br/><i>(Внимание: генерация кода доступна только на PRO тарифе)</i>.<br/><br/>
+                    <span className="text-[#8E8E93] font-bold">Шаг 2.</span> Скопируйте предоставленный HTML-код.<br/><br/>
+                    <span className="text-[#8E8E93] font-bold">Шаг 3.</span> Вставьте этот код в настройки вашего сайта перед закрывающим тегом <b>&lt;/body&gt;</b>.<br/>
+                    <ul className="list-disc ml-5 mt-2 space-y-1">
+                      <li><b>На Tilda:</b> Настройки сайта → Еще → HTML-код для вставки внутрь HEAD (или BODY).</li>
+                      <li><b>На WordPress:</b> Внешний вид → Редактор тем → header.php или footer.php.</li>
+                    </ul>
+                  </div>
+                </div>
+              )}
+
+              {activeModal === 'help_catalog' && (
+                <div className="flex flex-col gap-6">
+                  <div className="bg-[#F2F2F7] rounded-[16px] p-5 text-[15px] text-[#000000] leading-relaxed border border-[#E5E5EA]">
+                    <b>Как добавить товары в каталог?</b><br/><br/>
+                    Функция самостоятельного управления каталогом через админ-панель находится в разработке и скоро будет доступна.<br/><br/>
+                    В данный момент вы можете отправить список ваших товаров нашей службе поддержки. Подготовьте <b>названия, цены, описания и фотографии</b>, и мы оперативно и бесплатно загрузим их в ваш виджет!
+                  </div>
+                  <a href="https://wa.me/77077175818" target="_blank" className="h-[50px] bg-[#8BFDA8] text-[#000000] rounded-[12px] font-bold flex items-center justify-center transition-transform active:scale-95">
+                    Отправить товары в WhatsApp
+                  </a>
+                </div>
+              )}
+
+              {activeModal === 'help_stories' && (
+                <div className="flex flex-col gap-6">
+                  <div className="bg-[#F2F2F7] rounded-[16px] p-5 text-[15px] text-[#000000] leading-relaxed border border-[#E5E5EA]">
+                    <b>Как опубликовать Stories?</b><br/><br/>
+                    Stories — это отличный способ рассказать клиентам об акциях или показать отзывы.<br/><br/>
+                    Модуль самостоятельной загрузки Stories скоро появится в админке. Пока что для публикации историй подготовьте <b>вертикальные фото или видео (формат 9:16)</b> и отправьте их нашему менеджеру в WhatsApp. Мы добавим их на ваш сайт в тот же день.
+                  </div>
+                  <a href="https://wa.me/77077175818" target="_blank" className="h-[50px] bg-[#8BFDA8] text-[#000000] rounded-[12px] font-bold flex items-center justify-center transition-transform active:scale-95">
+                    Отправить материалы в WhatsApp
+                  </a>
+                </div>
+              )}
+
+              {activeModal === 'help_notifications' && (
+                <div className="flex flex-col gap-6">
+                  <div className="bg-[#F2F2F7] rounded-[16px] p-5 text-[15px] text-[#000000] leading-relaxed border border-[#E5E5EA]">
+                    <b>Как получать уведомления о заявках?</b><br/><br/>
+                    <span className="text-[#8E8E93] font-bold">Шаг 1.</span> Узнайте свой личный ID в Telegram. Для этого найдите в поиске бота <b>@userinfobot</b>, отправьте ему любое сообщение и скопируйте цифры из его ответа (ID).<br/><br/>
+                    <span className="text-[#8E8E93] font-bold">Шаг 2.</span> В админке перейдите в раздел «Уведомления» → «Куда получать заявки» и вставьте эти цифры.<br/><br/>
+                    <span className="text-[#8E8E93] font-bold text-[#FF3B30]">Шаг 3 (Важно!).</span> Перейдите в нашего официального бота <b>@Ai_nur_platformbot</b> и нажмите кнопку «Запустить» (/start). Без этого бот технически не сможет отправлять вам сообщения о новых клиентах.
+                  </div>
+                </div>
+              )}
+
+              {activeModal === 'help_appearance' && (
+                <div className="flex flex-col gap-6">
+                  <div className="bg-[#F2F2F7] rounded-[16px] p-5 text-[15px] text-[#000000] leading-relaxed border border-[#E5E5EA]">
+                    <b>Как изменить внешний вид виджета?</b><br/><br/>
+                    <span className="text-[#8E8E93] font-bold">Шаг 1.</span> Перейдите в раздел «Виджет» → «Внешний вид и цвета».<br/><br/>
+                    <span className="text-[#8E8E93] font-bold">Шаг 2.</span> Нажмите на цветовую палитру и выберите цвет, который соответствует вашему бренду. Или введите точный HEX-код (например, #FF0000 для красного) в поле рядом.<br/><br/>
+                    <span className="text-[#8E8E93] font-bold">Шаг 3.</span> Ниже выберите цвет текста на кнопках (Черный или Белый), чтобы он легко читался на выбранном фоне.<br/><br/>
+                    <i>Все изменения применяются мгновенно. Вы можете посмотреть результат, нажав на кнопку «Прототип виджета».</i>
+                  </div>
+                </div>
+              )}
+
+              {/* ================= ОСТАЛЬНЫЕ НАСТРОЙКИ ================= */}
+
               {/* PAYWALL ИНТЕГРАЦИИ */}
               {activeModal === 'integration' && (
                 <div className="flex flex-col gap-4">
@@ -512,7 +598,6 @@ export default function SettingsPage() {
                 </div>
               )}
 
-              {/* ДОБАВЛЕНО ПОЛЕ welcome_message */}
               {activeModal === 'prompt' && (
                 <div className="flex flex-col gap-6 h-full">
                   <div className="flex flex-col gap-2">
@@ -558,7 +643,7 @@ export default function SettingsPage() {
                         type="text" 
                         value={editForm.theme_color} 
                         onChange={e => handleColorChange(e.target.value)}
-                        className="flex-1 bg-[#FFFFFF] border border-[#E5E5EA] rounded-[10px] px-3 py-2 text-[15px] font-mono font-bold uppercase tracking-wider outline-none focus:border-[#8BFDA8]"
+                        className="flex-1 bg-[#FFFFFF] border border-[#E5E5EA] rounded-[10px] px-3 py-2 text-[15px] font-mono font-bold uppercase tracking-wider outline-none focus:border-[#8BFDA8] transition-colors"
                         placeholder="#8BFDA8"
                         maxLength={7}
                       />
