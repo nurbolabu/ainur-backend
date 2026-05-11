@@ -753,7 +753,7 @@ export default function SettingsPage() {
                           <div className="bg-[#F9F9F9] border border-[#E5E5EA] w-full p-4 rounded-[14px] flex items-center justify-between mb-6">
                               <span className="font-mono text-[18px] font-bold text-[#000000]">+7 (707) 717-58-18</span>
                               <button 
-                                onClick={() => navigator.clipboard.writeText('+77771234567')}
+                                onClick={() => navigator.clipboard.writeText('+77077175818')}
                                 className="text-[#8BFDA8] bg-[#000000] px-4 py-2 rounded-[8px] text-[13px] font-bold active:scale-95 transition-transform"
                               >
                                 Копировать
